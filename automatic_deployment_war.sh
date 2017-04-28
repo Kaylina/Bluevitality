@@ -7,7 +7,7 @@ war_full_path=$(pwd -P)/$1
 
 #判断是否输入了war包的名字
 if [ ! -n "$1" ] ;then
-    echo "you have not input war fiilename!"
+	echo "you have not input war fiilename!"
 	exit 1
 fi
 
