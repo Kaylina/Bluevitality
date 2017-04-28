@@ -11,7 +11,7 @@ if [[ ! -n "$1" ]] || [[ ! -e "$(pwd -P)/$1" ]] ;then
         exit 1
 fi
 
-#tomcat启动与关闭的路径及webapps路径
+#tomcat启动与关闭的脚本路径及webapps路径
 tom_up=/usr/local/tomcat/bin/startup.sh
 tom_down=/usr/local/tomcat/bin/shutdown.sh
 tom_webapps=/usr/local/tomcat/webapps
@@ -19,7 +19,7 @@ tom_webapps=/usr/local/tomcat/webapps
 #关闭tom
 function stop() {
         eval "$tom_down"
-        sleep 2
+        sleep 1
         #eval "$tom_down"
         killall java    #慎用(避免对其他java应用产生影响)
 }
