@@ -43,4 +43,3 @@ function start() {
 stop
 deploy $1 #参数传递(war包名)
 start
-
