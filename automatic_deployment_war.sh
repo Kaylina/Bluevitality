@@ -2,7 +2,7 @@
 #war包全自动部署脚本(非热部署)
 #by inmoonlight@163.com
 
-#脚本第一个参数是war包的名字，脚本与war应在同一目录下
+#脚本第一个参数是war包的名字，本脚本必须与war在同一目录下（格式：automatic_deployment_war.sh JAVA.war）
 war_full_path="$(pwd -P)/$1"
 
 #判断是否输入了war包的名字
