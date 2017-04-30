@@ -27,7 +27,7 @@ function stop() {
 #部署war包
 function deploy() {
         #按时间创建临时的旧包备份文件
-        mkdir -p /tmp/$(date "+%F_%H:%M") || echo "The created directory already exists : /tmp/$(date "+%F_%H:%M")"
+        mkdir -p /tmp/$(date "+%F_%H:%M") || echo "created backup directory fail..."
         cp "${tom_webapps}/${1}" /tmp/$(date "+%F_%H:%M")  &> /dev/null || echo "The file does not exist, the first deployment : $1"
         #移除webapps下的旧包之后再部署
         rm -rf "${tom_webapps}/${1}" "${tom_webapps}/${1%%\.war}" || echo "mv old file fail..."
@@ -41,6 +41,6 @@ function start() {
 
 #run
 stop
-deploy $1 #参数传递(war包名)
+deploy $1 #传参 (war包名)
 start
 
