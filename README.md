@@ -1,2 +1,3 @@
-# Tomcat-Automatic-deployment
-Tomcat的war包自动部署脚本
+# 平时工作和学习用到的脚本，做个记录方便使用
+
+奋斗～～
