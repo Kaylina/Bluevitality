@@ -43,4 +43,3 @@ function start() {
 stop
 deploy $1 #传参 (war包名)
 start
-
