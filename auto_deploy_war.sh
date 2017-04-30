@@ -21,7 +21,7 @@ function stop() {
         eval "$tom_down"
         sleep 1
         #eval "$tom_down"
-        killall java    #慎用(避免对其他java应用产生影响)
+        killall java    #慎用 (避免对其他java应用产生影响)
 }
 
 #部署war包
