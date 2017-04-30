@@ -1,10 +1,10 @@
-创建环境：
+#创建环境：
 mkdir 1400{1..4}/{digital,poems,phrase} -p
 touch 1400{1..4}/digital/SI_devide4_number_{01..15}.wav
 touch 1400{1..4}/poems/SI_devide4_number_{16..30}.wav
 touch 1400{1..4}/phrase/SI_devide4_number_{31..60}.wav
 
-
+#--------------------------------------------------------------------------
 	
 开始修改：
 #!/bin/bash
@@ -29,7 +29,7 @@ for n1 in 1400{1..4};
 find 要复制的文件夹 -type d -exec mkdir -p new_dir_copy/{} \;
 find 要复制的文件夹 -type f -exec touch new_dir_copy/{} \;
 
-例子：
+#例子：
 find /tmp/大数据文件夹 -type d -exec mkdir -p new_dir_copy/{} \;
 find /tmp/大数据文件夹 -type f -exec touch  new_dir_copy/{} \;
 
