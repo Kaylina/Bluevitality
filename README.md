@@ -26,6 +26,8 @@ ansible的脚本或文档
 
 NFS和rsync的脚本
 
+keepalive的dr脚本
+
 inotify-tool脚本
 
 
