@@ -24,6 +24,10 @@ python的flask脚本
 
 ansible的脚本或文档
 
+nodejs和mqtt的安装及相关设置，包括https
+
+搭建ss服务器的脚本
+
 NFS和rsync的脚本
 
 keepalive的dr脚本
