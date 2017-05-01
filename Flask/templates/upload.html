@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta charset="utf-8" />
+        <title>Flask - Upload</title>
+	</head>
+    
+    <body>
+        <form action="{{up_path}}" method="post" enctype="multipart/form-data">
+			<fieldset  style="width:10%">
+				<legend>文件上传:</legend>
+				<input type="file" name="file" />
+				<hr/>
+				<input type="submit" value="开始" />
+			</fieldset>
+		</form>
+    </body>
+
+</html>
