@@ -10,7 +10,7 @@ mysql的安装脚本
 
 tomcat的安装脚本
 
-nginx的安装脚本
+nginx的安装脚本（以及nginx的https）
 
 mysql的主从复制
 
