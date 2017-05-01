@@ -50,7 +50,7 @@ cd /etc/pki/CA && echo 01 > serial		#设置证书编号初始值
 		Locality Name (eg, city) [Default City]:shanghai#城市
 		Organization Name (eg, company) [Default Company Ltd]:paybay   #公司
 		Organizational Unit Name (eg, section) []:yanfa  #部门    
-		Common Name (eg, your name or your server's hostname) []:xxx.xxx.xxx.xxx #主机（必须与证书所有者能解析到的名字保持一致（即服务器的IP或域名）否则将无法通过验证
+		Common Name (eg, your name or your server’s hostname) []:xxx.xxx.xxx.xxx #主机（必须与证书所有者能解析到的名字保持一致（即服务器的IP或域名）否则将无法通过验证
 		Email Address []:admin@paybay.cn
 		#以上操作默认选项可通过修改配置文件（/etc/pki/tls/openssl.cnf）修改
 
