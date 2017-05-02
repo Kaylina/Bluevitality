@@ -1,0 +1,86 @@
+#准备：         yum -y install rpmdevtools pcre-devel
+#生成SPEC：     rpmdev-newspec -o Name-version.spec
+#-------------------------------------------------------
+#查看宏：       rpmbuild --showrc  |  grep  "_topdir"
+#  _builddir     %{_topdir}/BUILD
+#  _buildrootdir %{_topdir}/BUILDROOT
+#  _rpmdir       %{_topdir}/RPMS
+#  _sourcedir    %{_topdir}/SOURCES     原材料，如源码包，文档......
+#  _specdir      %{_topdir}/SPECS       管理rpm制作过程的描述文件
+#  _srcrpmdir    %{_topdir}/SRPMS
+#  _topdir       %{getenv:HOME}/rpmbuild
+#-------------------------------------------------------
+
+#自定义宏：
+%define Name nginx
+%define Version 1.2.2
+#需更换的配置文件......
+%define CONFIGFILE 1.conf
+%define InstallPath /usr/local/nginx
+
+Name:           %{Name}
+Version:        %{Version}
+Release:        1%{?dist}
+Summary:        .......................................
+License:        GPLv2
+URL:            mail: inmoonlight@.163.com
+buildroot:      %{_topdir}/BUILDROOT
+Source0:        %{Name}-%{Version}.tar.gz
+SOURCE1:        %{CONFIGFILE}
+BuildRequires:  gcc,make,automake,binutils
+Requires:		bash >= 2.0
+%description
+This is %{Name} ......
+
+%pre
+useradd %{Name} -s /bin/nologin
+
+%prep
+%setup -q -n %{Name}-%{Version}
+
+%build
+./configure \
+ --prefix=%{InstallPath} \
+ --user=%{Name} \
+ --group=%{Name} \
+make %{?_smp_mflags}
+
+%install
+rm -rf %{buildroot}
+%{__make} install DESTDIR=%{buildroot}
+%{__install} -p -d -D -m 0755  %{SOURCE1} %{buildroot}/usr/local/nginx/conf/%{CONFIGFILE}
+
+%files
+%doc
+%defattr(-,root,root,-)
+%attr(0755,root,root) /usr/local/nginx/sbin/nginx
+#注意路径！容易出错！
+%{_prefix}/*
+%{_prefix}/local/nginx/conf/%{CONFIGFILE}
+/usr/local/html/index.html
+
+%clean
+rm -rf %{buildroot}
+
+%post
+#sed ......
+chkconfig --add nginx
+chkconfig --level 345 nginx on
+
+%changelog
+#---------------------------------------------------------------------------------------------
+#    2.1 介绍区域的SOURCE0下增加如下
+#    
+#    Source0:        %{name}-%{version}.tar.gz 
+#    Source1:        index.html 
+#    Source2:        init.nginx 
+#    Source3:        fastcgi_params 
+#    Source4:        nginx.conf 
+#    2.2 安装区域增加如下
+#    
+#    make install DESTDIR=%{buildroot} 
+#    %{__install} -p -D %{SOURCE1} %{buildroot}/usr/html/index.html  #%{__install}这个宏代表install命令
+#    %{__install} -p -D -m 0755 %{SOURCE2} %{buildroot}/etc/rc.d/init.d/nginx 
+#    %{__install} -p -D %{SOURCE3} %{buildroot}/etc/nginx/fastcgi_params 
+#    %{__install} -p -D %{SOURCE4} %{buildroot}/etc/nginx/nginx.conf 
+
