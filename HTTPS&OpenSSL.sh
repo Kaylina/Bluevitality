@@ -19,10 +19,10 @@ serial          = $dir/serial           # The current serial number
 crlnumber       = $dir/crlnumber        # the current crl number
                                         # must be commented out to leave a V1 CRL
 crl             = $dir/crl.pem          # The current CRL
-private_key     = $dir/private/cakey.pem# The private key
+private_key     = $dir/private/cakey.pem # The private key
 RANDFILE        = $dir/private/.rand    # private random number file
 
-cd /etc/pki/CA && echo 01 > serial		#设置证书编号初始值
+cd /etc/pki/CA && echo 01 > serial	#设置证书编号初始值
 
 
 在PKI的CA端：
@@ -40,7 +40,7 @@ cd /etc/pki/CA && echo 01 > serial		#设置证书编号初始值
 		Country Name (2 letter code) [XX]:CN            		#国家（大写缩写）
 		State or Province Name (full name) []:shanghai  		#省份或洲
 		Locality Name (eg, city) [Default City]:shanghai		#城市
-		Organization Name (eg, company) [Default Company Ltd]:paybay   #公司
+		Organization Name (eg, company) [Default Company Ltd]:paybay    #公司
 		Organizational Unit Name (eg, section) []:yanfa  		#部门    
 		Common Name (eg, your name or your server’s hostname) []:xxx.xxx.xxx.xxx #地址须与证书所有者能解析到的名字一致！（IP or domain）
 		Email Address []:admin@paybay.cn
@@ -77,18 +77,18 @@ cd /etc/pki/CA && echo 01 > serial		#设置证书编号初始值
 	
 	http {
 		ssl_session_cache   shared:SSL:10m;		#配置共享会话缓存大小
-		ssl_session_timeout 10m;				#设置HTTPS的会话超时时间
+		ssl_session_timeout 10m;		#设置HTTPS的会话超时时间
 		#...
 			server {
 				listen              443 ssl;	#ssl参数
 				server_name         example.com
-				ssl_certificate     webserv.crt;			#证书
-				ssl_certificate_key webserv.key;			#私钥（私钥作为安全实体，应被放在有一定权限限制的目录并保证Nginx主进程有存取权)
-				ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;	#ssl_protocols 和 ssl_ciphers 限制连接含 SSL/TLS 的加強版本&算法
+				ssl_certificate     webserv.crt;	#证书
+				ssl_certificate_key webserv.key;	#私钥（私钥作为安全实体，应被放在有一定权限限制的目录并保证Nginx主进程有存取权)
+				ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;    #ssl_protocols 和 ssl_ciphers 限制连接含 SSL/TLS 的加強版本&算法
 				ssl_ciphers         HIGH:!aNULL:!MD5;
-				add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	#HSTS策略	
-				add_header X-Content-Type-Options nosniff;	#禁止服务器自动解析资源类型
-				add_header X-Xss-Protection 1;				#防XSS攻击
+				add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;#HSTS策略	
+				add_header X-Content-Type-Options nosniff;    #禁止服务器自动解析资源类型
+				add_header X-Xss-Protection 1;		#防XSS攻击
 				#...
 			}
 	}
@@ -124,11 +124,8 @@ cd /etc/pki/CA && echo 01 > serial		#设置证书编号初始值
 
 
 #附例子：（脚本实现时使用，以命令行方式填写x509证书信息）
-openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key -subj "/C=CN/ST=ShenZ/L=ShenZ/O=Example/OU=Web/CN=eg.cn"
-
-
-
-
+openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key \
+-subj "/C=CN/ST=ShenZ/L=ShenZ/O=Example/OU=Web/CN=eg.cn"
 
 
 
