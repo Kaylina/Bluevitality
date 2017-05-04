@@ -89,4 +89,4 @@ case $var in
 	umount ${local_path}					#输入为3时取消客户端挂载
 	sed -i "/^${serv_ip}/d" /etc/fstab
     ;;  
-esac 
+esac
