@@ -5,11 +5,11 @@
 
 #serv_define
 	pub_path=/data/nginx/sharefile		#S端共享目录
-	net_addr=*							#S端允许访问的地址，eg：192.168.10.0/24
+	net_addr=*				#S端允许访问的地址，eg：192.168.10.0/24
 
 #agen_define
-	local_path=/mnt						#C端挂载目录
-	serv_ip=127.0.0.1					#C端访问地址
+	local_path=/mnt				#C端挂载目录
+	serv_ip=127.0.0.1			#C端访问地址
 
 function show_and_conf_public() {
 	exportfs -a
