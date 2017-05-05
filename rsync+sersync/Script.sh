@@ -70,23 +70,18 @@ eof
 	echo "${serv_pub_user}:${serv_pub_pass}" > /etc/rsync.pass
 	
 	touch ${serv_log_path}
-	chmod 600 /etc/{rsyncd.conf,rsync.pass}
-	chmod 755 ${serv_pub_dir}
+	chmod 600 /etc/{rsyncd.conf,rsync.pass} ; chmod 755 ${serv_pub_dir}
 	
 	/usr/local/bin/rsync --daemon
 	
 	netstat -atupnl | grep -q 873 && {
-	
 		echo -e "\033[32mRsync'Server dameon start success... \033[0m"
-		
+		echo "/usr/local/bin/rsync --daemon" >> /etc/rc.local
 	} || {
-	
-		pkill rsync && /usr/local/bin/rsync --daemon
-		
+		pkill rsync ; /usr/local/bin/rsync --daemon
 		netstat -atupnl | grep -q 873 ; [ "$?" -ne "0" ] && echo -e "\033[31mRsync'Server dameon start Fail... \033]0m"
+		exit 1
 	}
-	
-	echo "/usr/local/bin/rsync --daemon" >> /etc/rc.local
 }
 
 function agen_config() {
