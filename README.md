@@ -20,8 +20,6 @@ docker的部署脚本的常用命令流程
 
 防火墙优化的脚本，安全加固用的
 
-inotify的文件和命令（配合rsync）+ NFS  NFS和rsync的脚本
-
 盒子截图的脚本
 
 python的flask脚本
