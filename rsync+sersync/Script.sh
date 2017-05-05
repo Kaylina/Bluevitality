@@ -76,6 +76,8 @@ eof
 	touch ${serv_log_path}
 	chmod 600 /etc/{rsyncd.conf,rsync.pass} ; chmod 755 ${serv_pub_dir}
 	
+	rm -rf /var/run/rsyncd.pid
+	
 	/usr/local/bin/rsync --daemon
 	
 	netstat -atupnl | grep -q 873  &&  {
