@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #define Server
+	serv_pub_module=rsync
 	serv_pub_dir=/data/nginx/sharefile			#S端共享目录 - 备份用
 	serv_pub_user=rsync					#Rsync服务访问账号
 	serv_pub_pass=12345					#Rsync服务访问密码
@@ -12,7 +13,7 @@
 	agen_rsync_user=rsync					#Rsync服务访问账号
 	agen_rsync_pass=12345					#Rsync服务访问密码
 	rsync_sevip=192.168.126.156				#Rsync服务ip
-	rsync_module=rsync					#Rsync服务模块名称
+	rsync_module=rsync					#Rsync服务模块名称(需要与serv_pub_module的值相同)
 
 #define sofrware function ...
 function install_rsync() {
@@ -65,7 +66,7 @@ secrets file = /etc/rsync.pass
 hosts allow =${serv_Src_ACL}
 #hosts deny = *
 timeout = 600
-[rsync]
+[${serv_pub_module:=rsync}]
 comment=rsync
 path=${serv_pub_dir}
 eof
