@@ -16,29 +16,32 @@
 
 #define sofrware function ...
 function install_rsync() {
-	tar zxf rsync-3.1.1.tar.gz && cd rsync-3.1.1 ; ./configure
-	make && make install
+
+	tar zxf rsync-3.1.1.tar.gz && cd rsync-3.1.1 ; ./configure ; make && make install
 	cd - ; return 0
+	
 }
 
 function install_inotify() {
-	tar zxf inotify-tools-3.14.tar.gz && cd inotify-tools-3.14 ; ./configure --prefix=/usr/local/inotify
-	make && make install
+
+	tar zxf inotify-tools-3.14.tar.gz && cd inotify-tools-3.14 ; ./configure --prefix=/usr/local/inotify ; make && make install
 	cd - ; return 0
+	
 }
 
 function install_sersync() {
+
 	tar zxf sersync2.5.4_64bit_binary_stable_final.tar.gz
 	mv ./GNU-Linux-x86 /usr/local/sersync && cd /usr/local/sersync
 	echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 	chmod 600 /usr/local/sersync/user.pass
 	cd - ; return 0
+	
 }
 
 function selinux_config() {
 
 	{ setenforce 0  ;  sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/selinux/config ; }  &> /dev/null 
-	
 	echo -n "SElinux：" ; grep -oP "(?<=^SELINUX=).*" /etc/selinux/config
 	
 }
@@ -74,10 +77,10 @@ eof
 	
 	/usr/local/bin/rsync --daemon
 	
-	netstat -atupnl | grep -q 873 && {
+	netstat -atupnl | grep -q 873  &&  {
 		echo -e "\033[32mRsync'Server dameon start success... \033[0m"
 		echo "/usr/local/bin/rsync --daemon" >> /etc/rc.local
-	} || {
+	}  ||  {
 		pkill rsync ; /usr/local/bin/rsync --daemon
 		netstat -atupnl | grep -q 873 ; [ "$?" -ne "0" ] && echo -e "\033[31mRsync'Server dameon start Fail... \033]0m"
 		exit 1
@@ -161,23 +164,23 @@ cat > /usr/local/sersync/confxml.xml <<eof
 </head>
 eof
 
-	echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
+	sysctl -p /etc/sysctl.conf ; echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 
 	sersync_start="nohup /usr/local/sersync/sersync2 -r -d -o /usr/local/sersync/confxml.xml > /usr/local/sersync/rsync.log 2>&1 &"
 	
 	echo ${sersync_start} >> /etc/rc.local
 	
-	eval ${sersync_start} ; echo -e "\033[32mSersync dameon start ok... \033[0m"
+	eval ${sersync_start} && echo -e "\033[32mSersync dameon start ok... \033[0m"
 }
 
 read -p "how to config? : S(1) or C(2) help(3) " -t 5 -n 1 var
 
 case $var in  
-    1)  serv_config  					#输入为1时执行服务端设置
-    ;;  				
-    2)  agen_config  					#输入为2时执行客户端挂载
+    	1)  serv_config  					#输入为1时执行服务端设置
+    	;;  				
+    	2)  agen_config  					#输入为2时执行客户端挂载
 	;;
-    3)  echo "Server-List-example：  rsync  --list-only  <username>@<serverip>::<modulename>"
+	3)  echo "Serv_List example：  rsync --list-only  <username>@<serverip>::<modulename>"
 	;;	
 	*)  exit 0
 	;;
