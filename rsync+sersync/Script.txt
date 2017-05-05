@@ -1,18 +1,18 @@
 #!/bin/bash
 
 #define Server
-serv_pub_dir=/data/nginx/sharefile			#S端共享目录 - 备份用
-serv_pub_user=rsync							#Rsync服务访问账号
-serv_pub_pass=12345							#Rsync服务访问密码
-serv_log_path=/var/log/rsyncd.log			#Rsync服务日志位置
-serv_Src_ACL=*								#源IP限制，格式：192.168.10.0/24或：192.168.1.*
+	serv_pub_dir=/data/nginx/sharefile			#S端共享目录 - 备份用
+	serv_pub_user=rsync					#Rsync服务访问账号
+	serv_pub_pass=12345					#Rsync服务访问密码
+	serv_log_path=/var/log/rsyncd.log			#Rsync服务日志位置
+	serv_Src_ACL=*						#源IP限制，格式：192.168.10.0/24或：192.168.1.*
 
 #define Agent
-agen_watch_dir=/data/nginx/sharefile		#C端监视目录
-agen_rsync_user=rsync						#Rsync服务访问账号
-agen_rsync_pass=12345						#Rsync服务访问密码
-rsync_sevip=192.168.126.156						#Rsync服务ip
-rsync_module=rsync							#Rsync服务模块名称
+	agen_watch_dir=/data/nginx/sharefile			#C端监视目录
+	agen_rsync_user=rsync					#Rsync服务访问账号
+	agen_rsync_pass=12345					#Rsync服务访问密码
+	rsync_sevip=192.168.126.156				#Rsync服务ip
+	rsync_module=rsync					#Rsync服务模块名称
 
 #define sofrware function ...
 function install_rsync() {
