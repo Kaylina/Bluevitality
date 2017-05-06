@@ -22,7 +22,7 @@ HTTP协议的常见内容笔记
 
 NTP安装及配置脚本
 
-Samba安装及配置脚本
+Samba安装及配置脚本 & vsftp安装配置脚本
 
 nodejs安装及配置流程说明
 
@@ -44,3 +44,4 @@ Haproxy自动安装&配置脚本
 
 DNS安装&配置脚本
 
+DRBD脚本
