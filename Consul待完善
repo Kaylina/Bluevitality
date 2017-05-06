@@ -1,1 +1,259 @@
 
+服务发现
+健康检查
+K/V存储
+多数据中心
+
+安装软件：
+	拷贝Consul到PATH路径中,在Unix系统中：例：/usr/local/bin
+	验证：输入consul即可	
+
+服务端启动：
+	说明：
+		完成Consul安装后所有节点必须运行agent. agent又细分为server、client模式.每个数据中心至少必须拥有一台server。
+		其他agent运行为client模式.client是轻量级进程，用于注册服务、健康检查、和转发对server的查询（agent须在集群中每个主机运行！）
+	启动：
+		consul agent -server -rejoin -bootstrap-expect <Number> -data-dir /tmp/consul -node=<Node-name> -ui-dir <Web-ui-Path> -config-dir=/etc/consul.d/ -bind=<ip> -client 0.0.0.0
+		说明：
+		-server： 		定义agent运行在server模式
+		-rejoin：		忽略先前的离开，在再次启动后仍旧尝试加入集群中。
+		-bootstrap-expect ：	在一个datacenter中期望的server节点数量，当该值提供时，consul一直等待达到指定的sever数量的时才会引导整个集群，该标记不能和bootstrap共用
+		-bootstrap:		设置服务是否为“bootstrap”模式。如果数据中心只有1个server agent，那么需要设置该参数。从技术上来讲，处于bootstrap模式的服务器是可以选择自己作为Raft Leader的。在consul集群中，只有一个节点可以配置该参数，如果有多个参数配置该参数，那么难以保证一致性。
+		-data-dir：		此目录为Agent存放state数据，所有Agent都必须有，该目录应放在持久存储中（reboot不会丢失），对于server角色的Agent很关键，此时它需要记录集群state状态
+		-node：			本节点在集群中的名称，在一个集群中它必须是唯一的，默认是该节点主机名
+		-ui-dir： 		提供存放web ui资源的路径，该目录必须可读
+		-config-dir：	需要加载的配置目录，里面所有以.json结尾的文件都会被加载！表示自己所注册的服务文件的存储路径（目录中的子目录是不会加载的）
+		-config-file：	需要加载的配置文件，在文件中都是json格式的信息，该参数可以多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数
+		-bind：			该地址用来在集群内部的通讯，集群内的所有节点到此地址都必须是可达的，默认：0.0.0.0
+		-client：		将绑定到client接口的地址，可以是HTTP、DNS、RPC服务器。默认"127.0.0.1"只允许回路连接。RPC地址会被其他的consul命令使用，比如consul members——查询agent列表
+		-log-level：	日志级别。默认为info。有如下级别："trace","debug", "info", "warn", and "err"。可以使用consul monitor来连接agent查看日志。
+		-syslog：		将日志记录进syslog（仅支持Linux和OSX平台）
+		-pid-file：		记录pid的文件
+		-dc/-datacenter 数据中心的名字
+		-client：		consul绑定在哪个client地址上，这个地址提供HTTP、DNS、RPC等服务，默认是127.0.0.1（例：consul agent -server -bootstrap-expect=1  -data-dir=/tmp/consul -node=server-110 -bind=192.168.21.110 -dc=zjgdc1 -client 0.0.0.0 -ui）
+		注：			使用-client 参数可指定允许客户端使用什么ip去访问，例如-client 192.168.11.143 表示可以使用http://192.168.11.143:8500/ui 去访问：consul agent -dev -client 192.168.11.143
+		
+	配置文件：
+		即-config-dir参数指定目录下的json文件：
+		示例一：
+			{  
+				"datacenter": "east-aws",  									#同命令行参数-datacenter
+				"data_dir": "/opt/consul",  								#同命令行参数-data_dir
+				"log_level": "INFO",  
+				"node_name": "foobar",  
+				"server": true,  
+				"watches": [  
+					{  
+						"type": "checks",  
+						"handler": "/usr/bin/health-check-handler.sh"  
+					}  
+				],  
+				"telemetry": {  
+					"statsite_address": "127.0.0.1:2180"  
+				}  
+			}
+		示例二：
+			{  
+				"datacenter": "east-aws",  
+				"data_dir": "/opt/consul",  
+				"log_level": "INFO",  										#同命令行参数-log_level
+				"node_name": "foobar",  									#同命令行参数node
+				"server": true,  
+				"addresses": {  
+					"https": "0.0.0.0"  
+				},  
+				"ports": {  
+					"https": 8080  
+				},  
+				"key_file": "/etc/pki/tls/private/my.key",  
+				"cert_file": "/etc/pki/tls/certs/my.crt",  
+				"ca_file": "/etc/pki/tls/certs/ca-bundle.crt"  
+			}  
+		
+	查看成员：
+		~]# consul members
+		Node  Address              Status  Type    Build  Protocol  DC
+		s1    10.201.102.198:8301  alive   server  0.7.4  2         dc1
+		s2    10.201.102.199:8301  alive   server  0.7.4  2         dc1
+		s3    10.201.102.200:8301  alive   server  0.7.4  2         dc1
+
+客户端启动：
+	客户端加入：（例，需修改+备注）
+		consul agent -data-dir /tmp/node1 -node=node1 -bind=192.168.11.144 -datacenter=dc1 -ui -config-dir=/etc/consul.d/ -join 10.201.102.198
+		说明：
+			-ui 启动内建的界面，可以通过形如：http://192.168.11.143:8500/ui/的形式去访问
+			当agent以client模式运行的时候不要加参数server就ok
+			使agent以client模式，-join：加入到已有的集群中去。
+			后期加入指定集群：consul join <集群任意节点Ip地址>
+			重启服务：consul reload （服务定义可以通过配置文件并发送SIGHUP给agent来进行更新）
+			移除节点：consul leave
+			-client 指定了客户端接口的绑定地址，包括：HTTP、DNS、RPC，而consul join 、consul members 都是通过RPC与Consul交互的(例子：-rpc-addr=192.168.11.143:8400)
+			
+	注册服务：
+		说明：
+			搭建好conusl集群后，用户或程序就能到consul中去查询、注册服务。可通过提供服务定义文件或调用HTTP API两种方式来注册服务！
+			首先为Consul配置创建一个目录，其会载入配置目录里的所有文件，在Unix中通常类似：/etc/consul.d
+			然后编写服务定义配置文件：假设有个名叫web的服务运行在80端口.另外我们给他设置一个标签.这样我们可使用他作为额外的查询方式:
+		操作：
+			配置c端服务：
+				mkdir /etc/consul.d
+				echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' > /etc/consul.d/web.json
+				说明：
+				name：	服务名称
+				port：	服务端口
+				tages：	标签
+			重启c端服务：（例，需修改+备注）
+				consul agent -server -bootstrap-expect 1 -data-dir /tmp/consul -node=s1 -bind=10.201.102.198 -rejoin -config-dir=/etc/consul.d/ -client 0.0.0.0
+				说明：
+				-data-dir：提供目录来存放agent的状态，所有的agent允许都需要该目录，该目录必须是稳定的，系统重启后都继续存在
+				若重启后输出："[INFO] agent: Synced service 'web'"，则说明此agent从配置文件中载入了服务定义并成功注册到服务目录
+				若想注册多个服务,应在Consul配置目录创建多个服务定义文件
+			
+	客户端健康检查脚本：（在consul的配置目录：xxx.json）
+		示例一：
+			{  
+				"check": {  
+					"id": "mem-util",  
+					"name": "Memoryutilization",  
+					"script": "/usr/local/bin/check_mem.py",  
+					"interval": "10s",  
+					"timeout": "1s"  
+				}  
+			} 
+		示例二：
+			{  
+				"check": {  
+					"id": "api",  
+					"name": "HTTPAPI on port 5000",  
+					"http": "http://localhost:5000/health",  
+					"interval": "10s",  
+					"timeout": "1s"  
+				}  
+			} 
+		示例三：
+			{  
+				"check": {  
+				"id": "ssh",  
+				"name": "SSHTCP on port 22",  
+				"tcp": "localhost:22",  
+				"interval": "10s",  
+				"timeout": "1s"  
+				}  
+			}  
+		示例四：
+			{  
+				"check": {  
+					"id": "mem-util",  
+					"name": "Memoryutilization",  
+					"docker_container_id": "f972c95ebf0e",  
+					"shell": "/bin/bash",  
+					"script": "/usr/local/bin/check_mem.py",  
+					"interval": "10s"  
+				}  
+			} 
+	
+		说明：
+			每一种check都必须包含name，id和notes两个是可选的。如果没有提供id，那么id会被设置为name。在一个节点中，check的ID都必须是唯一的。如果名字是冲突的，那么ID就应该设置。
+			字段Notes主要是增强checks的可读性。Script check中，notes字段可以由脚本生成。同样，适用HTTP接口更新TTL check的外部程序一样可以设置notes字段
+			Check脚本可以自由地做任何事情确定check的状态。唯一的限制是：退出代码必须遵循下面的约定：
+			退出代码0 – 正常
+			退出代码1 – 告警
+			其他值 - 失败。
+			Consul依赖此约定。脚本其他的输出都保存在notes字段中，可以供人查看。
+			
+		检测健康状态：
+			vagrant@n1:~$ curl http://localhost:8500/v1/health/state/critical
+			[{"Node":"agent-two","CheckID":"service:web","Name":"Service 'web' check","Status":"critical","Notes":"","ServiceID":"web","ServiceName":"web"}]
+	
+	键值存储：
+		为了提供服务发现以及健康检测，Consul提供了非常容易使用的键／值对存储。它能被用于存储动态配置信息，帮助服务协作，建构leader选举机制，以及开发者可以想到的建构任何其它的东西。
+		在运行代理步骤中展示了查询本地代理，我们先验证键／值存储中没有任何键存在：
+			curl -v http://localhost:8500/v1/kv/?recurse
+		可以用 PUT 来存储一些键：
+			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1
+			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42
+			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/sub/key3
+			查询：
+				curl http://localhost:8500/v1/kv/?recurse
+				[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
+				{"CreateIndex":98,"ModifyIndex":98,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="},
+				{"CreateIndex":99,"ModifyIndex":99,"Key":"web/sub/key3","Flags":0,"Value":"dGVzdA=="}]
+			说明：
+			这里我们创建了3个键，每个都关联了值"test"。注意 值 字段的返回是基于base64的编码，该编码允许非UTF8字符集。对于键"web/key2"，我们为其设置了一个42的 标记。
+			所有的键都支持设置一个64位长的整形标记值。这个标记并不是由Consul内部使用的，它可以被用于存储任意键值对的元数据信息。
+			在设置值之后，我们使用 ?recurse 参数发出了 GET 请求来接收多个键的信息。
+			 
+			也可以非常容易地获取单个键的信息：
+			curl http://localhost:8500/v1/kv/web/key1
+			[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="}]
+			
+			删除所有键：
+				curl -X DELETE http://localhost:8500/v1/kv/web/sub?recurse
+			
+			修改键：
+				数据示例：
+				[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
+				{"CreateIndex":98,"ModifyIndex":98,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
+				使用一个 PUT 请求相同的URI并且提供一个不同的消息体就可以修改指定的键，Consul提供了一个 检测并设置 的操作，对应的操作是原子的。
+				通过在GET请求中提供 ?cas= 参数以及指定最新的 ModifyIndex 值我们就可以得到原子CAS操作。例如，假设我们想要更新"web/key1"：
+				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97		返回true
+				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97		返回false
+				这里，第一个CAS更新成功了因为最新的 ModifyIndex 是97，而第二个操作失败了因为最新的 ModifyIndex 不再是97了。
+			
+			curl "http://localhost:8500/v1/kv/web/key2?index=101&wait=5s"
+			[{"CreateIndex":98,"ModifyIndex":101,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
+			通过提供"?index="参数，我们请求等待直到键包含了一个大于101的 ModifyIndex 的值。无论如何由于"?wait=5"参数限制了查询最多等待5秒，之后会返回当前没有修改的值。
+			该操作可以高效地等待键的更新。另外相同的方法可以用于等待一个键的集合，直到键集合中任何一个键发生的更新。
+	
+	停止客户端：
+		说明：
+			可以使用Ctrl-C 优雅的关闭Agent. 中断Agent之后你可以看到他离开了集群并关闭.
+			在退出中,Consul提醒其他集群成员,这个节点离开了.如果你强行杀掉进程.集群的其他成员应该能检测到这个节点失效了.当一个成员离开,他的服务和检测也会从目录中移除
+			当一个成员失效了,他的健康状况被简单的标记为危险,但是不会从目录中移除.Consul会自动尝试对失效的节点进行重连.允许他从某些网络条件下恢复过来.离开的节点则不会再继续联系.
+			如果一个agent作为一个服务器,一个优雅的离开是很重要的,可以避免引起潜在的可用性故障影响达成一致性协议.
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
