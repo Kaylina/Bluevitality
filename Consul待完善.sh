@@ -10,16 +10,16 @@
 		参数说明：
 			-server						定义agent运行在server模式
 			-rejoin						忽略先前的离开、再次启动后仍尝试加入集群
-			-bootstrap-expect 在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
+			-bootstrap-expect 	在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
 			-bootstrap				设置server是否为"bootstrap"模式。若数据中心只有1个server agent则需设置该参数。理论上处于bootstrap模式的server可以选择自己作为Raft Leader，集群中只有1个节点可配该参数
 			-data-dir					其为agent存放"元"数据，任何节点都必须有！。该目录应在持久存储中（reboot不丢失），对server角色的agent很关键：此时它要记录整个集群的state状态
-			-node							本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
+			-node						本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
 			-ui-dir						提供存放web ui资源的路径。该目录必须可读！
 			-config-dir				需加载的配置目录，里面所有以"json"结尾的文件都会被加载！表示node自身所注册的服务文件的存储路径（其中的子目录不会被加载、服务定义文件是注册服务的最通用的方式）
-			-config-file			需加载的配置文件，文件中都是"json"格式的信息，该参数可多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数...?
-			-bind							该地址用于集群内部的通讯、集群内所有节点到此地址都必须是可达的，默认：0.0.0.0 （c/s都需设置，用于consul内部的通讯）
+			-config-file				需加载的配置文件，文件中都是"json"格式的信息，该参数可多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数...?
+			-bind						该地址用于集群内部的通讯、集群内所有节点到此地址都必须是可达的，默认：0.0.0.0 （c/s都需设置，用于consul内部的通讯）
 			-client						将绑定到client接口的地址（即公开公开的地址），此地址提供HTTP、DNS、RPC服务。默认"127.0.0.1"，即只允许回路连接。RPC地址会被其他的consul命令使用，如：consul members查询 
-			-log-level				日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可使用：consul monitor来连接agent查看日志
+			-log-level					日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可使用：consul monitor来连接agent查看日志
 			-syslog						将日志记录进syslog（仅支持Linux和OSX平台）
 			-pid-file					记录pid的文件
 			-datacenter				数据中心的名字，旧版本选项为：-dc
@@ -27,7 +27,7 @@
 	配置示例：			#即参数：-config-dir指定目录下的 ***.json （此方式可省去参数直接只用配置文件启动consul服务端）
 			{  
 				"datacenter": "east-aws",  								#同命令行参数-datacenter
-				"data_dir": "/opt/consul",  							#同命令行参数-data_dir
+				"data_dir": "/opt/consul",  								#同命令行参数-data_dir
 				"log_level": "INFO",  										#同命令行参数-log_level
 				"node_name": "foobar",  									#同命令行参数node
 				"server": true,  
@@ -44,9 +44,9 @@
 		
 	查看成员：
 		~]#  consul members
-		Node   Address              Status   Type     Build   Protocol  DC
-		s1     10.201.102.198:8301  alive    server   0.7.4   2         dc1
-		s2     10.201.102.199:8301  alive    server   0.7.4   2         dc1
+		Node  Address                     Status  Type    Build    Protocol  DC
+		s1     10.201.102.198:8301  alive    server   0.7.4   2             dc1
+		s2     10.201.102.199:8301  alive    server   0.7.4   2             dc1
 
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@
 				mkdir /etc/consul.d &&	echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' > /etc/consul.d/web.json
 				参数说明：
 					name		服务名称
-					port		服务端口
+					port			服务端口
 					tages		标签（自定义）
 			2、重启client端服务：
 					consul agent -server -bootstrap-expect 1 -data-dir /var/consul -node=s1 -bind=10.201.102.198 -rejoin -config-dir=/etc/consul.d/ -client 0.0.0.0
@@ -144,48 +144,45 @@
 		为了提供服务发现及健康检测，Consul提供了非常容易使用的键/值对存储。它能被用于存储动态配置信息、帮助服务协作、建构Leader选举机制、及开发者可以想到的建构任何其它的东西
 		
 		这里展示了查询本地代理，我们先验证键值存储中有没有键存在：			#若查询不存在的key时将返回404错误
-			curl -v http://localhost:8500/v1/kv/?recurse			#因不存在将会返回404错误......
+			curl -v http://localhost:8500/v1/kv/?recurse			#因不存在将会返回404错误......( 注：recurse即递归 )
 		先用PUT方法存储一些键：
 			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1				
-			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42		其中：web/key2是键的名字、?flags键的标记信息（为64位的整行数字，可被客户端用来做一些元数据.）
+			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42		#其中：web/key2是键的名字、?flags键的标记信息（为64位的整行数字，可被客户端用来做一些元数据.）
 			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/sub/key3
-			查询：
+		查询存储的键：
 				curl http://localhost:8500/v1/kv/?recurse
 				[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
 				{"CreateIndex":98,"ModifyIndex":98,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="},
 				{"CreateIndex":99,"ModifyIndex":99,"Key":"web/sub/key3","Flags":0,"Value":"dGVzdA=="}]
-			说明：
-			这里我们创建了3个键，每个都关联了值"test"。注意 值 字段的返回是基于base64的编码，该编码允许非UTF8字符集。对于键"web/key2"，我们为其设置了一个42的 标记。
-			所有的键都支持设置一个64位长的整形标记值。这个标记并不是由Consul内部使用的，它可以被用于存储任意键值对的元数据信息。
-			在设置值之后，我们使用 ?recurse 参数发出了 GET 请求来接收多个键的信息。
+			备忘说明：
+			这里我们创建了3个键，每个都关联了值"test"。注意"值"字段的返回是基于base64的编码，该编码允许非UTF8字符集。对于键"web/key2"，我们为其设置了一个42的标记。
+			所有的键都支持设置一个64位长的整形标记值。这个标记并不是由Consul内部使用的，它可被用于存储任意键值对的元数据信息。
+			在设置值之后，我们使用 ?recurse 参数发出了GET请求来接收多个键的信息。
 			 
 			也可以非常容易地获取单个键的信息：
 			curl http://localhost:8500/v1/kv/web/key1
 			[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="}]
 			
-			删除所有键：curl -X DELETE http://localhost:8500/v1/kv/web/sub?recurse		（recurse标记即递归，此处删除了sub的所有值？）
+			删除所有键：curl -X DELETE http://localhost:8500/v1/kv/web/sub?recurse			#此处删除了sub的所有值
 			
 			修改键：
-				数据示例：
-				[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
-				{"CreateIndex":98,"ModifyIndex":98,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
-				使用一个 PUT 请求相同的URI并且提供一个不同的消息体就可以修改指定的键，Consul提供了一个检测并设置的操作，对应的操作是原子的。
+				使用一个PUT请求相同的URI并且提供一个不同的消息体即可修改指定的键，Consul提供了一个检测并设置的操作，对应的操作是原子的......
 				通过在GET请求中提供 ?cas= 参数以及指定最新的 ModifyIndex 值我们就可以得到原子CAS操作。例如，假设我们想要更新"web/key1"：
-				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97		返回true
-				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97		返回false
+				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回true
+				curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回false
 				这里，第一个CAS更新成功了因为最新的 ModifyIndex 是97，而第二个操作失败了因为最新的 ModifyIndex 不再是97了。
 			
-			curl "http://localhost:8500/v1/kv/web/key2?index=101&wait=5s"
-			[{"CreateIndex":98,"ModifyIndex":101,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
-			通过提供"?index="参数，我们请求等待直到键包含了一个大于101的 ModifyIndex 的值。无论如何由于"?wait=5"参数限制了查询最多等待5秒，之后会返回当前没有修改的值。
-			该操作可以高效地等待键的更新。另外相同的方法可以用于等待一个键的集合，直到键集合中任何一个键发生的更新。
-	 
+				curl "http://localhost:8500/v1/kv/web/key2?index=101&wait=5s"
+				[{"CreateIndex":98,"ModifyIndex":101,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
+				通过提供"?index="参数，我们请求等待直到键包含了一个大于101的 ModifyIndex 的值。无论如何由于"?wait=5"参数限制了查询最多等待5秒，之后会返回当前没有修改的值。
+				该操作可以高效地等待键的更新。另外相同的方法可以用于等待一个键的集合，直到键集合中任何一个键发生的更新。
+	
 	停止客户端：
 		说明：
-			可以使用Ctrl-C 优雅的关闭Agent. 中断Agent之后你可以看到他离开了集群并关闭.
-			在退出中,Consul提醒其他集群成员,这个节点离开了.如果你强行杀掉进程.集群的其他成员应该能检测到这个节点失效了.当一个成员离开,他的服务和检测也会从目录中移除
-			当一个成员失效了,他的健康状况被简单的标记为危险,但是不会从目录中移除.Consul会自动尝试对失效的节点进行重连.允许他从某些网络条件下恢复过来.离开的节点则不会再继续联系.
-			如果一个agent作为一个服务器,一个优雅的离开是很重要的,可以避免引起潜在的可用性故障影响达成一致性协议.
+			可用Ctrl-C 优雅的关闭Agent. 中断Agent之后你可以看到他离开了集群并关闭.
+			在退出中,Consul提醒其他集群成员此节点离开了.若强行杀掉进程则集群其他成员应能检测到这个节点失效了.当一个成员离开,他的服务和检测也会从目录中移除
+			当成员失效时他的健康状况被简单的标记为危险但不会从目录中移除，Consul会自动尝试对失效的节点重连等待并允许他从某些网络条件下恢复过来，而离开的节点则不会再继续联系.
+			若一个agent作为一个服务器,一个优雅的离开是很重要的,可以避免引起潜在的可用性故障影响达成一致性协议.
 ------------------------------------------------------------------------------------------------------------
 	
 备忘：
