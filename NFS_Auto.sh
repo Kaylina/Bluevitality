@@ -83,12 +83,12 @@ function agen_config() {
 read -p "how to config? : S(1) or C(2) or umount(3)?" -n 1 -t 5 var
 
 case $var in  
-    	1)  serv_config  					#输入为1时执行服务端设置
+    	1)  echo ; serv_config  				#输入为1时执行服务端设置
     	;;  				
-    	2)  agen_config  					#输入为2时执行客户端挂载
+    	2)  echo ; agen_config  				#输入为2时执行客户端挂载
 	;;			
 	3)	
-	umount ${local_path}					#输入为3时取消客户端挂载
+	echo ; umount ${local_path}				#输入为3时取消客户端挂载
 	sed -i "/^${serv_ip}/d" /etc/fstab
     	;;  
 esac
