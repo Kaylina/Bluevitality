@@ -10,16 +10,16 @@
 		参数说明：
 			-server						定义agent运行在server模式
 			-rejoin						忽略先前的离开、再次启动后仍尝试加入集群
-			-bootstrap-expect 	在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
+			-bootstrap-expect 在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
 			-bootstrap				设置server是否为"bootstrap"模式。若数据中心只有1个server agent则需设置该参数。理论上处于bootstrap模式的server可以选择自己作为Raft Leader，集群中只有1个节点可配该参数
 			-data-dir					其为agent存放"元"数据，任何节点都必须有！。该目录应在持久存储中（reboot不丢失），对server角色的agent很关键：此时它要记录整个集群的state状态
-			-node						本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
+			-node							本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
 			-ui-dir						提供存放web ui资源的路径。该目录必须可读！
 			-config-dir				需加载的配置目录，里面所有以"json"结尾的文件都会被加载！表示node自身所注册的服务文件的存储路径（其中的子目录不会被加载、服务定义文件是注册服务的最通用的方式）
-			-config-file				需加载的配置文件，文件中都是"json"格式的信息，该参数可多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数...?
-			-bind						该地址用于集群内部的通讯、集群内所有节点到此地址都必须是可达的，默认：0.0.0.0 （c/s都需设置，用于consul内部的通讯）
+			-config-file			需加载的配置文件，文件中都是"json"格式的信息，该参数可多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数...?
+			-bind							该地址用于集群内部的通讯、集群内所有节点到此地址都必须是可达的，默认：0.0.0.0 （c/s都需设置，用于consul内部的通讯）
 			-client						将绑定到client接口的地址（即公开公开的地址），此地址提供HTTP、DNS、RPC服务。默认"127.0.0.1"，即只允许回路连接。RPC地址会被其他的consul命令使用，如：consul members查询 
-			-log-level					日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可使用：consul monitor来连接agent查看日志
+			-log-level				日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可使用：consul monitor来连接agent查看日志
 			-syslog						将日志记录进syslog（仅支持Linux和OSX平台）
 			-pid-file					记录pid的文件
 			-datacenter				数据中心的名字，旧版本选项为：-dc
@@ -27,7 +27,7 @@
 	配置示例：			#即参数：-config-dir指定目录下的 ***.json （此方式可省去参数直接只用配置文件启动consul服务端）
 			{  
 				"datacenter": "east-aws",  								#同命令行参数-datacenter
-				"data_dir": "/opt/consul",  								#同命令行参数-data_dir
+				"data_dir": "/opt/consul",  							#同命令行参数-data_dir
 				"log_level": "INFO",  										#同命令行参数-log_level
 				"node_name": "foobar",  									#同命令行参数node
 				"server": true,  
@@ -44,9 +44,9 @@
 		
 	查看成员：
 		~]#  consul members
-		Node  Address                     Status  Type    Build    Protocol  DC
-		s1     10.201.102.198:8301  alive    server   0.7.4   2             dc1
-		s2     10.201.102.199:8301  alive    server   0.7.4   2             dc1
+		Node   Address              Status   Type     Build   Protocol  DC
+		s1     10.201.102.198:8301  alive    server   0.7.4   2         dc1
+		s2     10.201.102.199:8301  alive    server   0.7.4   2         dc1
 
 ---------------------------------------------------------------------------------------------------------------------
 
@@ -72,7 +72,7 @@
 				mkdir /etc/consul.d &&	echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' > /etc/consul.d/web.json
 				参数说明：
 					name		服务名称
-					port			服务端口
+					port		服务端口
 					tages		标签（自定义）
 			2、重启client端服务：
 					consul agent -server -bootstrap-expect 1 -data-dir /var/consul -node=s1 -bind=10.201.102.198 -rejoin -config-dir=/etc/consul.d/ -client 0.0.0.0
@@ -127,14 +127,25 @@
 			echo '{"check": {"name": "ping", "script": "ping -c1 163.com >/dev/null", "interval": "30s"}}'  >/etc/consul.d/ping.json
 			
 		检测健康：
-			vagrant@n1:~$ curl http://localhost:8500/v1/health/state/critical	(注意:这个命令可以运行在任何节点！！~。critical指的类似于日志的级别...）
-			[{"Node":"agent-two","CheckID":"service:web","Name":"Service 'web' check","Status":"critical","Notes":"","ServiceID":"web","ServiceName":"web"}]
+			~]# curl http://localhost:8500/v1/health/state/critical		#注意:这个命令可以运行在任何节点！！~。critical指的类似于日志的级别......?
+			[
+				{
+					"Node": "agent-two", 
+					"CheckID": "service:web", 
+					"Name": "Service 'web' check", 
+					"Status": "critical", 
+					"Notes": "", 
+					"ServiceID": "web", 
+					"ServiceName": "web"
+				}
+			]
 	
 	键值存储：
-		为了提供服务发现以及健康检测，Consul提供了非常容易使用的键／值对存储。它能被用于存储动态配置信息，帮助服务协作，建构leader选举机制，以及开发者可以想到的建构任何其它的东西。
-		在运行代理步骤中展示了查询本地代理，我们先验证键／值存储中没有任何键存在：（若查询不存在的key时将返回404错误）
-			curl -v http://localhost:8500/v1/kv/?recurse
-		可以用 PUT 来存储一些键：
+		为了提供服务发现及健康检测，Consul提供了非常容易使用的键/值对存储。它能被用于存储动态配置信息、帮助服务协作、建构Leader选举机制、及开发者可以想到的建构任何其它的东西
+		
+		这里展示了查询本地代理，我们先验证键值存储中有没有键存在：			#若查询不存在的key时将返回404错误
+			curl -v http://localhost:8500/v1/kv/?recurse			#因不存在将会返回404错误......
+		先用PUT方法存储一些键：
 			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1				
 			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42		其中：web/key2是键的名字、?flags键的标记信息（为64位的整行数字，可被客户端用来做一些元数据.）
 			curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/sub/key3
