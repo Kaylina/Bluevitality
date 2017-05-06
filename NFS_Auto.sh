@@ -24,7 +24,7 @@ function serv_config() {
 	setenforce 0
 	
 	[ -d "${pub_path}" ] || {
-		echo >&2 "${pub_path} 不存在..."
+		echo >&1  -e "\033[31m${local_path}不存在...请先创建共享目录 :-) ...\033[0m"
 		exit 1
 	}
 	
@@ -32,7 +32,7 @@ function serv_config() {
 	
 	echo "${pub_path} ${net_addr}(rw,sync)" > /etc/exports
 	
-	[ -e "/usr/bin/systemctl" ] && {
+	[ -x "/usr/bin/systemctl" ] && {
 		#Centos 7
 		yum -y install nfs-utils rpcbind
 		
@@ -59,7 +59,7 @@ function agen_config() {
 	setenforce 0
 	
 	[ -d "${local_path}" ] || {
-		echo >&2 "${local_path} 不存在..."
+		echo >&1  -e "\033[31m${local_path}不存在...请先创建挂载目录 :-) ...\033[0m" 
 		exit 1
 	}
 	
