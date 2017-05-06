@@ -12,11 +12,13 @@
 	serv_ip=127.0.0.1			#C端访问地址
 
 function show_and_conf_public() {
+
 	exportfs -a
 	echo -e "\033[31mService config success... \033[0m"
 	echo -e "\033[31mPublic_dir:  \033[0m"
 	showmount -e
 	exit 0
+	
 }
 	
 function serv_config() {
