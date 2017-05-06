@@ -14,8 +14,8 @@
 function show_and_conf_public() {
 
 	exportfs -a
-	echo -e "\033[31mService config success... \033[0m"
-	echo -e "\033[31mPublic_dir:  \033[0m"
+	echo -e "\033[32mService config success... \033[0m"
+	echo -e "\033[32mPublic_dir:  \033[0m"
 	showmount -e
 	exit 0
 	
@@ -73,10 +73,10 @@ function agen_config() {
 	mount -t nfs ${serv_ip}:${pub_path} ${local_path}
 	
 	echo "${serv_ip}:${pub_path} ${local_path} nfs rsize=8192,wsize=8192,timeo=14,_netdev 0 0" >> /etc/fstab
-	echo -e "\033[31mAgent config success... \033[0m"
+	echo -e "\033[32mAgent config success... \033[0m"
 	
 	showmount -e ${serv_ip}
-	echo -e "\033[31mLocal mount: \033[0m" ${local_path}
+	echo -e "\033[32mLocal mount: \033[0m" ${local_path}
 	exit 0
 }
 
@@ -92,3 +92,4 @@ case $var in
 	sed -i "/^${serv_ip}/d" /etc/fstab
     	;;  
 esac
+
