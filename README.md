@@ -10,7 +10,7 @@ mysql的安装脚本、tomcat的安装脚本、nginx的安装脚本、mysql的�
 
 常用的sed处理tomcat和nginx优化的脚本
 
-docker的部署脚本的常用命令流程
+docker的部署脚本的常用命令流程 & docker修改阿里云镜像源的脚本（需要指定版本以上的...）
 
 防火墙优化的脚本，安全加固用的
 
