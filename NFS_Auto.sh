@@ -2,7 +2,6 @@
 #NFS服务C、S端自动安装配置脚本，兼容Centos6、7系列...
 #选项：1 服务端设置、2 客户端挂载、3、客户端恢复
 
-
 #serv_define
 	pub_path=/data/nginx/sharefile		#S端共享目录
 	net_addr=*				#S端允许访问的地址，eg：192.168.10.0/24
