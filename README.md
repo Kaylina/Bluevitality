@@ -14,6 +14,22 @@ docker的部署脚本的常用命令流程
 
 防火墙优化的脚本，安全加固用的
 
+zabbix的userparameter百度收集汇总
+
+consul的操作流程笔记清单（不断的完善）
+
+HTTP协议的常见内容笔记
+
+NTP安装及配置脚本
+
+Samba安装及配置脚本
+
+nodejs安装及配置流程说明
+
+【ELK学习笔记】
+
+crontab说明
+
 盒子截图的脚本
 
 ansible的脚本或文档
@@ -24,7 +40,7 @@ nodejs和mqtt的安装及相关设置，包括https
 
 keepalive的dr脚本（全自动形式的，包括卸载的）
 
-Haproxy脚本
+Haproxy自动安装&配置脚本
 
 DNS安装&配置脚本
 
