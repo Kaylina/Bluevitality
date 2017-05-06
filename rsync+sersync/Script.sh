@@ -12,6 +12,7 @@
 	agen_watch_dir=/data/nginx/sharefile			#C端监视目录
 	agen_rsync_user=rsync					#Rsync服务访问账号
 	agen_rsync_pass=12345					#Rsync服务访问密码
+	thread_num=2						#Rsync同步线程数量（多核情况下适当调高）
 	rsync_sevip=192.168.126.156				#Rsync服务ip
 	rsync_module=rsync					#Rsync服务模块名称(需要与serv_pub_module的值相同)
 
@@ -169,7 +170,7 @@ eof
 
 	sysctl -p /etc/sysctl.conf ; echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 
-	sersync_start="nohup /usr/local/sersync/sersync2 -r -d -o /usr/local/sersync/confxml.xml > /usr/local/sersync/rsync.log 2>&1 &"
+	sersync_start="nohup /usr/local/sersync/sersync2 -r -d  -n ${thread_num:=2} -o /usr/local/sersync/confxml.xml > /usr/local/sersync/rsync.log 2>&1 &"
 	
 	echo ${sersync_start} >> /etc/rc.local
 	
