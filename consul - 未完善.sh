@@ -1,15 +1,15 @@
 服务端启动：
 
 	备忘说明：
-		安装软件：拷贝Consul到PATH路径中，在Unix中可直接使用：例：/usr/local/bin/consul
-		完成consul安装后所有节点必须运行agent！  agent又细分为：server、client模式。每个数据中心至少必须有1台consul server （它会成为集群中的Leader）
-		其他agent运行为client模式。client是轻量级进程，主要负责注册服务、健康检查、转发对server的查询
+		安装：拷贝Consul到PATH中并给予"x"权限，在Unix中可直接使用，例：/usr/local/bin/consul
+		完成安装后所有节点必须运行agent! agent可分为：server、client。每个数据中心至少须有1台consul -server #会成为集群中的Leader
+		集群中其他agent运行为client。它是轻量级进程，主要负责注册服务、健康检查、转发对server的查询...
 	
 	启动示例：
 		consul agent -server -rejoin -bootstrap-expect <Num> -data-dir /var/consul -node=<Name> -ui-dir <Path> -config-dir=/etc/consul.d/  -bind=<ip>  -client 0.0.0.0
 		参数说明：
-		-server		          定义agent运行在server模式
-		-rejoin		          忽略先前的离开、再次启动后仍尝试加入集群
+		-server		          使agent运行在server模式
+		-rejoin		          忽略先前的离开、再次启动时仍尝试加入集群
 		-bootstrap-expect 	  在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
 		-bootstrap		  设置server是否为"bootstrap"模式。若数据中心只有1个server agent则需设置该参数。理论上处于bootstrap模式的server可以选择自己作为Raft Leader，集群中只有1个节点可配该参数
 		-data-dir		  其为agent存放"元"数据，任何节点都必须有！。该目录应在持久存储中（reboot不丢失），对server角色的agent很关键：此时它要记录整个集群的state状态
