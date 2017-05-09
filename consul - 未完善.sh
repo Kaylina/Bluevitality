@@ -10,7 +10,7 @@
 		参数说明：
 		-server		          使agent运行在server模式
 		-rejoin		          忽略先前的离开、再次启动时仍尝试加入集群
-		-bootstrap-expect 	  在1个"datacenter"中期望的server节点数，当该值提供时consul将一直等待达到指定的sever数量的时才会去引导整个集群（该标记不能和bootstrap共用）
+		-bootstrap-expect 	  在1个"datacenter"中期望的server数量，若启用则一直等到达到指定sever数时才去引导整个集群（其不能和bootstrap共用）
 		-bootstrap		  设置server是否为"bootstrap"模式。若数据中心只有1个server agent则需设置该参数。理论上处于bootstrap模式的server可以选择自己作为Raft Leader，集群中只有1个节点可配该参数
 		-data-dir		  其为agent存放"元"数据，任何节点都必须有！。该目录应在持久存储中（reboot不丢失），对server角色的agent很关键：此时它要记录整个集群的state状态
 		-node		          本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
