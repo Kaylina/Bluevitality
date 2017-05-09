@@ -618,3 +618,4 @@ docker的consul注意事项：
 	接受base64编码的字符串并返回解码的结果，如果给定的字符串不是有效的base64字符串，则返回错误。
 	{{base64Decode“aGVsbG8 =”}}
 	输出：hello
+	
