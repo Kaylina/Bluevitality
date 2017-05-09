@@ -6,30 +6,30 @@
 		集群中其他agent运行为client。它是轻量级进程，主要负责注册服务、健康检查、转发对server的查询...
 	
 	启动示例：
-		consul agent -server -rejoin -bootstrap-expect <Num> -data-dir /var/consul -node=<Name> -ui-dir <Path> -config-dir=/etc/consul.d/  -bind=<ip>  -client 0.0.0.0
+		consul agent -server -rejoin -bootstrap-expect 3 -data-dir /var/consul -node=<Name> -config-dir=/etc/consul.d/  -bind=<ip>  -client 0.0.0.0
 		参数说明：
 		-server		          使agent运行在server模式
 		-rejoin		          忽略先前的离开、再次启动时仍尝试加入集群
-		-bootstrap-expect 	  在1个"datacenter"中期望的server数量，若启用则一直等到达到指定sever数时才去引导整个集群（其不能和bootstrap共用）
-		-bootstrap		  设置server是否为"bootstrap"模式。若数据中心只有1个server agent则需设置该参数。理论上处于bootstrap模式的server可以选择自己作为Raft Leader，集群中只有1个节点可配该参数
-		-data-dir		  其为agent存放"元"数据，任何节点都必须有！。该目录应在持久存储中（reboot不丢失），对server角色的agent很关键：此时它要记录整个集群的state状态
-		-node		          本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名，建议指定
+		-bootstrap-expect 	  在1个"datacenter"中期望的server数量，若启用则等到达到指定sever数时才去引导整个集群（其不能和bootstrap共用）
+		-bootstrap		  设置S端是否为"bootstrap"模式。若数据中心仅1个server则需启用。理论上处于bootstrap模式的server可使自身为Leader
+		-data-dir		  为agent存放"元"数据，任何节点都要有。该目录应在持久存储中（reboot不丢失），若server模式则用于记录整个集群state
+		-node		          本节点在集群中的名称，在集群中它必须唯一，默认是该节点主机名（建议指定）
 		-ui-dir		          提供存放web ui资源的路径。该目录必须可读！
-		-config-dir	          需加载的配置目录，里面所有以"json"结尾的文件都会被加载！表示node自身所注册的服务文件的存储路径（其中的子目录不会被加载、服务定义文件是注册服务的最通用的方式）
-		-config-file	          需加载的配置文件，文件中都是"json"格式的信息，该参数可多次配置，后面文件中加载的参数会覆盖前面加载文件中的参数...?
-		-bind		          该地址用于集群内部的通讯、集群内所有节点到此地址都必须是可达的，默认：0.0.0.0 （c/s都需设置，用于consul内部的通讯）
-		-client		          将绑定到client接口的地址（即公开公开的地址），此地址提供HTTP、DNS、RPC服务。默认"127.0.0.1"，即只允许回路连接。RPC地址会被其他的consul命令使用，如：consul members查询 
-		-log-level		  日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可使用：consul monitor来连接agent查看日志
-		-syslog			  将日志记录进syslog（仅支持Linux和OSX平台）
-		-pid-file		  记录pid的文件
-		-datacenter		  数据中心的名字，旧版本选项为：-dc
+		-config-dir	          需加载的配置目录，其中".json"格式的文件都会被加载，表示node自身所注册的服务文件的存储路径
+		-config-file	          需加载的配置文件，文件是"json"格式的信息，该参数可多次配置，后面文件加载的参数会覆盖前面文件中的参数...
+		-bind		          该地址用于集群内部通讯、C/S均需设置，集群内所有节点到此地址都必须可达，默认：0.0.0.0
+		-client		          将绑定到client接口的地址（即公开地址），其提供HTTP、DNS、RPC服务。默认"127.0.0.1"。RPC地址会被其他consul命令使用
+		-log-level		  日志级别。默认"info"。有如下级别："trace","debug", "info", "warn",  "err"。可用：consul monitor来连接节点查看日志
+		-syslog			  将日志记录进syslog，仅支持Linux和OSX平台
+		-pid-file		  记录pid号
+		-datacenter		  数据中心名字，旧版本选项为：-dc
 		
-	配置示例：		 #即参数：-config-dir指定目录下的 ***.json （此方式可省去参数直接只用配置文件启动consul服务端）
+	配置示例：		 #即参数-config-dir指定目录下的 ***.json （此方式可省去参数直接用配置文件启动consul）
 		{  
-			"datacenter": "east-aws",  		#同命令行参数-datacenter
-			"data_dir": "/opt/consul",  		#同命令行参数-data_dir
-			"log_level": "INFO",  			#同命令行参数-log_level
-			"node_name": "foobar",  		#同命令行参数node
+			"datacenter": "east-aws",  	
+			"data_dir": "/opt/consul",  
+			"log_level": "INFO",  	
+			"node_name": "foobar",  
 			"server": true,  
 			"watches": [  
 				{  
@@ -43,51 +43,49 @@
 		}
 		
 	查看成员：
-		~]#  consul members
-		Node  Address                     Status  Type    Build    Protocol  DC
-		s1     10.201.102.198:8301  alive    server   0.7.4   2             dc1
-		s2     10.201.102.199:8301  alive    server   0.7.4   2             dc1
+		~]# consul members
+		Node  Address               Status   Type     Build   Protocol  DC
+		s1    10.201.102.198:8301   alive    server   0.7.4   2         dc1
 
 ---------------------------------------------------------------------------------------------------------------------
 
 客户端启动：
 
-	客户加入：
-	consul agent -ui -data-dir /var/node1 -node=node1 -bind=192.168.11.144 -datacenter=dc1 -config-dir=/etc/consul.d/ -join 10.201.102.198
-		备忘说明：
-			参数："-ui" 启动内建界面，可通过形如："http://192.168.11.143:8500/ui/" 的形式访问
-			参数："-join" 可使agent加入已有集群。 当agent以client模式运行时不加参数："server"就ok！
-			后期加入集群："consul join <集群任意节点Ip地址>"	注：若报：Error joining the cluster: dial tcp 10.0.0.53:8301: getsockopt: no route to host 可能是防火墙的原因，检查端口8301是否开放
-			重点：为加入集群，一个Consul的agent只需了解一个已存在的集群成员，加入集群后agent将会自动传递完整的consul成员信息......
-			重启和移除节点：consul <reload/leave>			#服务定义可通过配置文件并发送SIGHUP给agent已进行更新
-			参数："-client"指定了客户端接口的绑定地址，包括：HTTP、DNS、RPC，而consul join、members 都是通过RPC与Consul交互的		#例子：-rpc-addr=192.168.11.143:8400
+	节点加入：
+	consul agent -ui -data-dir /var/consul -node=<Name> -bind=<ip> -datacenter=dc1 -config-dir=/etc/consul.d/ -join <ip>
+	备忘说明：
+		参数："-ui" 启动内建界面，可通过："http://1ocalhost:8500/ui/" 的形式访问
+		参数："-join" 使agent加入已有集群。当agent以client模式运行时不加参数："-server"即可！
+		后期加入集群："consul join <任一集群节点Ip>"	#注：若报：Error joining the cluster: dial tcp 10.0.0.53:8301: getsockopt: no route to host 可能是防火墙的原因，检查端口8301是否开放
+		为加入集群，一个agent仅需了解一个已存在的集群成员，加入集群后agent将会自动传递完整的成员信息......
+		重启/移除节点：consul <reload/leave>			#服务定义可通过配置文件并发送SIGHUP信号给agent进行更新
+		参数："-client"指定了客户端绑定地址，用于HTTP、DNS、RPC服务
+		consul <join/members> 都是通过RPC与Consul交互的	#例：-rpc-addr=192.168.11.143:8400
 				
 	注册服务：
 	备忘说明：
-		搭建好conusl集群后，用户或程序就能到consul中去查询、注册服务。可通过两种方式注册服务：1）提供服务定义文件、2）调用HTTP API
-		首先为consul创建配置目录，其会载入此目录的所有文件，在Unix中通常类似：/etc/consul.d。然后编写服务定义配置文件
-		本例假设有名叫web的服务运行在80端口，另外给他设一个标签，这样可使用他作为额外的查询方式：......
+		搭建好conusl集群后用户和程序便能到consul中去查询&注册服务。可通过2种方式：1：服务定义文件、2：HTTP API
+		首先为consul创建配置目录，其会载入此目录所有文件，在Unix中通常类似：/etc/consul.d。然后编辑服务定义
+		本例假设有名叫web的服务运行在80端口，另为其设一个标签："tags"，这样可使用其作为额外的查询方式：......
 	操作步骤：
-		1、设定consul端配置文件：
-			mkdir /etc/consul.d &&	echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' > /etc/consul.d/web.json
-			参数说明：
-				name		服务名称
-				port			服务端口
-				tages		标签（自定义）
-		2、重启client端服务：
-				consul agent -server -bootstrap-expect 1 -data-dir /var/consul -node=s1 -bind=10.201.102.198 -rejoin -config-dir=/etc/consul.d/ -client 0.0.0.0
-				备忘说明：
-					参数："-data-dir"。提供目录来存放agent的状态，所有的agent都需要该目录并且该目录必须是稳定的（系统重启后都继续存在）
-					若重启后输出："[INFO] agent: Synced service 'web'"，则说明此agent从配置文件中载入了服务定义并成功注册到服务目录......
-					若需注册多个服务可在Consul配置目录创建多个服务定义文件......
+		1、定义C端服务：
+			mkdir /etc/consul.d ；echo '{"service": {"name": "web", "tags": ["rails"], "port": 80}}' > /etc/consul.d/web.json
+		2、重启C端服务：
+			consul agent -server -bootstrap-expect 1 -data-dir /var/consul -node=s1 -bind=<ip> -rejoin -config-dir=/etc/consul.d/ -client <ip>
+			备忘说明：
+				参数："-data-dir"。用于存放agent的状态，所有agent都需要该目录且该目录必须稳定（重启后继续存在）
+				若重启后输出："[INFO] agent: Synced service 'web'"，则此agent从配置中载入了服务定义并成功注册...
+				如需注册多个服务可在Consul配置目录下创建多个服务定义文件...
 						
-	健康检查：			#在consul的配置目录：xxx.json。与服务类似，检查可以通过：1）检查定义、2）HTTP API请求。来注册......
+	健康检查：			#与服务定义相同，检查定义可通过2种方式：1：检查定义、2：HTTP API
 	备忘说明：
-		在基于脚本的健康检查中：脚本运行在与Consul进程同样的用户下，若此命令以非0值退出则此节点会被标记为不健康！这是所有基于脚本的健康检查的约定......
-		每种check都须包含name！但：id、notes两个是可选的。若没提供id则id会被设为name。在一个节点中，check的ID必须唯一！因此若名字冲突那么ID就应设置......
-		字段Notes主要是增强checks的可读性。Script check中"notes"字段可由脚本生成。同样，适用HTTP接口更新TTL check的外部程序一样可设置notes字段......
-		Check脚本可自由地做任何事情确定check状态。唯一限制是退出代码必须遵循下面的约定：0-->正常、1-->告警、其他-->失败。Consul依赖此约定。脚本其他的输出都保存在notes字段中以供人查看
-		注意，当我们尝试用DNS查询不健康的web服务时Consul将不会返回结果，因为服务不健康.....
+		在基于脚本的健康检查中的约定：脚本运行于与Consul进程相同的UID，若脚本以非0值退出则此节点被标为不健康！
+		每种check都须包含name，但：id、notes是可选的。若未提供id则其被设为name。
+		在一个节点中的每个check的ID必须唯一！因此若check的name值冲突那么ID就应设置......
+		字段notes用于增强checks的可读性。Script check中"notes"字段可由脚本生成，脚本其他的输出保存在notes中以供查看
+		字段notes同样适用HTTP接口更新TTL check的外部程序一样可设置notes字段......
+		Check脚本可自由地做任何事情确定check状态。唯一限制是退出代码必须遵循下面的约定：0-->正常、1-->告警、其他-->失败。
+		注意，当尝试用DNS查询不健康的服务时Consul将不会返回结果，因为服务不健康！.....
 		
 	示例一：
 		{  
