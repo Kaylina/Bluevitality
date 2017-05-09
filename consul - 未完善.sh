@@ -95,23 +95,8 @@
 				"timeout": "1s"  
 			}  
 		} 
+		
 	示例二：
-		{  
-			"check": {  
-				"id": "api",  
-				"name": "HTTPAPI on port 5000",  "http": "http://localhost:5000/health",  "interval": "10s",  
-				"timeout": "1s"  
-			}  
-		} 
-	示例三：
-		{  
-			"check": {  
-				"id": "ssh",  
-				"name": "SSHTCP on port 22",  "tcp": "localhost:22",  "interval": "10s",  
-				"timeout": "1s"  
-			}  
-		}  
-	示例四：
 		{  
 			"check": {  
 				"id": "mem-util",  
@@ -121,11 +106,12 @@
 				"interval": "10s"  
 			}  
 		} 
-	示例五：
+		
+	示例三：
 		echo '{"check": {"name": "ping", "script": "ping -c1 163.com >/dev/null", "interval": "30s"}}'  >/etc/consul.d/ping.json
 			
-	检测健康：
-		~]# curl http://localhost:8500/v1/health/state/critical		#注意:这个命令可以运行在任何节点！！~。critical指的类似于日志的级别......?
+	检测健康：	#注意:此命令可运行在任何节点！~。critical特指集群节点的状态，即查询健康状态为critical的节点...
+		~]# curl http://localhost:8500/v1/health/state/critical	
 		[
 			{
 				"Node": "agent-two", 
@@ -139,48 +125,59 @@
 		]
 	
 	键值存储：
-	为了提供服务发现及健康检测，Consul提供了非常容易使用的键/值对存储。它能被用于存储动态配置信息、帮助服务协作、建构Leader选举机制、及开发者可以想到的建构任何其它的东西
+	为提供服务发现和健康检测，Consul提供了易于使用的键/值存储......
+	其可被用于存储动态配置信息、帮助服务协作、建构Leader选举机制、及开发者可以想到的建构任何其它的东西
 	
-	这里展示了查询本地代理，我们先验证键值存储中有没有键存在：			#若查询不存在的key时将返回404错误
+	这里展示查询本地代理，先验证键值存储中有没有键：			#若查询不存在的key将返回404
 		curl -v http://localhost:8500/v1/kv/?recurse			#因不存在将会返回404错误......( 注：recurse即递归 )
 	先用PUT方法存储一些键：
 		curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key1				
-		curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42		#其中：web/key2是键的名字、?flags键的标记信息（为64位的整行数字，可被客户端用来做一些元数据.）
+		curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/key2?flags=42
 		curl -X PUT -d 'test' http://localhost:8500/v1/kv/web/sub/key3
+		#其中：web/key2是键的名字、?flags键的标记信息（为64位的整行数字，可被客户端用来做一些元数据.）
+		#对于键"web/key2"，我们为其设置了"42"的自定义标记....
+		
 	查询存储的键：
-			curl http://localhost:8500/v1/kv/?recurse
-			[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
+		curl http://localhost:8500/v1/kv/?recurse
+		[
+			{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="},
 			{"CreateIndex":98,"ModifyIndex":98,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="},
-			{"CreateIndex":99,"ModifyIndex":99,"Key":"web/sub/key3","Flags":0,"Value":"dGVzdA=="}]
-		备忘说明：
-		这里我们创建了3个键，每个都关联了值"test"。注意"值"字段的返回是基于base64的编码，该编码允许非UTF8字符集。对于键"web/key2"，我们为其设置了一个42的标记。
-		所有的键都支持设置一个64位长的整形标记值。这个标记并不是由Consul内部使用的，它可被用于存储任意键值对的元数据信息。
-		在设置值之后，我们使用 ?recurse 参数发出了GET请求来接收多个键的信息。
-		 
-		也可以非常容易地获取单个键的信息：
-		curl http://localhost:8500/v1/kv/web/key1
-		[{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="}]
+			{"CreateIndex":99,"ModifyIndex":99,"Key":"web/sub/key3","Flags":0,"Value":"dGVzdA=="}
+		]
+	备忘说明：
+		这里创建了3个键，每个都关联值"test"。注意值的返回是base64的编码，该编码允许非UTF8字符集。
+		所有键都支持设置一个64位长的整形标记。此标记并不由Consul内部使用，它可被用于存储任意键值对的元数据信息...
+		在设置值之后，我们使用"?recurse"参数发出GET请求来接收多个键的信息（递归）...
+	 
+		获取单个键的信息：curl http://localhost:8500/v1/kv/web/key1
+		[
+			{"CreateIndex":97,"ModifyIndex":97,"Key":"web/key1","Flags":0,"Value":"dGVzdA=="}
+		]
 		
-		删除所有键：curl -X DELETE http://localhost:8500/v1/kv/web/sub?recurse			#此处删除了sub的所有值
+		删除所有键的信息：curl -X DELETE http://localhost:8500/v1/kv/web/sub?recurse	#此处删除了sub的所有值
 		
-		修改键：
-			使用一个PUT请求相同的URI并且提供一个不同的消息体即可修改指定的键，Consul提供了一个检测并设置的操作，对应的操作是原子的......
-			通过在GET请求中提供 ?cas= 参数以及指定最新的 ModifyIndex 值我们就可以得到原子CAS操作。例如，假设我们想要更新"web/key1"：
-			curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回true
-			curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回false
-			这里，第一个CAS更新成功了因为最新的 ModifyIndex 是97，而第二个操作失败了因为最新的 ModifyIndex 不再是97了。
-		
-			curl "http://localhost:8500/v1/kv/web/key2?index=101&wait=5s"
-			[{"CreateIndex":98,"ModifyIndex":101,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}]
-			通过提供"?index="参数，我们请求等待直到键包含了一个大于101的 ModifyIndex 的值。无论如何由于"?wait=5"参数限制了查询最多等待5秒，之后会返回当前没有修改的值。
-			该操作可以高效地等待键的更新。另外相同的方法可以用于等待一个键的集合，直到键集合中任何一个键发生的更新。
+	修改键值：
+		使用PUT请求相同的URI并提供一个不同的消息体即可修改指定键，Consul提供了检测并设置的操作且操作是原子的......
+		通过在GET中提供 ?cas= 参数并及指定最新的 ModifyIndex 值就可以得到原子操作。
+		假设想要更新"web/key1"：
+		curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回true
+		curl -X PUT -d 'newval' http://localhost:8500/v1/kv/web/key1?cas=97			#返回false
+		这里，第一个CAS更新成功了因为最新的 ModifyIndex 是97，而第二个操作失败因为最新的 ModifyIndex 不再是97
+	
+		curl "http://localhost:8500/v1/kv/web/key2?index=101&wait=5s"
+		[
+			{"CreateIndex":98,"ModifyIndex":101,"Key":"web/key2","Flags":42,"Value":"dGVzdA=="}
+		]
+		通过提供"?index="，即可请求等待直到键包含一个大于101的 ModifyIndex 的值
+		并且由于"?wait=5"，限制了查询最多等待5秒则超时后会返回当前没有修改的值
+		该操作可高效地等待键的更新。另外相同的方法可用于等待一个键的集合，直到键集合中任何一个键发生更新...
 	
 	停止客户端：
-		说明：
-			可用Ctrl-C 优雅的关闭Agent. 中断Agent之后你可以看到他离开了集群并关闭.
-			在退出中,Consul提醒其他集群成员此节点离开了.若强行杀掉进程则集群其他成员应能检测到这个节点失效了.当一个成员离开,他的服务和检测也会从目录中移除
-			当成员失效时他的健康状况被简单的标记为危险但不会从目录中移除，Consul会自动尝试对失效的节点重连等待并允许他从某些网络条件下恢复过来，而离开的节点则不会再继续联系.
-			若一个agent作为一个服务器,一个优雅的离开是很重要的,可以避免引起潜在的可用性故障影响达成一致性协议.
+		可用Ctrl-C 优雅的关闭Agent. 中断Agent之后可以看到他离开了集群并关闭.
+		在"尤雅"退出时Consul提醒其他集群成员此节点离开，若强行杀掉进程则集群其他成员应会检测到此节点失效了
+		当成员离开时其服务和检测也会从目录中移除，但当成员失效时他的健康状况被简单的标记为危险但不会从目录中移除
+		成员失效时Consul会自动尝试对失效节点重连等待并允许其从某些网络条件下恢复起来，而离开的节点则不再继续联系
+		若agent作为服务器端，那么优雅的离开是很重要的，这可以避免引起潜在的可用性故障影响达成一致性协议
 ------------------------------------------------------------------------------------------------------------
 	
 备忘：
