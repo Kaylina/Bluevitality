@@ -4,9 +4,9 @@
 #DMS服务需要的端口（不能与已经使用的端口冲突，若修改则war包中EMQ的地址也要修改）
 SERV_PORT=8011
 #数据库服务的IP地址及账号密码
-DB_ADDRESS=139.196.238.45
+DB_ADDRESS=139.196.238.XX
 #emq服务器地址
-EMQ_ADDRESS=139.196.238.45
+EMQ_ADDRESS=139.196.238.xx
 #建议保持默认（产生随机数修改ID..）
 EMQ_ID=$(echo ${RANDOM} | cut -c 1-2)
 
