@@ -90,7 +90,7 @@ function  register_service() {
 
 function kv_storage() {
 
-	curl -X PUT -d  "${kv_storage_value}" http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &> > /dev/null
+	curl -X PUT -d  "${kv_storage_value}" http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &>  /dev/null
 	echo -e "\033[32mabout KV info :\ncurl http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}\033[0m"
 	
 }
