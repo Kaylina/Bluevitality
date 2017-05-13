@@ -90,7 +90,7 @@ function  register_service() {
 
 function kv_storage() {
 
-	curl -X PUT -d  "${kv_storage_value}" http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}
+	curl -X PUT -d  "${kv_storage_value}" http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &> > /dev/null
 	echo -e "\033[32mabout KV info :\ncurl http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}\033[0m"
 	
 }
@@ -126,7 +126,7 @@ function agent_client() {
 		echo -e "\033[31mconsul client start fail......\033[0m"
 	}
 	
-	[[ "${kv_storage_enable}" == "on" ]] && kv_storage || echo -e "\033[31mkv_storage config fail......\033[0m"
+	[[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[31mkv_storage config fail......\033[0m"
 	
 }  
 
@@ -146,9 +146,9 @@ function script_variables_check() {
 	#CLIENT VARIABLES CHECK
 	echo ${cluster_node_ip} | grep -Eq "[0-9]{2,}\.[0-9]+\.[0-9]+\.[0-9]+"  \
 	&& echo ${client_bind_ip} | grep -Eq "[0-9]{2,}\.[0-9]+\.[0-9]+\.[0-9]+"  \
-	&& [[ ${#register_serv} -ge 1  &&	 ${#register_port} -ge 2 ]]  \
-	&& [[ ${#register_tages} -ge 1  &&	${#register_check_interval} -ge 1 ]]  \
-	&& [[ ${#register_check_scripts} -ge 1 && ${#kv_storage_enable} -ge 1 ]]  \
+	&& [[ ${#register_serv} -ge 1  &&  ${#register_port} -ge 2 ]]  \
+	&& [[ ${#register_tages} -ge 1  &&  ${#register_check_interval} -ge 1 ]]  \
+	&& [[ ${#register_check_scripts} -ge 1  &&  ${#kv_storage_enable} -ge 1 ]]  \
 	&& [[ "${kv_storage_enable}" == "on" || "${kv_storage_enable}" == "off" ]]  \
    	|| { 
 		echo -e "\033[31mscript Client variables check fail ....\033[0m" 
