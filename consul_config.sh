@@ -176,10 +176,10 @@ function consul_remove() {
 mkdir -p ${conf_path}  ${data_path} 2> /dev/null && rm -rf ${conf_path:=protect"/"}/*  ${data_path:=protect"/"}/*
 
 #First check the variables , after the start.....
-script_variables_check && read -p "isnatll(i)  uninstall(u)  server(s)  client(c) ：" -t 20 -n 1 vstr
+script_variables_check && read -p "isnatll(i)  uninstall(u)  server(s)  client(c) ：" -t 20 -n 1
 
 echo
-case ${vstr} in 
+case ${REPLY} in 
 	"i") 	consul_install
 	;;
 	"u")  	consul_remove
