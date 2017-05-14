@@ -124,6 +124,7 @@ function agent_client() {
 	eval "nohup $consul_command &> /var/log/consul-client.log &" && \
 	echo $consul_command >> /etc/rc.local || {
 		echo -e "\033[31mconsul client start fail......\033[0m"
+		exit 1
 	}
 	
 	[[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[31mkv_storage config success..\033[0m"
