@@ -126,7 +126,7 @@ function agent_client() {
 		echo -e "\033[31mconsul client start fail......\033[0m"
 	}
 	
-	[[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[31mkv_storage config fail......\033[0m"
+	[[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[31mkv_storage config success..\033[0m"
 	
 }  
 
@@ -192,8 +192,7 @@ case ${REPLY} in
 	;;
 esac
 
-#
-#设置模板：
+#模板：
 #	模板要查询的服务端地址
 #	模板监控的服务（要提供配置文件，比如Nginx）
 #	模板要执行的命令（要考虑到docker环境）
