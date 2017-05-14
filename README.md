@@ -24,6 +24,8 @@ HTTP协议的常见内容笔记
 
 NTP安装及配置脚本
 
+glusterfs自动部署脚本
+
 Samba安装及配置脚本 & vsftp安装配置脚本
 
 nodejs安装及配置流程说明
