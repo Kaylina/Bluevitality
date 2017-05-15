@@ -14,7 +14,7 @@
 	register_port=80					#服务端口
 	register_tages="my_info"				#用户自定义tag信息
 	register_check_interval=10				#健康检查间隔，second
-	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值非0则不健康
+	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值非0则不健康（此检查对应当前服务，注意json信息）
 	kv_storage_enable="on"					#是否启用键值存储功能（on/off）
 	kv_storage_serv=${register_serv}			#
 	kv_storage_key="123"					#键
@@ -84,7 +84,7 @@ function  register_service() {
 					\"${register_tages:=user_info}\"
 				]
 			}
-		}" > ${conf_path}/${register_serv}.json		#服务注册&健康检查信息写到配置目录，文件格式 .json
+		}" > ${conf_path}/${register_serv}.json	     #服务注册&健康检查写到配置目录的json文件（service段包括server及其check）
 		
 }
 
