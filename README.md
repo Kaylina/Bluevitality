@@ -20,7 +20,7 @@ zabbix的userparameter百度收集汇总
 
 consul的操作流程笔记清单（不断的完善）
 
-server.xml的优化配置例子
+server.xml的优化配置例子（以及：性能和安全的优化脚本）
 
 HTTP协议的常见内容笔记
 
