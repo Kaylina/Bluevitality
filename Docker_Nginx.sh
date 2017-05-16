@@ -6,8 +6,8 @@
 #定义
         image_name=nginx_serv                                   #构建的镜像名字
         container_name=nginx                                    #构建的容器名字
-        container_dir=/usr/local/nginx/sharefile                #容器要暴露的目录（存放资源）
-        host_dir=/data/nginx/sharefile                          #容器暴露的目录在宿主机中的挂载位置
+        container_dir=/usr/local/nginx/sharefile                #容器要暴露的目录（存放资源，不存在会创建）
+        host_dir=/data/nginx/sharefile                          #容器暴露的目录在宿主机中的挂载位置（不存在会创建）
 
         
 #删除已创建的容器和构建的镜像
@@ -26,6 +26,8 @@ EXPOSE 443
 eof
 
 docker build -t "${image_name}" .
+
+mkdir -p ${host_dir} 2> /dev/null
 
 docker run -d  \
 --name ${container_name}  \
