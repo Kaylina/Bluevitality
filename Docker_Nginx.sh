@@ -22,6 +22,7 @@ ADD ./html /usr/share/nginx/html
 VOLUME /var/log/nginx
 RUN mkdir -p ${container_dir}
 EXPOSE 80
+EXPOSE 443
 eof
 
 docker build -t "${image_name}" .
@@ -31,3 +32,4 @@ docker run -d  \
 -p 80:80 \
 -v ${host_dir:?var not define}:${container_dir:?var not define}:rw  \
 ${image_name}
+
