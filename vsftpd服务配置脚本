@@ -122,3 +122,15 @@ create_user  \
 # 当chroot_list_enable=YES，chroot_local_user=NO，在/etc/vsftpd.chroot_list文件中列出的用户，不能切换到其他目录；未在文件中列出的用户，可以切换到其他目录。
 # 当chroot_list_enable=NO，chroot_local_user=YES，所有的用户均不能切换到其他目录。
 # 当chroot_list_enable=NO，chroot_local_user=NO，所有的用户均可以切换到其他目录。
+
+# PORT模式：
+# FTP客户端连接到FTP服务器的21端口，发送用户名和密码
+# 登录成功后要list或读取数据时客户端随机开放一个端口（N>1024），发送 PORT命令到FTP服务器，告诉服务器客户端采用主动模式并开放端口
+# 服务器收到PORT主动模式命令和端口号后，通过自身20端口和客户端开放的端口连接
+
+# PASV模式：
+# 中文成为被动模式，工作原理：FTP客户端连接到FTP服务器的21端口，发送用户名和密码
+# 登录成功后要list或者读取数据时发送PASV命令到服务器， 服务器在本地随机开放一个端口（N>1024），然后把开放的端口告诉客户端
+# 客户端再连接到服务器开放的端口进行传输
+
+
