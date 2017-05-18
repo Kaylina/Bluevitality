@@ -290,13 +290,13 @@ esac
 
 
 #       备忘：
-#       指定服务执行命令               consul exec -service="node_name" "exec_command"
-#       指定节点执行命令               consul exec -node="node_name" "exec_command"
-#       查某节点所有服务               curl http://10.245.6.90:8500/v1/catalog/node/:node
-#       查某节点所有Checks           curl http://10.245.6.90:8500/v1/health/node/:node
-#       查某服务所有Checks          curl http://10.245.6.90:8500/v1/health/checks/:service
-#       查某服务所有节点              curl http://10.245.6.90:8500/v1/health/service/:service
-#       查某状态所有Checks          curl http://10.245.6.90:8500/v1/health/state/:state
+#       指定服务执行命令     		consul exec -service="node_name" "exec_command"
+#       指定节点执行命令               	consul exec -node="node_name" "exec_command"
+#       查某节点所有服务               	curl http://10.245.6.90:8500/v1/catalog/node/<node>
+#       查某节点所有检查		curl http://10.245.6.90:8500/v1/health/node/<node>
+#       查某服务所有检查 	        curl http://10.245.6.90:8500/v1/health/checks/<service>
+#       查某服务所有节点              	curl http://10.245.6.90:8500/v1/health/service/<service>
+#       查某状态所有检查        	curl http://10.245.6.90:8500/v1/health/state/<state>
 
 
 
