@@ -1,20 +1,20 @@
 #!/bin/bash
-#Ê¹ÓÃµÄ¹Ù·½nginx¾µÏñ£¬½¨Òé¸ü»»¾µÏñÔ´Îª°¢ÀïÔÆºóÖ´ÐÐ¡¢ ¾µÏñÃû£ºdocker.io/nginx:latest
-#ÐèÔÚ±¾½Å±¾µ±Ç°Ä¿Â¼Ìá¹©nginxµÄÅäÖÃÎÄ¼þ¡¢web×ÊÔ´Ä¿Â¼
-#±¾ÀýÓëËÞÖ÷»ú¹²ÏíÁË"/usr/local/nginx/sharefile"¡£ÓÃÓÚtomcatÈÝÆ÷ÏñÆäÖÐ£¨Ò²ÐèÒª¹ÒÔØ£©Ð´Èë×ÊÔ´...
+#ä½¿ç”¨çš„å®˜æ–¹nginxé•œåƒï¼Œå»ºè®®æ›´æ¢é•œåƒæºä¸ºé˜¿é‡Œäº‘åŽæ‰§è¡Œã€ é•œåƒåï¼šdocker.io/nginx:latest
+#éœ€åœ¨æœ¬è„šæœ¬å½“å‰ç›®å½•æä¾›nginxçš„é…ç½®æ–‡ä»¶ã€webèµ„æºç›®å½•
+#æœ¬ä¾‹ä¸Žå®¿ä¸»æœºå…±äº«äº†"/usr/local/nginx/sharefile"ã€‚ç”¨äºŽtomcatå®¹å™¨åƒå…¶ä¸­ï¼ˆä¹Ÿéœ€è¦æŒ‚è½½ï¼‰å†™å…¥èµ„æº...
 
-#¶¨Òå
-        image_name=nginx_serv                                   #¹¹½¨µÄ¾µÏñÃû×Ö
-        container_name=nginx                                    #¹¹½¨µÄÈÝÆ÷Ãû×Ö
-        container_dir=/usr/local/nginx/sharefile                #ÈÝÆ÷Òª±©Â¶µÄÄ¿Â¼£¨´æ·Å×ÊÔ´£¬²»´æÔÚ»á´´½¨£©
-        host_dir=/data/nginx/sharefile                          #ÈÝÆ÷±©Â¶µÄÄ¿Â¼ÔÚËÞÖ÷»úÖÐµÄ¹ÒÔØÎ»ÖÃ£¨²»´æÔÚ»á´´½¨£©
+#å®šä¹‰
+        image_name=nginx_serv                                   #æž„å»ºçš„é•œåƒåå­—
+        container_name=nginx                                    #æž„å»ºçš„å®¹å™¨åå­—
+        container_dir=/usr/local/nginx/sharefile                #å®¹å™¨è¦æš´éœ²çš„ç›®å½•ï¼ˆå­˜æ”¾èµ„æºï¼Œä¸å­˜åœ¨ä¼šåˆ›å»ºï¼‰
+        host_dir=/data/nginx/sharefile                          #å®¹å™¨æš´éœ²çš„ç›®å½•åœ¨å®¿ä¸»æœºä¸­çš„æŒ‚è½½ä½ç½®ï¼ˆä¸å­˜åœ¨ä¼šåˆ›å»ºï¼‰
 
         
-#É¾³ýÒÑ´´½¨µÄÈÝÆ÷ºÍ¹¹½¨µÄ¾µÏñ
+#åˆ é™¤å·²åˆ›å»ºçš„å®¹å™¨å’Œæž„å»ºçš„é•œåƒ
 docker rm -f $( docker ps -a | awk /${container_name}/'{print $1}' ) 2> /dev/null
 docker rmi $(docker images | awk /${image_name}/'{print $3}' ) 2> /dev/null
 
-#¼ÓÈëÅäÖÃÎÄ¼þ¼°web×ÊÔ´
+#åŠ å…¥é…ç½®æ–‡ä»¶åŠwebèµ„æº
 cat > dockerfile <<eof
 FROM docker.io/nginx:latest
 ADD ./conf /etc/nginx/nginx.conf
@@ -34,3 +34,4 @@ docker run -d  \
 -p 80:80 \
 -v ${host_dir:?var not define}:${container_dir:?var not define}:rw  \
 ${image_name}
+
