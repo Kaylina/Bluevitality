@@ -38,7 +38,7 @@
 
 function consul_install() {
 
-	[[ -e /usr/local/bin/consul ]] ||  { cp ./consul /usr/local/bin  &&  chmod a+x /usr/local/bin/consul ；}
+	[[ -e /usr/local/bin/consul ]] ||  { cp ./consul /usr/local/bin  &&  chmod a+x /usr/local/bin/consul ; }
 	
 }
 
