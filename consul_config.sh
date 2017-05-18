@@ -213,37 +213,30 @@ function consul_help() {
                 [[ ${v} == "reload" ]] &&  consul reload            					#重读配置，相当于：kill -HUP
                 [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent        
                 [[ ${v} ==  "delete_key" ]] && { 
-		
-                        read -p "Key: "                 #删除单个key
-                        curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse
+			#删除单个key
+                        read -p "Key: "  &&  curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse
                 }  
                 
                 [[ ${v} == "search_key" ]] && {  
-                
-                        read -p "Key: "                 #查询单个key
-                        curl -s http://127.0.0.1:8500/v1/kv/${REPLY} | python -m json.tool
-                        
+                	#查询单个key
+                        read -p "Key: "  &&  curl -s http://127.0.0.1:8500/v1/kv/${REPLY} | python -m json.tool   
                 }                              
                 
                 [[ ${v} == "about_service's_node.." ]] && {
-                
-                        read -p "service name: "        #查询提供某服务的所有节点
-                        curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool  
-                        
+                	#查询提供某服务的所有节点
+                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool         
                 }                             
                 
                 [[ ${v} == "exec_command" ]] && {
                         #node or service exec command
                         read -p "node(n) server(s)" -n 1 
                         [[ "${REPLY}" == "n" ]] && {
-                                read -p "node_name:" exec_node_name
-                                read -p "node_exec:" exec_command
+                                read -p "node_name:" exec_node_name ; read -p "node_exec:" exec_command
                                 consul exec -node="${exec_node_name}" '${exec_command}'
                         } 
 			
                         [[ "${REPLY}" == "s" ]] && {
-                                read -p "serv_name:" exec_serv_name
-                                read -p "serv_exec:" exec_command
+                                read -p "serv_name:" exec_serv_name ; read -p "serv_exec:" exec_command
                                 consul exec -service="${exec_serv_name}" '${exec_command}'
                         }  
                 }
