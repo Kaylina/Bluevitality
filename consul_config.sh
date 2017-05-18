@@ -4,7 +4,7 @@
 #配置文件都在哪里？
 #会不会开机自启，写在了哪里？
 #如何查询？
-#如何使用
+#如何使用 说明默认执行时提供的功能
 #最后一个重要的部分：模板！！！
 
 #目前：
@@ -180,9 +180,9 @@ function script_variables_check() {
 
 function consul_remove() {
 
-	killall consul
+	killall consul 2>&-
 	sed -i '/consul.*/d'  /etc/rc.local
-	rm -rf /usr/local/bin/consul ${conf_path:=protect"/"} ${data_path:=protect"/"} 2>&-
+	rm -rf /usr/local/bin/consul ${conf_path:=protect"/"} ${data_path:=protect"/"}
 	rm -rf /var/run/consul_server.pid  /var/run/consul_client.pid
 	
 }
