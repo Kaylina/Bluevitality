@@ -1,4 +1,12 @@
 #!/bin/bash
+#C/S需要网络互通
+#配置文件都在哪里？
+#会不会开机自启，写在了哪里？
+#如何查询？
+#脚本如何写？
+#如何使用
+#最后一个重要的部分：模板！！！
+
 
 #SERVER VARIABLES
 	service_number=1					#服务端数量
@@ -15,11 +23,13 @@
 	register_tages="my_info"				#用户自定义tag信息
 	register_check_interval=10				#健康检查间隔，second
 	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值非0则不健康（此检查对应当前服务，注意json信息）
+        register_check_timeout=5                                #脚本执行超时时间（秒）【还没加入变量检查】
+        register_check_notes="XXX service check fail"           #脚本检查失败提示信息【还没加入变量检查】
 	kv_storage_enable="on"					#是否启用键值存储功能（on/off）
 	kv_storage_serv=${register_serv}			#
 	kv_storage_key="123"					#键
 	kv_storage_value="321"					#值
-	dc_name=${dc_name}					#请保持默认
+	dc_name=${dc_name}					#请保持默认（同一个数据中心）
 	data_path=${data_path}					#
 	conf_path=${conf_path}					#
 
@@ -70,13 +80,17 @@ function agent_server() {
 	
 } 
 
+#仅适用了脚本检查的方式
 function  register_service() {
 
 	echo "{
 			\"service\": {
 				\"check\": {
+                                        \"name\": \"service check\",
+					\"script\": \"${register_check_scripts}\",
 					\"interval\": \"${register_check_interval}s\",
-					\"script\": \"${register_check_scripts}\"
+                                        \"timeout\": \"${register_check_timeout:=5}s\",
+                                        \"notes\": \"${register_check_notes}\"
 				},
 				\"name\": \"${register_serv}\",
 				\"port\": ${register_port},
@@ -173,11 +187,78 @@ function consul_remove() {
 	rm -rf /var/run/consul_server.pid  /var/run/consul_client.pid
 	
 }
+function consul_help() {
+
+        consul_help_var=(
+        "members"
+        "services_info"
+        "nodes_info"
+        "reload"
+        "check_config"
+        "delete_key"
+        "search_key"
+        "about_service's_node.."
+        "exec_command"
+        quit
+        )
+
+        echo -e "\033[32mselect:\033[0m" 
+
+        select v in ${consul_help_var[@]} 
+        do 
+                [[ ${v} == "members" ]] && { consul members ;}                    
+                [[ ${v} == "services_info" ]] && { curl http://127.0.0.1:8500/v1/catalog/services ;}         #查询所有服务
+                [[ ${v} == "nodes_info" ]] && { curl http://127.0.0.1:8500/v1/catalog/nodes ;}               #查看节点
+                [[ ${v} == "reload" ]] && { consul reload ;}       	#重读配置，相当于：kill -1 或： kill -HUP
+                [[ ${v} == "check_config" ]] && { 
+                
+                        consul configtest -config-dir ${conf_path} 	#检查配置文件.不真正启动agent。
+                }               
+                
+                [[ ${v} ==  "delete_key" ]] && { 
+                
+                        read -p "Key: "                 #删除单个key
+                        curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse 
+                }  
+                
+                [[ ${v} == "search_key" ]] && {  
+                
+                        read -p "Key: "                 #查询单个key
+                        curl http://127.0.0.1:8500/v1/kv/${REPLY}
+                        
+                }                              
+                
+                [[ ${v} == "about_service's_node.." ]] && {
+                
+                        read -p "service name: "        #查询提供某服务的所有节点
+                        curl http://127.0.0.1:8500/v1/catalog/service/${REPLY}    
+                        
+                }                             
+                
+                [[ ${v} == "exec_command" ]] && {
+                        #node or service exec command
+                        read -p "node(n) server(s)" -n 1 
+                        [[ "${REPLY}" == "n" ]] && {
+                                read -p "node_name:" exec_node_name
+                                read -p "node_exec:" exec_command
+                                consul exec -node="${exec_node_name}" '${exec_command}'
+                        } 
+                        [[ "${REPLY}" == "s" ]] && {
+                                read -p "serv_name:" exec_serv_name
+                                read -p "serv_exec:" exec_command
+                                consul exec -service="${exec_serv_name}" '${exec_command}'
+                        }  
+                }
+                
+                [[ ${v} == "quit" ]] && break
+        done 
+
+}
 
 mkdir -p ${conf_path}  ${data_path} 2> /dev/null && rm -rf ${conf_path:=protect"/"}/*  ${data_path:=protect"/"}/*
 
 #First check the variables , after the start.....
-script_variables_check && read -p "isnatll(i)  uninstall(u)  server(s)  client(c) ：" -t 20 -n 1
+script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) consul_info(h)：" -t 20 
 
 echo
 case ${REPLY} in 
@@ -189,6 +270,10 @@ case ${REPLY} in
 	;;
 	"c") 	agent_client
 	;;
+        "q")    consul leave            #离开集群
+        ;;
+        "1")    consul_help             #查询...
+        ;;
 	*)  	exit 1
 	;;
 esac
@@ -202,6 +287,17 @@ esac
 #如果周末来得及：（先不考虑和consul结合的太紧密的场景，仅使用）
 #	docker的swarm集群的初始化环境配置和网络配置
 #	注：脚本方式...
+
+
+#       备忘：
+#       指定服务执行命令               consul exec -service="node_name" "exec_command"
+#       指定节点执行命令               consul exec -node="node_name" "exec_command"
+#       查某节点所有服务               curl http://10.245.6.90:8500/v1/catalog/node/:node
+#       查某节点所有Checks           curl http://10.245.6.90:8500/v1/health/node/:node
+#       查某服务所有Checks          curl http://10.245.6.90:8500/v1/health/checks/:service
+#       查某服务所有节点              curl http://10.245.6.90:8500/v1/health/service/:service
+#       查某状态所有Checks          curl http://10.245.6.90:8500/v1/health/state/:state
+
 
 
 
