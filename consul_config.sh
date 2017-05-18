@@ -4,6 +4,7 @@
 #配置文件都在哪里？
 #会不会开机自启，写在了哪里？
 #如何查询？
+#增加插入key和server信息的curl功能
 #如何使用 说明默认执行时提供的功能
 #最后一个重要的部分：模板！！！
 
@@ -48,28 +49,28 @@ function agent_server() {
 	
 	read -p "please input agent_server_node_name："  -t 8 node_name	#need：node name......
 	[[ "${node_name}" == "" ]] && {
-		echo -e "\033[32mNode_name Not defined.... Use random numbers\033[0m"
 		node_name=${RANDOM:1:4}
+		echo -e "\033[32mNode_name Not defined.... Use random numbers ${node_name} \n \033[0m"
 	}
 
 	consul_command="consul  \
-    	agent  \
-    	-server  \
-    	-rejoin  \
-        -ui \
-    	-bootstrap-expect ${service_number}  \
-    	-pid-file=/var/run/consul_server.pid  \
-    	-datacenter ${dc_name}  \
-    	-data-dir=${data_path:=/var/consul}  \
-    	-config-dir=${conf_path:=/etc/consul}  \
-    	-node=${node_name}  \
-    	-bind=${bind_add}  \
-    	-client 0.0.0.0  \
-    	-syslog"
+	agent  \
+	-server  \
+	-rejoin  \
+	-ui \
+	-bootstrap-expect ${service_number}  \
+	-pid-file=/var/run/consul_server.pid  \
+	-datacenter ${dc_name}  \
+	-data-dir=${data_path:=/var/consul}  \
+	-config-dir=${conf_path:=/etc/consul}  \
+	-node=${node_name}  \
+	-bind=${bind_add}  \
+	-client 0.0.0.0  \
+	-syslog"
 
 	[[ "${service_number}" == "1" ]] && consul_command=$( echo ${consul_command} | sed 's/-bootstrap-expect.../-bootstrap /' )
 	
-	echo -e "\033[32mRun command: \n ${consul_command} \n \033[0m"
+	echo -e "\033[32mRun command: \n${consul_command} \n \033[0m"
 	
 	sed -i "/consul/d" /etc/rc.local  ;  echo ${consul_command} >> /etc/rc.local
 	
@@ -84,7 +85,7 @@ function agent_server() {
 #仅适用了脚本检查的方式
 function  register_service() {
 
-	echo "  {
+	echo  "{
 			\"service\": {
 				\"check\": {
                                         \"name\": \"service check\",
@@ -106,33 +107,33 @@ function  register_service() {
 function kv_storage() {
 
 	curl -X PUT -d "${kv_storage_value}"  http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &>  /dev/null
-	echo -e "\033[32mKV info :\ncurl http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key} \n \033[0m"
+	echo -e "\033[32mKV info :\ncurl -s http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key} \n\033[0m"
 	
 }
 
 function agent_client() {
 
 	read -p "please input agent_client_node_name："  -t 8 node_name
-	[[ "${node_name}" == "" ]] && {  
-		echo -e "\033[32mNode_name Not defined.... Use random numbers\033[0m"
+	[[ "${node_name}" == "" ]] && {
 		node_name=${RANDOM:1:4}
+		echo -e "\033[32mNode_name Not defined.... Use random numbers ${node_name} \n \033[0m"
 	}
 	
 	consul_command="consul  \
-    	agent  \
-    	-ui  \
-    	-node=${node_name}  \
-    	-pid-file=/var/run/consul_client.pid  \
-    	-bind=${client_bind_ip}  \
-    	-datacenter=${dc_name}  \
-    	-data-dir=${data_path}  \
-    	-config-dir=${conf_path}  \
-    	-join ${cluster_node_ip}  \
+	agent  \
+	-ui  \
+	-node=${node_name}  \
+	-pid-file=/var/run/consul_client.pid  \
+	-bind=${client_bind_ip}  \
+	-datacenter=${dc_name}  \
+	-data-dir=${data_path}  \
+	-config-dir=${conf_path}  \
+	-join ${cluster_node_ip}  \
 	-client 0.0.0.0  \
-    	-rejoin   \
-    	-syslog"
+	-rejoin   \
+	-syslog"
 	
-	register_service  ;  echo -e "\033[32mregister_service finish...\nRun command: \n ${consul_command} \n \033[0m"
+	register_service  ;  echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
 	
 	sed -i "/consul/d" /etc/rc.local
 	
@@ -142,7 +143,7 @@ function agent_client() {
 		exit 1
 	}
 	
-	sleep 0.2 && [[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[32mkv_storage config success..\033[0m"
+	sleep 0.2 && [[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[32mkv_storage success..\033[0m"
 	
 }  
 
@@ -183,7 +184,7 @@ function consul_remove() {
 	killall consul 2>&-
 	sed -i '/consul.*/d'  /etc/rc.local
 	rm -rf /usr/local/bin/consul ${conf_path:=protect"/"} ${data_path:=protect"/"}
-	rm -rf /var/run/consul_server.pid  /var/run/consul_client.pid
+	rm -rf /var/{run,log}/consul_*
 	
 }
 
@@ -207,27 +208,27 @@ function consul_help() {
         select v in ${consul_help_var[@]} 
         do 
                 [[ ${v} == "members" ]] && consul members                    
-                [[ ${v} == "services_info" ]] && curl http://127.0.0.1:8500/v1/catalog/services        	#查询所有服务
-                [[ ${v} == "nodes_info" ]] && curl http://127.0.0.1:8500/v1/catalog/nodes     	     	#查看节点
+                [[ ${v} == "services_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services | python -m json.tool #查询所有服务
+                [[ ${v} == "nodes_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/nodes | python -m json.tool 	 #查看节点
                 [[ ${v} == "reload" ]] &&  consul reload            					#重读配置，相当于：kill -HUP
-                [[ ${v} == "check_config" ]] && consul configtest -config-dir ${conf_path} 		#检查配置文件.不真正启动agent        
+                [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent        
                 [[ ${v} ==  "delete_key" ]] && { 
 		
                         read -p "Key: "                 #删除单个key
-                        curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse 
+                        curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse
                 }  
                 
                 [[ ${v} == "search_key" ]] && {  
                 
                         read -p "Key: "                 #查询单个key
-                        curl http://127.0.0.1:8500/v1/kv/${REPLY}
+                        curl -s http://127.0.0.1:8500/v1/kv/${REPLY} | python -m json.tool
                         
                 }                              
                 
                 [[ ${v} == "about_service's_node.." ]] && {
                 
                         read -p "service name: "        #查询提供某服务的所有节点
-                        curl http://127.0.0.1:8500/v1/catalog/service/${REPLY}    
+                        curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool  
                         
                 }                             
                 
@@ -255,7 +256,7 @@ function consul_help() {
 mkdir -p ${conf_path}  ${data_path} 2>&-  &&  rm -rf ${conf_path:=protect"/"}/*  ${data_path:=protect"/"}/*
 
 #First check the variables , after the start.....
-script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) consul_info(h)：" -t 15
+script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) more_help(h)：" -t 15
 
 echo
 case ${REPLY} in 
