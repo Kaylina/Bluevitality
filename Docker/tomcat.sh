@@ -1,38 +1,38 @@
 #!/bin/bash
-#tomcat: °æ±¾£ºtomcat:8.0.43-jre8¡¢ĞèÒªÏÈ´Ó¹ÙÍøÏÂÔØtomcat¾µÏñ
-#½Å±¾Ö´ĞĞÊ±£ºWAR°ü¡¢¾µÏñĞèÒªÔÚ½Å±¾Í¬Ò»Ä¿Â¼ÏÂ(Á÷³Ì£ºÉèÖÃ±äÁ¿¡¢µ¼Èë¾µÏñ¡¢¹ÒÔØÄ¿Â¼¡¢ÔËĞĞÈİÆ÷)
-#¹ÒÔØµÄÄ¿Â¼Ä¬ÈÏÔÚ£º/data/docker-tomcat
+#tomcat: ç‰ˆæœ¬ï¼štomcat:8.0.43-jre8ã€éœ€è¦å…ˆä»å®˜ç½‘ä¸‹è½½tomcaté•œåƒ
+#è„šæœ¬æ‰§è¡Œæ—¶ï¼šWARåŒ…ã€é•œåƒéœ€è¦åœ¨è„šæœ¬åŒä¸€ç›®å½•ä¸‹(æµç¨‹ï¼šè®¾ç½®å˜é‡ã€å¯¼å…¥é•œåƒã€æŒ‚è½½ç›®å½•ã€è¿è¡Œå®¹å™¨)
+#æŒ‚è½½çš„ç›®å½•é»˜è®¤åœ¨ï¼š/data/docker-tomcat
 
 
-HOST_TOM_PORT=8089      #TomcatÓëËŞÖ÷»ú¹ØÁªµÄ¶Ë¿Ú
-CONTAINER_NAME=tomcat   #ÈİÆ÷Ãû
-WAR_NAME=signage.war    #WAR°üÃû
+HOST_TOM_PORT=8089      #Tomcatä¸å®¿ä¸»æœºå…³è”çš„ç«¯å£
+CONTAINER_NAME=tomcat   #å®¹å™¨å
+WAR_NAME=signage.war    #WARåŒ…å
 
-#Èô²»´æÔÚÔòµ¼Èë¾µÏñ
+#è‹¥ä¸å­˜åœ¨åˆ™å¯¼å…¥é•œåƒ
 docker images | grep -q  "docker.io/tomcat" ||  docker load < tomcat.8.0.43-jre8.tar
 
-#ÈôÒÑ´æÔÚ´ËÈİÆ÷ÏÈÉ¾³ı£¨±¾½Å±¾Ã»ÓĞÊ¹ÓÃdockerfile·½Ê½£©
+#è‹¥å·²å­˜åœ¨æ­¤å®¹å™¨å…ˆåˆ é™¤ï¼ˆæœ¬è„šæœ¬æ²¡æœ‰ä½¿ç”¨dockerfileæ–¹å¼ï¼‰
 docker rm -f $(docker ps -a | awk "/${CONTAINER_NAME}/{print $1}") 2>&-
 
-#´´½¨×ÊÔ´Ä¿Â¼£¨ÏÈÇå¿Õ×ÊÔ´Ä¿Â¼Êı¾İ£¬·ÀÖ¹¶à´ÎÖ´ĞĞÆğ³åÍ»£©
+#åˆ›å»ºèµ„æºç›®å½•ï¼ˆå…ˆæ¸…ç©ºèµ„æºç›®å½•æ•°æ®ï¼Œé˜²æ­¢å¤šæ¬¡æ‰§è¡Œèµ·å†²çªï¼‰
 rm -rf /data/docker-tomcat/{webapps,config,logs}
 mkdir -p /data/docker-tomcat/{webapps,config,logs} 
 chcon -Rt svirt_sandbox_file_t /data/docker-tomcat/{webapps,config,logs} 2>&-
 setenforce 0 && chmod 766 -R /data/docker-tomcat/{webapps,config,logs}
 
-#ÒÆ¶¯war°ü
+#ç§»åŠ¨waråŒ…
 cp -rf ${WAR_NAME} /data/docker-tomcat/webapps
 
-#ÔËĞĞÈİÆ÷
+#è¿è¡Œå®¹å™¨
 docker run -d -p ${HOST_TOM_PORT}:8080 --name $CONTAINER_NAME \
 -v /data/docker-tomcat/webapps:/usr/local/tomcat/webapps -v /data/docker-tomcat/logs:/usr/local/tomcat/logs \
 docker.io/tomcat:8.0.43-jre8
 
 #------------------------------------------------------------------
-# ×¢Òâ£º
-# ÔİÊ±È¡ÏûÁË¹ÒÔØ£º
+# æ³¨æ„ï¼š
+# æš‚æ—¶å–æ¶ˆäº†æŒ‚è½½ï¼š
 # -v /data/docker-tomcat-data/config:/usr/local/tomcat/conf \
  
-# ½á¹¹ĞŞ¸Ä
-# ÏŞÖÆÈİÆ÷¿ÉÊ¹ÓÃµÄÄÚ´æ£¬TomcatÈİÆ÷µÄ¶Ñ´óĞ¡£¨°Ù¶È£©
-#
+# ç»“æ„ä¿®æ”¹
+# é™åˆ¶å®¹å™¨å¯ä½¿ç”¨çš„å†…å­˜ï¼ŒTomcatå®¹å™¨çš„å †å¤§å°ï¼ˆç™¾åº¦ï¼‰
+# 
