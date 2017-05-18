@@ -8,6 +8,14 @@ chroot_dir=/data                        #FTP根路径
 
 [ -d ${chroot_dir} ] ||  echo -e "\033[31mdirectory not exist!......\033[0m" && exit 1
 
+#check user
+if [ $(id -u) != "0" ]
+then
+  echo -e "\033[1;40;31mError: You must be root to run this script, please use root to install this script.\033[0m"
+  rm -rf $LOCKfile
+  exit 1
+fi
+
 #使用随机的数字密码创建帐号
 for username in ${userlist[@]}
 do
