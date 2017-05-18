@@ -1,5 +1,5 @@
 #!/bin/bash
-#C/S需要网络互通
+#C/S需要网络互通，c/s运行时的输出存放在：/var/log/consul-{server,client}.log
 #配置文件都在哪里？
 #会不会开机自启，写在了哪里？
 #如何查询？
@@ -7,6 +7,9 @@
 #如何使用
 #最后一个重要的部分：模板！！！
 
+#目前：
+# 删除key要注意先写服务名再写key名！配置检查没提示？exec在Node节点提示被忽略！
+# KV注册没有成功....
 
 #SERVER VARIABLES
 	service_number=1					#服务端数量
@@ -56,6 +59,7 @@ function agent_server() {
     	agent  \
     	-server  \
     	-rejoin  \
+        -ui \
     	-bootstrap-expect ${service_number}  \
     	-pid-file=/var/run/consul_server.pid  \
     	-datacenter ${dc_name}  \
@@ -83,7 +87,7 @@ function agent_server() {
 #仅适用了脚本检查的方式
 function  register_service() {
 
-	echo "{
+	echo "  {
 			\"service\": {
 				\"check\": {
                                         \"name\": \"service check\",
@@ -97,7 +101,7 @@ function  register_service() {
 				\"tags\": [
 					\"${register_tages:=user_info}\"
 				]
-			}
+		}
 		}" > ${conf_path}/${register_serv}.json	     #服务注册&健康检查写到配置目录的json文件（service段包括server及其check）
 		
 }
@@ -106,6 +110,7 @@ function kv_storage() {
 
 	curl -X PUT -d  "${kv_storage_value}" http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &>  /dev/null
 	echo -e "\033[32mabout KV info :\ncurl http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}\033[0m"
+        echo
 	
 }
 
@@ -141,7 +146,7 @@ function agent_client() {
 		exit 1
 	}
 	
-	[[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[31mkv_storage config success..\033[0m"
+	sleep 0.1 && [[ "${kv_storage_enable}" == "on" ]] && kv_storage &&  echo -e "\033[32mkv_storage config success..\033[0m"
 	
 }  
 
@@ -209,10 +214,10 @@ function consul_help() {
                 [[ ${v} == "members" ]] && { consul members ;}                    
                 [[ ${v} == "services_info" ]] && { curl http://127.0.0.1:8500/v1/catalog/services ;}         #查询所有服务
                 [[ ${v} == "nodes_info" ]] && { curl http://127.0.0.1:8500/v1/catalog/nodes ;}               #查看节点
-                [[ ${v} == "reload" ]] && { consul reload ;}       	#重读配置，相当于：kill -1 或： kill -HUP
+                [[ ${v} == "reload" ]] && { consul reload ;}                 #重读配置，相当于：kill -1 或： kill -HUP
                 [[ ${v} == "check_config" ]] && { 
                 
-                        consul configtest -config-dir ${conf_path} 	#检查配置文件.不真正启动agent。
+                        consul configtest -config-dir ${conf_path} #检查配置文件.不真正启动agent。
                 }               
                 
                 [[ ${v} ==  "delete_key" ]] && { 
@@ -272,7 +277,7 @@ case ${REPLY} in
 	;;
         "q")    consul leave            #离开集群
         ;;
-        "1")    consul_help             #查询...
+        "h")    consul_help             #查询...
         ;;
 	*)  	exit 1
 	;;
@@ -290,13 +295,13 @@ esac
 
 
 #       备忘：
-#       指定服务执行命令     		consul exec -service="node_name" "exec_command"
-#       指定节点执行命令               	consul exec -node="node_name" "exec_command"
-#       查某节点所有服务               	curl http://10.245.6.90:8500/v1/catalog/node/<node>
-#       查某节点所有检查		curl http://10.245.6.90:8500/v1/health/node/<node>
-#       查某服务所有检查 	        curl http://10.245.6.90:8500/v1/health/checks/<service>
-#       查某服务所有节点              	curl http://10.245.6.90:8500/v1/health/service/<service>
-#       查某状态所有检查        	curl http://10.245.6.90:8500/v1/health/state/<state>
+#       指定服务执行命令               consul exec -service="node_name" "exec_command"
+#       指定节点执行命令               consul exec -node="node_name" "exec_command"
+#       查某节点所有服务               curl http://10.245.6.90:8500/v1/catalog/node/:node
+#       查某节点所有Checks           curl http://10.245.6.90:8500/v1/health/node/:node
+#       查某服务所有Checks          curl http://10.245.6.90:8500/v1/health/checks/:service
+#       查某服务所有节点              curl http://10.245.6.90:8500/v1/health/service/:service
+#       查某状态所有Checks          curl http://10.245.6.90:8500/v1/health/state/:state
 
 
 
