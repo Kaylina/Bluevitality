@@ -19,7 +19,7 @@
 	client_bind_ip=192.168.126.161				#必须定义（client自身绑定的地址）
 	register_serv=web					#服务名称
 	register_port=80					#服务端口
-	register_tages="user_info"				#自定义tag信息
+	register_tages="用于web服务"			     #自定义tag信息
 	register_check_interval=10				#健康检查间隔，秒
 	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值，非0则不健康（此检查对应当前服务，注意json）
         register_check_timeout=5                                #脚本执行超时时间（秒）
@@ -121,6 +121,7 @@ function kv_storage() {
 
 	curl -X PUT -d "${kv_storage_value}"  http://localhost:8500/v1/kv/${kv_storage_serv}/${kv_storage_key}  &>  /dev/null
 	echo -e "\033[32mKV info :\ncurl -s http://${client_bind_ip}:8500/v1/kv/${kv_storage_serv}/${kv_storage_key} \n\033[0m"
+	[ "$?" != "0"] && echo -e "\033[31mkv_storage fail..\033[0m"
 	
 }
 
@@ -142,9 +143,9 @@ function agent_client() {
 	-client 0.0.0.0  \
 	-retry-join ${cluster_node_ip}"
 	
-	register_service ; echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
+	register_service ; echo -e "\033[32mregister_service finish... \n\nRun command: \n${consul_command}  \n \033[0m"
 	
-	sed -i "/consul/d" /etc/rc.local
+	sed -i "/consul.*/d" /etc/rc.local
 	
 	eval "nohup $consul_command &> /var/log/consul-client.log &" && \
 	echo $consul_command >> /etc/rc.local || {
