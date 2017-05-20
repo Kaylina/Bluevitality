@@ -29,8 +29,8 @@
 	#qc42f6myqfpoevfkrzmx08n0r *  manager   		Ready   Active        Leader
 	
 	#Active：该Node可被指派Task
-	#Pause：	该Node不可被指派新Task，但其他已存在的Task保持运行（暂停一个Node后该其不再接收新的Task）
-	#Drain：	该Node不可被指派新Task，Swarm Scheduler停掉已存在的Task并将它们调度到可用的Node上（进行停机维护时可修改AVAILABILITY为Drain状态）
+	#Pause：该Node不可被指派新Task，但其他已存在的Task保持运行（暂停一个Node后该其不再接收新的Task）
+	#Drain：该Node不可被指派新Task，Swarm Scheduler停掉已存在的Task并将它们调度到可用的Node上（进行停机维护时可修改AVAILABILITY为Drain状态）
 
 查看Node状态：
 	docker node inspect self				#在该Node上执行?
