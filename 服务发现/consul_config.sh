@@ -15,8 +15,8 @@
 	dc_name=default						#数据中心命名
 
 #CLIENT VARIABLES
-	cluster_node_ip=192.168.26.135				#必须定义（集群中任意节点的IP地址）加入集群..
-	client_bind_ip=192.168.16.161				#必须定义（client自身绑定的地址）
+	cluster_node_ip=192.168.126.135				#必须定义（集群中任意节点的IP地址）加入集群..
+	client_bind_ip=192.168.126.161				#必须定义（client自身绑定的地址）
 	register_serv=web					#服务名称
 	register_port=80					#服务端口
 	register_tages="user_info"				#自定义tag信息
@@ -70,9 +70,9 @@ function agent_server() {
     			\"datacenter\": \"${dc_name}\",
 			\"node_name\": \"${node_name}\",
     			\"data_dir\": \"${data_path:=/var/consul}\",
-    			\"log_level\": "INFO",
+    			\"log_level\": \"INFO\",
     			\"enable_syslog\": true
-		}" > /dev/${conf_path}/server.json
+		}" > ${conf_path}/server.json
 	
 	[[ "${service_number}" == "1" ]] && consul_command=$( echo ${consul_command} | sed 's/-bootstrap-expect.../-bootstrap /' )
 	
@@ -80,8 +80,8 @@ function agent_server() {
 	
 	sed -i "/consul/d" /etc/rc.local  ;  echo ${consul_command} >> /etc/rc.local
 	
-	eval "nohup ${consul_command} &> /var/log/consul-server.log & " ||  \
-	{
+	eval "nohup ${consul_command} &> /var/log/consul-server.log & " 
+	grep -q [[:digit:]] /var/run/consul-server.pid || {
 		echo -e "\033[31mconsul service start fail......\033[0m"
 		exit 1
 	}
@@ -97,7 +97,7 @@ function  register_service() {
 			\"node_name\": \"${node_name}\",
 			\"disable_remote_exec\": false,
 			\"disable_update_check\": false,
-			\"retry_interval\": "5s",
+			\"retry_interval\": \"10s\",
 			\"enable_syslog\": true,
 			\"service\": {
 				\"check\": {
@@ -140,7 +140,7 @@ function agent_client() {
 	-config-dir=${conf_path}  \
 	-join ${cluster_node_ip}  \
 	-client 0.0.0.0  \
-	-retry-join"
+	-retry-join ${cluster_node_ip}"
 	
 	register_service ; echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
 	
@@ -249,12 +249,12 @@ function consul_help() {
                         #node or service exec command
                         read -p 'exec on node(n) service(s)?' -n 1 
                         [[ "${REPLY}" == "n" ]] && {
-                                read -p "node_name:" exec_node_name ; read -p 'node_exec:' exec_command
+                                read -p "node_name:" exec_node_name ; read -p 'commands:' commands
                                 consul exec -node="${exec_node_name}" '${exec_command}'
                         } 
 			
                         [[ "${REPLY}" == "s" ]] && {
-                                read -p 'serv_name:' exec_serv_name ; read -p 'serv_exec:' exec_command
+                                read -p 'serv_name:' exec_serv_name ; read -p 'commands:' commands
                                 consul exec -service="${exec_serv_name}" '${exec_command}'
                         }  
                 }
