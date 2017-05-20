@@ -27,8 +27,8 @@
 	register_tages="user_info"				#自定义tag信息
 	register_check_interval=10				#健康检查间隔，秒
 	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值，非0则不健康（此检查对应当前服务，注意json）
-        register_check_timeout=5                                #脚本执行超时时间（秒）【还没加入变量检查】
-        register_check_notes="XXX service check fail"           #脚本检查失败提示信息【还没加入变量检查】
+        register_check_timeout=5                                #脚本执行超时时间（秒）
+        register_check_notes="XXX service check fail"           #脚本检查失败提示信息
 	kv_storage_enable="on"					#是否启用键值存储功能：on/off
 	kv_storage_serv=${register_serv}			#
 	kv_storage_key="123"					#键
@@ -39,7 +39,10 @@
 
 function consul_install() {
 
-	[[ -e /usr/local/bin/consul ]] ||  { cp ./consul /usr/local/bin  &&  chmod a+x /usr/local/bin/consul ; }
+	[[ -x /usr/local/bin/consul ]] ||  { 
+		cp ./consul /usr/local/bin  &&  chmod a+x /usr/local/bin/consul
+		mkdir -p ${conf_path}  ${data_path}  &&  rm -rf ${conf_path:=protect"/"}/*  ${data_path:=protect"/"}/*
+	}  2>&-
 	
 }
 
@@ -130,10 +133,10 @@ function agent_client() {
 	-config-dir=${conf_path}  \
 	-join ${cluster_node_ip}  \
 	-client 0.0.0.0  \
-	-rejoin   \
+	-rejoin  \
 	-syslog"
 	
-	register_service  ;  echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
+	register_service ; echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
 	
 	sed -i "/consul/d" /etc/rc.local
 	
@@ -162,6 +165,7 @@ function script_variables_check() {
 	#CLIENT VARIABLES CHECK
 	echo ${cluster_node_ip} | grep -Eq "[0-9]{2,}\.[0-9]+\.[0-9]+\.[0-9]+"  \
 	&& echo ${client_bind_ip} | grep -Eq "[0-9]{2,}\.[0-9]+\.[0-9]+\.[0-9]+"  \
+	&& echo ${register_check_timeout} | grep -Eq "^[[:digit:]]+$"  \
 	&& [[ ${#register_serv} -ge 1  &&  ${#register_port} -ge 2 ]]  \
 	&& [[ ${#register_tages} -ge 1  &&  ${#register_check_interval} -ge 1 ]]  \
 	&& [[ ${#register_check_scripts} -ge 1  &&  ${#kv_storage_enable} -ge 1 ]]  \
@@ -181,12 +185,12 @@ function script_variables_check() {
 
 function consul_remove() {
 
-	killall consul 2>&-
+	killall consul 
 	sed -i '/consul.*/d'  /etc/rc.local
 	rm -rf /usr/local/bin/consul ${conf_path:=protect"/"} ${data_path:=protect"/"}
 	rm -rf /var/{run,log}/consul_*
 	
-}
+} 2>&-
 
 function consul_help() {
 
@@ -245,8 +249,6 @@ function consul_help() {
         done 
 
 }
-
-mkdir -p ${conf_path}  ${data_path} 2>&-  &&  rm -rf ${conf_path:=protect"/"}/*  ${data_path:=protect"/"}/*
 
 #First check the variables , after the start.....
 script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) more_help(h)：" -t 15
