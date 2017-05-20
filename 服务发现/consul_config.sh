@@ -308,7 +308,7 @@ function template-exec() {
 [[ "${enable-template}" == "on" ]] && template-exec
 
 #First check the variables , after the start.....
-script_variables_check && echo -en "\033[1;34mIsnatll(i) Uninstall(u) Server(s) Client(c) More_help(m)：\033[0m"
+script_variables_check && echo -e "\033[1;34mIsnatll(i) Uninstall(u) Server(s) Client(c) More_help(m)：\033[0m"
 
 read -t 8
 
