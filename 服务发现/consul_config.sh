@@ -38,9 +38,9 @@
 	conf_path=${conf_path}					#
 
 #check user
-[ "$(id -u)" != "0" ] && { echo -e "\033[1;31mError: must be root to run this script.\033[0m" ; exit 1 }
+[ "$(id -u)" != "0" ] && { echo -e "\033[1;31mError: must be root to run this script.\033[0m" ; exit 1 ; }
 
-function consul_install() {
+function consul_install() { 
 
 	[[ -x /usr/local/bin/consul ]] ||  { 
 		cp ./consul /usr/local/bin  &&  chmod a+x /usr/local/bin/consul
