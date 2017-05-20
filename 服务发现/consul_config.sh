@@ -1,16 +1,14 @@
 #!/bin/bash
 #C/S需要网络互通，c/s运行时的输出存放在：/var/log/consul-{server,client}.log
-#安装时consul二进制包要与脚本在同一目录
-#配置文件都在哪里？
-#会不会开机自启，写在了哪里？
-#如何查询？
+#安装时consul二进制包要与脚本在同一目录！
+#默认生成配置文件路径：/etc/consul.d。默认开机自启：写入/etc/rc.local
+#查询其他功能时执行"h"选项。
 #增加插入key和server信息的curl功能
 #如何使用 说明默认执行时提供的功能
 #最后一个重要的部分：模板！！！
 
 #目前：
 # 删除key要注意先写服务名再写key名！配置检查没提示？exec在Node节点提示被忽略！
-# KV注册没有成功....
 
 #SERVER VARIABLES
 	service_number=1					#consul服务端数量（高可用）
@@ -198,28 +196,33 @@ function consul_remove() {
 function consul_help() {
 
         consul_help_var=(
-        "members"
-        "services_info"
+	"check_config"
+        "show_members"
+        "exec_command"
+        "all_services"
+	"find_service"
         "nodes_info"
-        "reload"
-        "check_config"
+        "serv_reload"
         "delete_key"
         "search_key"
-        "about_service's_node.."
-        "exec_command"
-        quit
+        "quit"
         )
 
         echo -e "\033[32mselect:\033[0m" 
 
         select v in ${consul_help_var[@]} 
         do 
-                [[ ${v} == "members" ]] && consul members                    
-                [[ ${v} == "services_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services | python -m json.tool #查询所有服务
+                [[ ${v} == "show_members" ]] && consul members                    
+                [[ ${v} == "all_services" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services | python -m json.tool #查询所有服务
                 [[ ${v} == "nodes_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/nodes | python -m json.tool 	 #查看节点
-                [[ ${v} == "reload" ]] &&  consul reload            					#重读配置，相当于：kill -HUP
-                [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent        
-                [[ ${v} ==  "delete_key" ]] && { 
+                [[ ${v} == "serv_reload" ]] && consul reload            				#重读配置，相当于：kill -HUP
+                [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent                                    
+                [[ ${v} == "find_service" ]] && {
+                	#查询提供某服务的所有节点
+                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool         
+                }  
+		
+                [[ ${v} == "delete_key" ]] && { 
 			#删除单个key
                         read -p "Key: "  &&  curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse
                 }  
@@ -227,13 +230,8 @@ function consul_help() {
                 [[ ${v} == "search_key" ]] && {  
                 	#查询单个key
                         read -p "Key: "  &&  curl -s http://127.0.0.1:8500/v1/kv/${REPLY} | python -m json.tool   
-                }                              
-                
-                [[ ${v} == "about_service's_node.." ]] && {
-                	#查询提供某服务的所有节点
-                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool         
-                }                             
-                
+                }  
+		
                 [[ ${v} == "exec_command" ]] && {
                         #node or service exec command
                         read -p "exec on node(n) server(s) ?" -n 1 
