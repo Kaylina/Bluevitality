@@ -12,7 +12,6 @@ chroot_dir=/data                        #FTP根路径
 if [ $(id -u) != "0" ]
 then
   echo -e "\033[1;40;31mError: You must be root to run this script, please use root to install this script.\033[0m"
-  rm -rf $LOCKfile
   exit 1
 fi
 
