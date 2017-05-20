@@ -11,13 +11,13 @@
 	service_number=1					#consul服务端数量（高可用）
 	data_path=/var/consul					#数据存放目录
 	conf_path=/etc/consul.d					#配置存放目录（服务注册信息&健康检测脚本）
-	bind_add=192.168.10.1					#consul只能绑定在1个IP（集群node间通讯）
+	bind_add=192.168.126.135				#consul只能绑定在1个IP（集群node间通讯）
 	dc_name=default						#数据中心命名
 
 #CLIENT VARIABLES
-	cluster_node_ip=192.168.10.1				#必须定义（集群中任意节点的IP地址）加入集群..
-	client_bind_ip=192.168.10.2				#必须定义（client自身绑定的地址）
-	register_serv=web-server				#服务名称
+	cluster_node_ip=192.168.26.135				#必须定义（集群中任意节点的IP地址）加入集群..
+	client_bind_ip=192.168.16.161				#必须定义（client自身绑定的地址）
+	register_serv=web					#服务名称
 	register_port=80					#服务端口
 	register_tages="user_info"				#自定义tag信息
 	register_check_interval=10				#健康检查间隔，秒
@@ -71,8 +71,8 @@ function agent_server() {
 			\"node_name\": \"${node_name}\",
     			\"data_dir\": \"${data_path:=/var/consul}\",
     			\"log_level\": "INFO",
-    			\"enable_syslog": true
-		}"
+    			\"enable_syslog\": true
+		}" > /dev/${conf_path}/server.json
 	
 	[[ "${service_number}" == "1" ]] && consul_command=$( echo ${consul_command} | sed 's/-bootstrap-expect.../-bootstrap /' )
 	
@@ -113,7 +113,7 @@ function  register_service() {
 					\"${register_tages:=user_info}\"
 				]
 			}
-		}"  >  ${conf_path}/${register_serv}.json	#服务注册&健康检查写到配置目录的json文件 service段包括：server & check
+		}"  >  ${conf_path}/client.json		#服务注册&健康检查写到配置目录的json文件 service段包括：server & check
 
 }
 
@@ -230,31 +230,31 @@ function consul_help() {
 		
                 [[ ${v} == "delete_key" ]] && { 
 			#删除单个key (curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse)
-                        read -p "Key: "  &&  consul kv delete ${REPLY:?var is null!}
+                        read -p 'Key: '  &&  consul kv delete ${REPLY:?var is null!}
                 }  
                 
                 [[ ${v} == "search_key" ]] && {  
                 	#查询单个key (url -s http://127.0.0.1:8500/v1/kv/${REPLY}?pretty)
-                        read -p "Key: "  &&  consul kv get ${REPLY:?var is null!}
+                        read -p 'Key: '  &&  consul kv get ${REPLY:?var is null!}
                 } 
 		
 		[[ ${v} == "add_to_key" ]] && {
 			#新增key/value
 			echo -e "\033[32mexample: consul kv put service/key value \033[0m"
-			read -p "key_name："  key_name ; read -p "key_value："  key_value
+			read -p 'key_name：'  key_name ; read -p 'key_value：'  key_value
 			consul kv put ${key_name:?var is null!} ${key_value:?var is null!}
 		}
                 
 		[[ ${v} == "exec_command" ]] && {
                         #node or service exec command
-                        read -p "exec on node(n) service(s) ?" -n 1 
+                        read -p 'exec on node(n) service(s)?' -n 1 
                         [[ "${REPLY}" == "n" ]] && {
-                                read -p "node_name:" exec_node_name ; read -p "node_exec:" exec_command
+                                read -p "node_name:" exec_node_name ; read -p 'node_exec:' exec_command
                                 consul exec -node="${exec_node_name}" '${exec_command}'
                         } 
 			
                         [[ "${REPLY}" == "s" ]] && {
-                                read -p "serv_name:" exec_serv_name ; read -p "serv_exec:" exec_command
+                                read -p 'serv_name:' exec_serv_name ; read -p 'serv_exec:' exec_command
                                 consul exec -service="${exec_serv_name}" '${exec_command}'
                         }  
                 }
