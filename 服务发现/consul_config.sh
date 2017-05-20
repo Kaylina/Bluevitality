@@ -293,7 +293,7 @@ function template-exec() {
 		exit 1
 	}
 	
-	exec-command="nohuop consul-template -consul-addr 127.0.0.1:8500 -retry 15s -syslog -log-level=info \
+	exec-command="nohuop consul-template -consul-addr 127.0.0.1:8500 -retry 10s -syslog -log-level=info \
 	-template "${consul_template}:/${confige_file}:${template_exec}" &> /var/log/consul-template.log &"
 	
 	if [[ "${only-out-to-view}" == "no" ]] ;then
@@ -308,10 +308,11 @@ function template-exec() {
 [[ "${enable-template}" == "on" ]] && template-exec
 
 #First check the variables , after the start.....
-script_variables_check && echo -e "\033[1;34mIsnatll(i) Uninstall(u) Server(s) Client(c) More_help(m)：\033[0m"
+script_variables_check && echo -en "\033[1;34mIsnatll(i) Uninstall(u) Server(s) Client(c) More_help(m)：\033[0m"
 
 read -t 8
 
+echo
 case ${REPLY} in 
 	"i") 	consul_install
 	;;
@@ -321,7 +322,7 @@ case ${REPLY} in
 	;;
 	"c") 	agent_client
 	;;
-        "q")    consul leave            #离开集群
+        "q")    consul leave 
         ;;
         "m")    consul_help             #查询...
         ;;
