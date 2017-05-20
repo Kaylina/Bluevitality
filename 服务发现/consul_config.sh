@@ -3,12 +3,9 @@
 #安装时consul二进制包要与脚本在同一目录！
 #默认生成配置文件路径：/etc/consul.d。默认开机自启：写入/etc/rc.local
 #查询其他功能时执行"h"选项。
-#增加插入key和server信息的curl功能
-#如何使用 说明默认执行时提供的功能
-#最后一个重要的部分：模板！！！
 
-#目前：
-# 删除key要注意先写服务名再写key名！配置检查没提示？exec在Node节点提示被忽略！
+
+#最后一个重要的部分：模板！！！
 
 #SERVER VARIABLES
 	service_number=1					#consul服务端数量（高可用）
@@ -63,15 +60,20 @@ function agent_server() {
 	-rejoin  \
 	-ui \
 	-bootstrap-expect ${service_number}  \
-	-pid-file=/var/run/consul_server.pid  \
-	-datacenter ${dc_name}  \
-	-data-dir=${data_path:=/var/consul}  \
 	-config-dir=${conf_path:=/etc/consul}  \
-	-node=${node_name}  \
 	-bind=${bind_add}  \
-	-client 0.0.0.0  \
-	-syslog"
+	-client 0.0.0.0"
 
+	echo 	"{
+			\"pid_file\": \"/var/run/consul-server.pid\",
+    			\"server\": true,
+    			\"datacenter\": \"${dc_name}\",
+			\"node_name\": \"${node_name}\",
+    			\"data_dir\": \"${data_path:=/var/consul}\",
+    			\"log_level\": "INFO",
+    			\"enable_syslog": true
+		}"
+	
 	[[ "${service_number}" == "1" ]] && consul_command=$( echo ${consul_command} | sed 's/-bootstrap-expect.../-bootstrap /' )
 	
 	echo -e "\033[32mRun command: \n${consul_command} \n \033[0m"
@@ -86,10 +88,17 @@ function agent_server() {
 	
 } 
 
-#仅适用了脚本检查的方式
+#仅使用了脚本检查的方式
 function  register_service() {
 
 	echo  "{
+			\"pid_file\": \"/var/run/consul-client.pid\",
+			\"datacenter\": \"${dc_name}\",
+			\"node_name\": \"${node_name}\",
+			\"disable_remote_exec\": false,
+			\"disable_update_check\": false,
+			\"retry_interval\": "5s",
+			\"enable_syslog\": true,
 			\"service\": {
 				\"check\": {
                                         \"name\": \"service check\",
@@ -126,16 +135,12 @@ function agent_client() {
 	consul_command="consul  \
 	agent  \
 	-ui  \
-	-node=${node_name}  \
-	-pid-file=/var/run/consul_client.pid  \
 	-bind=${client_bind_ip}  \
-	-datacenter=${dc_name}  \
 	-data-dir=${data_path}  \
 	-config-dir=${conf_path}  \
 	-join ${cluster_node_ip}  \
 	-client 0.0.0.0  \
-	-rejoin  \
-	-syslog"
+	-retry-join"
 	
 	register_service ; echo -e "\033[32mregister_service finish... \n\n Run command: \n${consul_command} \n \033[0m"
 	
@@ -205,36 +210,44 @@ function consul_help() {
         "serv_reload"
         "delete_key"
         "search_key"
+	"add_to_key"
         "quit"
         )
 
-        echo -e "\033[32mselect:\033[0m" 
+        echo -e "\033[1;32mselect:\033[0m" 
 
         select v in ${consul_help_var[@]} 
         do 
                 [[ ${v} == "show_members" ]] && consul members                    
-                [[ ${v} == "all_services" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services | python -m json.tool #查询所有服务
-                [[ ${v} == "nodes_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/nodes | python -m json.tool 	 #查看节点
+                [[ ${v} == "all_services" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services?pretty 	#查询所有服务
+                [[ ${v} == "nodes_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/nodes?pretty 	 	#查看节点
                 [[ ${v} == "serv_reload" ]] && consul reload            				#重读配置，相当于：kill -HUP
                 [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent                                    
                 [[ ${v} == "find_service" ]] && {
                 	#查询提供某服务的所有节点
-                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY} | python -m json.tool         
+                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY}?pretty       
                 }  
 		
                 [[ ${v} == "delete_key" ]] && { 
-			#删除单个key
-                        read -p "Key: "  &&  curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse
+			#删除单个key (curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse)
+                        read -p "Key: "  &&  consul kv delete ${REPLY:?var is null!}
                 }  
                 
                 [[ ${v} == "search_key" ]] && {  
-                	#查询单个key
-                        read -p "Key: "  &&  curl -s http://127.0.0.1:8500/v1/kv/${REPLY} | python -m json.tool   
-                }  
+                	#查询单个key (url -s http://127.0.0.1:8500/v1/kv/${REPLY}?pretty)
+                        read -p "Key: "  &&  consul kv get ${REPLY:?var is null!}
+                } 
 		
-                [[ ${v} == "exec_command" ]] && {
+		[[ ${v} == "add_to_key" ]] && {
+			#新增key/value
+			echo -e "\033[32mexample: consul kv put service/key value \033[0m"
+			read -p "key_name："  key_name ; read -p "key_value："  key_value
+			consul kv put ${key_name:?var is null!} ${key_value:?var is null!}
+		}
+                
+		[[ ${v} == "exec_command" ]] && {
                         #node or service exec command
-                        read -p "exec on node(n) server(s) ?" -n 1 
+                        read -p "exec on node(n) service(s) ?" -n 1 
                         [[ "${REPLY}" == "n" ]] && {
                                 read -p "node_name:" exec_node_name ; read -p "node_exec:" exec_command
                                 consul exec -node="${exec_node_name}" '${exec_command}'
@@ -252,7 +265,7 @@ function consul_help() {
 }
 
 #First check the variables , after the start.....
-script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) more_help(h)：" -t 15
+script_variables_check && read -p "isnatll(i) uninstall(u) server(s) client(c) more_help(h)：" -t 8
 
 echo
 case ${REPLY} in 
@@ -281,5 +294,10 @@ esac
 #       查某服务所有检查          	curl http://10.245.6.90:8500/v1/health/checks/<service>
 #       查某服务所有节点             	curl http://10.245.6.90:8500/v1/health/service/<service>
 #       查某状态所有检查          	curl http://10.245.6.90:8500/v1/health/state/<state>
+
+#	加密：S端生成密钥：consul keygen ----> 执行时c/s均追加参数：consul ..... -encrypt=XXXXXXX
+
+
+
 
 
