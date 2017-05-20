@@ -240,33 +240,17 @@ function consul_help() {
 
         select v in ${consul_help_var[@]} 
         do 
+
+                [[ ${v} == "serv_reload" ]] && consul reload            					#重读配置：kill -HUP
                 [[ ${v} == "show_members" ]] && consul members                    
-                [[ ${v} == "all_services" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services?pretty 	#查询所有服务
                 [[ ${v} == "nodes_info" ]] && curl -s http://127.0.0.1:8500/v1/catalog/nodes?pretty 	 	#查看节点
-                [[ ${v} == "serv_reload" ]] && consul reload            				#重读配置，相当于：kill -HUP
-                [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'	#检查配置文件.不真正启动agent                                    
+                [[ ${v} == "all_services" ]] && curl -s http://127.0.0.1:8500/v1/catalog/services?pretty 	#查询所有服务
+                [[ ${v} == "check_config" ]] && consul configtest -config-dir=${conf_path} && echo 'ok'		#检查配置文件.不真正启动agent                                    
                 [[ ${v} == "find_service" ]] && {
                 	#查询提供某服务的所有节点
-                        read -p "service name: "  &&  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY}?pretty       
-                }  
-		
-                [[ ${v} == "delete_key" ]] && { 
-			#删除单个key (curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse)
-                        read -p 'Key: '  &&  consul kv delete ${REPLY:?var is null!}
-                }  
-                
-                [[ ${v} == "search_key" ]] && {  
-                	#查询单个key (url -s http://127.0.0.1:8500/v1/kv/${REPLY}?pretty)
-                        read -p 'Key: '  &&  consul kv get ${REPLY:?var is null!}
+                        read -p "service name: ";  curl -s http://127.0.0.1:8500/v1/catalog/service/${REPLY}?pretty       
                 } 
 		
-		[[ ${v} == "add_to_key" ]] && {
-			#新增key/value
-			echo -e "\033[32mexample: consul kv put service/key value \033[0m"
-			read -p 'key_name：'  key_name ; read -p 'key_value：'  key_value
-			consul kv put ${key_name:?var is null!} ${key_value:?var is null!}
-		}
-                
 		[[ ${v} == "exec_command" ]] && {
                         #node or service exec command
                         read -p 'exec on node(n) service(s)?' -n 1 
@@ -280,6 +264,23 @@ function consul_help() {
                                 consul exec -service="${exec_serv_name}" '${exec_command}'
                         }  
                 }
+		
+                [[ ${v} == "delete_key" ]] && { 
+			#删除单个key (curl -X DELETE http://127.0.0.1:8500/v1/kv/${REPLY}?recurse)
+                        read -p 'Key: ' ;  consul kv delete ${REPLY:?var is null!}
+                }  
+                
+                [[ ${v} == "search_key" ]] && {  
+                	#查询单个key (url -s http://127.0.0.1:8500/v1/kv/${REPLY}?pretty)
+                        read -p 'Key: ' ;  consul kv get ${REPLY:?var is null!}
+                } 
+		
+		[[ ${v} == "add_to_key" ]] && {
+			#新增key/value
+			echo -e "\033[32mexample: consul kv put service/key value \033[0m"
+			read -p 'key_name：'  key_name ; read -p 'key_value：'  key_value
+			consul kv put ${key_name:?var is null!} ${key_value:?var is null!}
+		}
                 
                 [[ ${v} == "quit" ]] && break
         done 
