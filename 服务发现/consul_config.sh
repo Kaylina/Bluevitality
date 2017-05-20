@@ -19,7 +19,7 @@
 	client_bind_ip=192.168.126.161				#必须定义（client自身绑定的地址）
 	register_serv=web					#服务名称
 	register_port=80					#服务端口
-	register_tages="用于web服务"			     #自定义tag信息
+	register_tages="用于web服务"			      #自定义tag信息
 	register_check_interval=10				#健康检查间隔，秒
 	register_check_scripts="ping -c 1 127.0.0.1 2>&1"	#脚本/命令的返回值，非0则不健康（此检查对应当前服务，注意json）
         register_check_timeout=5                                #脚本执行超时时间（秒）
@@ -72,7 +72,7 @@ function agent_server() {
     			\"data_dir\": \"${data_path:=/var/consul}\",
     			\"log_level\": \"INFO\",
     			\"enable_syslog\": true
-		}" > ${conf_path}/server.json
+		 }"  >  ${conf_path}/server.json
 	
 	[[ "${service_number}" == "1" ]] && consul_command=$( echo ${consul_command} | sed 's/-bootstrap-expect.../-bootstrap /' )
 	
