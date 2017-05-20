@@ -274,6 +274,7 @@ esac
 #	docker的swarm集群的初始化环境配置和网络配置
 #	注：脚本方式...
 
+
 #       备忘：
 #       指定服务执行命令               	consul exec -service="node_name" "exec_command"
 #       指定节点执行命令               	consul exec -node="node_name" "exec_command"
