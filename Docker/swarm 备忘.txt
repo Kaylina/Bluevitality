@@ -1,0 +1,118 @@
+#!/bin/bash
+
+环境：
+	Host-A	 <--->	Master
+	Host-B 	 <--->	Node-1
+	Host-C 	 <--->	Node-2
+
+	
+创建集群：		#设置集群的方式有多种种.... 集群间使用的端口为2375
+	Master：docker swarm init --advertise-addr <Master_ip_address>
+		#下列输出说明如何将Worker Node加入到集群（查看提示：docker swarm join-token worker）
+		#Swarm initialized: current node (5pe2p4dlxku6z2a6jnvxc4ve6) is now a manager.
+		#To add a worker to this swarm, run the following command:	
+		#	
+		#	docker swarm join \	
+		#	--token SWMTKN-1-4dm09nzp3xic15uebqja69o2552b75pcg7or0g9t2eld9ehqt3-1kb79trnv6fbydvl9vif3fsch \	
+		#	192.168.1.107:2377	
+		#	
+		#To add a manager to this swarm, run 'docker swarm join-token manager' and follow the instructions.	
+
+	Node-1：docker swarm join --token ............ 192.168.1.107:2377
+	Node-2：docker swarm join --token ............ 192.168.1.107:2377
+
+查看Node信息：
+	docker node ls
+	#ID                           HOSTNAME  		STATUS  AVAILABILITY  MANAGER STATUS
+	#oibbiiwrgwjkw0ni38ydrfsre    worker1   		Ready   Active      
+	#oocli2uzdt2hy6o50g5z6j7dq    worker2   		Ready   Active      
+	#qc42f6myqfpoevfkrzmx08n0r *  manager   		Ready   Active        Leader
+	
+	#Active：	该Node可被指派Task
+	#Pause：	该Node不可被指派新Task，但其他已存在的Task保持运行（暂停一个Node后该其不再接收新的Task）
+	#Drain：	该Node不可被指派新Task，Swarm Scheduler停掉已存在的Task并将它们调度到可用的Node上（进行停机维护时可修改AVAILABILITY为Drain状态）
+
+查看Node状态：
+	docker node inspect self		#在该Node上执行?
+	
+修改node状态：	
+	docker node update --availability drain <manager>		#将Manager Node的AVAILABILITY值改为Drain状态，使其只具备管理功能
+
+#Swarm支持设置一组Manager Node，通过支持多Manager Node实现HA
+#Swarm使用Raft协议保证多Manager间状态的一致性。基于Raft协议，Manager Node具有一定容错功能（可容忍最多有(N-1)/2个节点失效）
+
+#每个Node的配置可能不同，比如有的适合CPU密集型应用，有的适合运行IO密集型应用
+#Swarm支持给每个Node添加标签元数据，这样可根据Node标签来选择性地调度某个服务部署到期望的一组Node上
+
+设置Node标签：		#eg:主机在名为bjidc的数据中心
+	docker node update --label-add datacenter=bjidc		
+	docker node update --label-add 键=值
+
+改变Node角色：		#dorker Node可以变为Manager Node，这样实际Worker Node由工作Node变成了管理Node
+	提权：docker node promote 	<worker1>
+	降权：docker node demote 	<worker1>
+		
+退出所在集群：
+	docker swarm node leave [--force]
+
+集群部署服务：		#必须在Manager Node上操作。Swarm mode下使用"Docker"可实现服务的部署运行、扩缩容、删除、滚动更新等功能
+	docker service create --replicas 1 --name myapp   alpine ping c.cn	#从镜像alpine创建名为myapp的服务并指定服务副本数=1
+	docker service create --replicas 2 --name myredis redis				#启动2个容器来运行。相当于在各节点执行doker run......
+	
+	查看服务列表信息：
+		docker service ls
+		#ID            NAME     MODE        REPLICAS  IMAGE
+		#kilpacb9uy4q  myapp  	replicated  1/1       alpine:latest
+		#vf1kcgtd5byc  myredis 	replicated  2/2       redis
+	
+	查询指服务的信息：
+		docker service ps myredis
+		#ID            NAME       IMAGE  NODE     DESIRED 	STATE  	CURRENT STATE     ERROR  PORTS
+		#0p3r9zm2uxpl  myredis.1  redis  manager  Running   Running 48 seconds ago        
+		#ty3undmoielo  myredis.2  redis  worker1  Running   Running 44 seconds ago
+	
+	查看服务详细信息：
+		docker service inspect <ID/Name>
+
+#Swarm支持服务扩容缩容，通过--mode设置服务类型，提供了两种模式
+#replicated：	指定服务Task的个数（需要创建几个冗余副本），这也是Swarm默认使用的服务类型
+#global：		在Swarm集群的每个Node上都创建一个服务！
+			
+服务扩容缩容：						#在Manager Node上执行（将前面部署的2个副本的myredis服务，扩容到3个副本）
+	docker service scale <ID>=<Task>	
+	docker service scale myredis=3		
+	#查看服务信息：docker service ls
+	#ID            NAME    MODE        	REPLICAS  IMAGE
+	#kilpacb9uy4q  myapp   replicated  	1/1       alpine:latest
+	#vf1kcgtd5byc  myredis replicated  	3/3       redis
+
+	#通过docker service ps myredis	#查看myredis是各副本的状态信息：
+	#ID            NAME       IMAGE  	NODE     	DESIRED 	STATE  		CURRENT STATE     	ERROR  PORTS
+	#0p3r9zm2uxpl  myredis.1  redis  	manager  	Running     Running 	14 minutes ago                
+	#ty3undmoielo  myredis.2  redis  	worker1  	Running     Running 	14 minutes ago                
+	#zxsvynsgqmpk  myredis.3  redis  	worker2  	Running     Running 	less than a second ago
+	#可以看到，我们目前3个Node的Swarm集群，每个Node上都有一个myredis应用服务的副本，可见也实现了很好的负载均衡
+	
+	
+	缩容时只需将副本数小于当前应用服务拥有的副本数即可实现！大于指定缩容副本数的副本会被删除
+	若需删除所有服务，只需在Manager Node上执行：docker service rm <服务ID>
+		
+服务滚动更新：
+	docker service create  --replicas 3  --name redis  --update-delay 10s  redis:3.0.6
+	#通过--update-delay表示需更新的服务每成功部署1个延迟10秒后再更新下1个。若更新失败则调度器会暂停本次服务的部署更新
+	
+	更新已部署的服务所在容器中使用的Image的版本：
+	docker service update --image redis:3.0.7 redis:3.0.6
+	#将Redis服务对应的Image版本由3.0.6更新为3.0.7，同样，若更新失败则暂停本次更新。
+
+创建Overlay网络：
+	docker network create -d overlay --subnet=10.0.9.0/24  my-network
+	#创建Overlay网络my-network后集群中所有的Manager都可访问。以后在创建服务时只要指定使用的网络即可
+	例：
+	docker service create --replicas 3   --network my-network  --name myweb  nginx
+	#若Swarm集群中其他Node的容器也使用my-network这个网络，那么处于该网络中的所有容器间均可连通
+
+#--------------------------------------------------------------------------------------------------
+#注！
+#Docker 1.12中Swarm已内置了服务发现工具，不再需要像以前使用 Etcd 或 Consul 这些工具来配置服务发现
+#对于容器来说若没有外部通信但又是运行中的状态会被服务发现工具认为是 Preparing 状态，但若映射了端口则会是 Running 状态。
