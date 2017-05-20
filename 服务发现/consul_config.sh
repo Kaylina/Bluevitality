@@ -37,6 +37,9 @@
 	data_path=${data_path}					#
 	conf_path=${conf_path}					#
 
+#check user
+[ "$(id -u)" != "0" ] && { echo -e "\033[1;31mError: must be root to run this script.\033[0m" ; exit 1 }
+
 function consul_install() {
 
 	[[ -x /usr/local/bin/consul ]] ||  { 
@@ -233,7 +236,7 @@ function consul_help() {
                 
                 [[ ${v} == "exec_command" ]] && {
                         #node or service exec command
-                        read -p "node(n) server(s)" -n 1 
+                        read -p "exec on node(n) server(s) ?" -n 1 
                         [[ "${REPLY}" == "n" ]] && {
                                 read -p "node_name:" exec_node_name ; read -p "node_exec:" exec_command
                                 consul exec -node="${exec_node_name}" '${exec_command}'
@@ -272,11 +275,6 @@ case ${REPLY} in
 esac
 
 #------------------------------------------------------
-#如果周末来得及：（先不考虑和consul结合的太紧密的场景，仅使用）
-#	docker的swarm集群的初始化环境配置和网络配置
-#	注：脚本方式...
-
-
 #       备忘：
 #       指定服务执行命令               	consul exec -service="node_name" "exec_command"
 #       指定节点执行命令               	consul exec -node="node_name" "exec_command"
@@ -285,7 +283,5 @@ esac
 #       查某服务所有检查          	curl http://10.245.6.90:8500/v1/health/checks/<service>
 #       查某服务所有节点             	curl http://10.245.6.90:8500/v1/health/service/<service>
 #       查某状态所有检查          	curl http://10.245.6.90:8500/v1/health/state/<state>
-
-
 
 
