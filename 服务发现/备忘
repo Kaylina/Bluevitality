@@ -613,4 +613,89 @@ docker的consul注意事项：
 	接受base64编码的字符串并返回解码的结果，如果给定的字符串不是有效的base64字符串，则返回错误。
 	{{base64Decode“aGVsbG8 =”}}
 	输出：hello
-	
+
+----------------------------------------------------------------------------------------------------------
+#加入模板的变量检查（如过没有开启则不检查）
+.........
+#服务模板读入路径：
+consul_template=/etc/consul.d/consul_template.templ
+#服务配置文件输出路径
+confige_file=/etc/nginx/nginx.conf
+#执行的命令
+template_exec="nginx -s reload"
+
+执行：
+consul-template -consul-addr 127.0.0.1:8500 -template "${consul_template}:/${confige_file}:${template_exec}" -retry 15s -syslog -log-level=info -pid_file = "/var/run/consul_template.pid"	
+#模板内容不写入磁盘：-dry
+
+例子：
+[root@localhost ~]# curl -s http://127.0.0.1:8500/v1/catalog/service/web?pretty
+[
+    {
+        "ID": "c6307f4a-6162-a98c-274a-33757ed8d5b2",
+        "Node": "3918",
+        "Address": "192.168.126.161",
+        "TaggedAddresses": {
+            "lan": "192.168.126.161",
+            "wan": "192.168.126.161"
+        },
+        "NodeMeta": {},
+        "ServiceID": "web",
+        "ServiceName": "web",
+        "ServiceTags": [
+            "user_info"
+        ],
+        "ServiceAddress": "",
+        "ServicePort": 80,
+        "ServiceEnableTagOverride": false,
+        "CreateIndex": 449,
+        "ModifyIndex": 449
+    }
+]
+
+模板内容：
+{{range service "web"}}	#第一个range的范围相对于URL，即此services相对于：http://127.0.0.1:8500/v1/catalog/services下的内容
+{{.Name}}:{{.Address}}:{{.Port}} --- {{.Tags}}
+{{end}}
+
+输出：web:192.168.126.161:80 --- [user_info]
+
+#--------------------------------------------------------------------
+高级部分：
+{{ if keyExists "app/beta_active" }}	#如果指定的key存在则......
+  # ...
+{{ else }}
+  # ...
+{{ end }}
+
+{{ range ls "service/redis" }}			#环绕key？
+{{ .Key }}:{{ .Value }}{{ end }}
+
+
+{{ range services }}
+{{ .Name }}: {{ .Tags | join "," }}{{ end }}
+输出：node01 tag1,tag2,tag3
+
+
+{{ base64Decode "aGVsbG8=" }}输出：hello
+{{ base64Encode "hello" }}输出：aGVsbG8=
+
+
+{{ range $i := loop 5 8 }}
+stanza-{{ $i }}{{ end }}
+输出：
+stanza-5
+stanza-6
+stanza-7
+
+{{ range services }}
+{{ range service .Name }}
+{{ end }}
+{{ end }}
+
+
+enable-template="off"					#是否启用模板功能：on/off (可从命令行选项执行)
+only-out-to-view="yes"					#是否不渲染模板仅输出到屏幕：yes/no
+consul_template=/etc/consul.d/consul_template.templ	#服务模板读入路径(需要事先定义好模板!).....
+confige_file=/etc/nginx/nginx.conf			#服务配置文件输出路径
+template_exec="nginx -s reload"				#执行的命令(如重启服务)
