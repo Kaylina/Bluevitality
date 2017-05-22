@@ -1,0 +1,43 @@
+
+-b, --bridge                        #指定容器使用的网络接口，默认为docker0，也可以指定其他网络接口
+--bip                               #指定桥接地址，即定义一个容器的私有网络
+--cgroup-parent                     #为所有的容器指定父cgroup
+--cluster-advertise                 #为集群设定一个地址或者名字
+--cluster-store                     #后端分布式存储的URL
+--cluster-store-opt=map[]           #设置集群存储参数
+--config-file=/etc/docker/daemon.json  #指定配置文件
+-D                                  #启动debug模式
+--default-gateway                   #为容器设定默认的ipv4网关(--default-gateway-v6)
+--dns=[]                            #设置dns
+--dns-opt=[]                        #设置dns参数
+--dns-search=[]                     #设置dns域
+--exec-opt=[]                       #运行时附加参数
+--exec-root=/var/run/docker         #设置运行状态文件存储目录
+--fixed-cidr                        #为ipv4子网绑定ip
+-G, --group=docker                  #设置docker运行时的属组
+-g, --graph=/var/lib/docker         #设置docker运行时的家目录
+-H, --host=[]                       #设置docker程序启动后套接字连接地址
+--icc=true                          #是内部容器可以互相通信，环境中需要禁止内部容器访问
+--insecure-registry=[]              #设置内部私有注册中心地址
+--ip=0.0.0.0                        #当映射容器端口的时候默认的ip(这个应该是在多主机网络的时候会比较有用)
+--ip-forward=true                   #使net.ipv4.ip_forward生效，其实就是内核里面forward
+--ip-masq=true                      #启用ip伪装技术(容器访问外部程序默认不会暴露自己的ip)
+--iptables=true                     #启用容器使用iptables规则
+-l, --log-level=info                #设置日志级别
+--live-restore                      #启用热启动(重启docker，保证容器一直运行1.12新特性)
+--log-driver=json-file              #容器日志默认的驱动
+--max-concurrent-downloads=3        #为每个pull设置最大并发下载
+--max-concurrent-uploads=5          #为每个push设置最大并发上传
+--mtu                               #设置容器网络的MTU
+--oom-score-adjust=-500             #设置内存oom的平分策略(-1000/1000)
+-p, --pidfile=/var/run/docker.pid   #指定pid所在位置
+-s, --storage-driver                #设置docker存储驱动
+--selinux-enabled                   #启用selinux的支持
+--storage-opt=[]                    #存储参数驱动
+--swarm-default-advertise-addr      #设置swarm默认的node节点
+--tls                               #使用tls加密
+--tlscacert=~/.docker/ca.pem        #配置tls CA 认证
+--tlscert=~/.docker/cert.pem        #指定认证文件
+--tlskey=~/.docker/key.pem          #指定认证keys
+--userland-proxy=true               #为回环接口使用用户代理
+--userns-remap                      #为用户态的namespaces设定用户或组
