@@ -297,7 +297,7 @@ function template-exec() {
 	exec-command="nohuop consul-template -consul-addr 127.0.0.1:8500 -retry 10s -syslog -log-level=info \
 	-template "${consul_template}:/${confige_file}:${template_exec}" &> /var/log/consul-template.log &"
 	
-	if [[ "${only-out-to-view}" == "no" ]] ;then
+	if [[ "${only-out-to-view}" == "yes" ]] ;then
 		eval $( echo $exec-command | sed -n 's/&.*/-dry/p' )
 	else
 		eval $exec-command
