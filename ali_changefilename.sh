@@ -27,7 +27,8 @@ for A in 1400{1..4};
 find /tmp/大数据文件夹 -type d -exec mkdir -p new_dir_copy/{} \;
 find /tmp/大数据文件夹 -type f -exec touch  new_dir_copy/{} \;
 
-
+#恢复错误：（可执行多次）
+find . -type f | grep -v "wav$" | awk -F".wav" '{print "mv "$0 " "$1".wav" }' | bash -
 
 #-------------------------------------------------------------------------- 更直接的：
 #找出当前目录开始其内部所有以SI开头并且以wav结尾的文件，输出格式："mv 旧文件名 新文件名" 然后交给bash去执行这个命令（可以重复执行，没影响）
