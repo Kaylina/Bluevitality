@@ -28,3 +28,8 @@ find /tmp/大数据文件夹 -type d -exec mkdir -p new_dir_copy/{} \;
 find /tmp/大数据文件夹 -type f -exec touch  new_dir_copy/{} \;
 
 
+
+#-------------------------------------------------------------------------- 更直接的：
+#找出当前目录开始其内部所有以SI开头并且以wav结尾的文件，输出格式："mv 旧文件名 新文件名" 然后交给bash去执行这个命令（可以重复执行，没影响）
+find . -type f -name "SI_*wav"  | grep number | awk -F"_number_|/"  '{print $0"-->"$(NF-2)}' | awk -F'-->|_number_' '{print "mv "$1"_number_"$2" "$1"_"$3"_"$2}' | bash -
+
