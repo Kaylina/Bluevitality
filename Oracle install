@@ -17,9 +17,9 @@ echo "passwordXX" | passwd oracle --stdin
 
 #目录准备及权限调整
 mkdir -p /export/servers/oracle/11.2.0  		#数据库系统安装目录
-mkdir -p /export/data/oradata    				#数据库数据安装目录
+mkdir -p /export/data/oradata    			#数据库数据安装目录
 mkdir -p /export/data/oradata_back  			#数据备份目录
-mkdir -p /home/oracle/inventory 				#清单目录
+mkdir -p /home/oracle/inventory 			#清单目录
 chown -R oracle:oinstall /export/servers/oracle
 chown -R oracle:oinstall /home/oracle/inventory
 chown -R oracle:oinstall /export/data
@@ -55,7 +55,7 @@ eof
 #认证模块
 echo >> /etc/pam.d/login  <<eof
 session  required   /lib64/security/pam_limits.so
-session     required      pam_limits.so
+session  required   pam_limits.so
 eof
 
 echo >> /etc/profile  <<eof
@@ -91,7 +91,7 @@ DECLINE_SECURITY_UPDATES=true
 
 #切换到oracle身份，若已经是此用户可跳过
 sudo su - oracle
-cd /home/oracle/database/ ;  ./runInstaller -silent -responseFile /home/oracle/database/response/my_db_install.rsp
+cd /home/oracle/database/  ;  ./runInstaller -silent -responseFile /home/oracle/database/response/my_db_install.rsp
 
 #注：如果安装过程中报错则在root登陆的终端执行如下命令删除inventory.xml文件后再重新执行上面的命令：
 rm -rf /home/oracle/inventory/ContentsXML/inventory.xml
@@ -113,7 +113,7 @@ export PATH=$PATH:$ORACLE_HOME/bin
 #刷新环变：
 source ~/.bash_profile
 
-#补充！（使用root身份）		#正常来说，上面定义的环境变量的文件路径应该是已经存在的，但是没有，所以使用下面命令手动创建了...
+#补充！（使用root身份）正常来说，上面定义的环境变量的文件路径应该是已经存在的，但是没有，所以使用下面命令手动创建了...
 mkdir -p -m 755 /export/servers/oracle/product/11.2.0/db_1/lib
 mkdir -p -m 755 /export/servers/oracle/product/11.2.0/db_1/network/admin
 
@@ -125,17 +125,17 @@ cp -R /home/oracle/database/response/dbca.rsp  /home/oracle/database/response/my
 vim /home/oracle/database/response/my_dbca.rsp
 OPERATION_TYPE = "createDatabase"
 GDBNAME = "orcl11g"
-SID = "orcl"					#SID (实例?)
+SID = "orcl"				#SID (实例?)
 SYSPASSWORD = "passwordXX"
 SYSTEMPASSWORD = "passwordXX"
 DATAFILEDESTINATION = /export/data/oradata
 RECOVERYAREADESTINATION = /export/data/oradata_back
 SYSDBAUSERNAME = "system"		#管理账号：system
-SYSDBAPASSWORD = "passwordXX"	#管理密码：passwordXX
+SYSDBAPASSWORD = "passwordXX"		#管理密码：passwordXX
 #以上2项可选
 INSTANCENAME = "实例名"
 CHARACTERSET = "UTF8" 			#按需求设置，建议使用UTF8
-NATIONALCHARACTERSET= "UTF8" 	#可选 "UTF8" or "AL16UTF16" 建议UTF8
+NATIONALCHARACTERSET= "UTF8" 		#可选 "UTF8" or "AL16UTF16" 建议UTF8
 TOTALMEMORY = "1024" 			#使用最大内存，单位M建库（根据实际内存容量来规划）
 
 
@@ -158,14 +158,14 @@ chmod 777 -R /export/servers/
 /export/servers/oracle/11.2.0/bin/dbca -silent -responseFile /home/oracle/database/response/my_dbca.rsp
 
 
-#配置监听：(如果提示没有找到下面netca的路径则使用find名查找它的位置：find / -iname "netca" ,注：要使用oracle用户执行！)	注意！这个作为启动服务的命令...
+#配置监听：(如果提示没有找到下面netca的路径则使用find名查找它的位置：find / -iname "netca" ,注：要用oracle用户执行！)
 /export/servers/oracle/11.2.0/bin/netca /silent /responsefile /home/oracle/database/response/netca.rsp 
 
 #执行完成会在 $ORACLE_HOME/network/admin目录下生成sqlnet.ora和listener.ora两个文件。
 
 #注册sid(有问题，但不影响启动，这个文件不存在..)
 mkdir -p  /export/servers/oracle/product/11.2.0/db_1/network/admin/
-vim $ORACLE_HOME/network/admin/listener.ora		#在文件最后添加如下
+vim $ORACLE_HOME/network/admin/listener.ora	#在文件最后添加如下：
 
 SID_LIST_LISTENER =
 (SID_LIST =
@@ -188,12 +188,12 @@ LISTENER =
 
 #启动服务：（除了修改/etc/oratab这一步外，下面的操作都要使用oracle身份执行！）
 vim 修改：/etc/oratab
-将：	orcl:/export/servers/oracle/11.2.0:N
-改为：	orcl:/export/servers/oracle/11.2.0:Y
+将：orcl:/export/servers/oracle/11.2.0:N
+改为：orcl:/export/servers/oracle/11.2.0:Y
 #注：开头的orcl为实例名（参考：http://jingyan.baidu.com/article/b2c186c8fe4306c46ef6ff16.html）
 
 nohup /export/servers/oracle/11.2.0/bin/tnslsnr &
-/export/servers/oracle/11.2.0/bin/dbstart （会错误提示：ORACLE_HOME_LISTNER 没有设置）
+/export/servers/oracle/11.2.0/bin/dbstart #（会提示：ORACLE_HOME_LISTNER 没设置）
 
 
 #开启自启：（使用root身份执行！）
