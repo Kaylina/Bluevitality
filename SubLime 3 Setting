@@ -1,0 +1,43 @@
+{
+	"auto_complete_selector": "-",
+	"auto_complete_triggers":
+	[
+		{
+			"characters": ".",
+			"selector": "source.python"
+		}
+	],
+	"color_scheme": "Packages/Color Scheme - Default/Monokai.tmTheme",
+	"default_encoding": "UTF-8",
+	"dpi_scale": 1,
+	"gutter": true,					        //是否显示行号边栏
+	"margin": 12,					          //行号边栏和文字的间距
+	"fold_buttons": true,			      //是否显示代码折叠按钮
+	"spell_check": true,			      //是否打开拼写检查
+	"font_size": 13, 				        //字体大小
+	"highlight_line": true,			    //高亮显示当前行
+	"caret_style": "phase",			    //柔和光标
+	"tree_animation_enabled": true,	//左边边栏文件夹动画
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"spell_check": true,
+	"sublime_completions_visibility": "jedi",
+	"tab_size": 4,				          //TAB宽度
+	"translate_tabs_to_spaces": true
+}
+
+//github -> save
+//移动当前行	    Ctrl + Shift + ↑/↓
+//搜索当前词	    Ctrl + d 			下一个：F3
+//归并为一行	    Ctrl + j
+//查找和替换	    Ctrl + f      Ctrl + h
+//列出打开文件	 Ctrl + p
+//找函数或类	    Ctrl + r
+//左右分屏幕	    Alt + Shift + <number>     切屏：Ctrl <number> 
+//普通全屏	    F11
+//补齐提示	    TAB
+
+//命令行界面	Ctrl + `
+//启动程序		Ctrl + B
