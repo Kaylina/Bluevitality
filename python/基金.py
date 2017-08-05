@@ -10,15 +10,9 @@ import sqlite3
 
 def createdb(name):
     try:
+        print "DB name: \t %s" %(str(os.getcwd())+'\\'+name)
         conn = sqlite3.connect(name)
-        conn.execute(
-            '''CREATE TABLE record
-           (
-                Time     CHAR(50),
-                Value     CHAR(50)
-           );
-           ''')
-        print "DB_name:\t%s" %(name)
+        conn.execute('''CREATE TABLE record(Time CHAR(50),Value CHAR(50));''')
         conn.close()
     except:
         print "Create DB Error..."
@@ -29,22 +23,19 @@ conn = sqlite3.connect(db_name)
 
 #获取网页HTML结构
 def html_info(url):
-    element=requests.get(str(url)).text
-    html=BeautifulSoup(element,'html.parser')
-    html_string=html.select("#gz_gszzl")  #ID!
-    x=re.compile(r'(?<=>).*%')            #正则
-    v=x.findall(str(html_string))[0]      #匹配
+    html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
+    v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]            #正则
     t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
+    print "%s \t %s" %(v,t)
     sql="INSERT INTO record (Time,Value) VALUES ('%s','%s')" %(t,v)
     conn.execute(sql)
     conn.commit()
-    print "%s \t %s" %(v,t)
 
 if __name__ == '__main__':
     createdb(name=db_name)
     while True:
         html_info(url='http://fund.eastmoney.com/003625.html?spm=search')
-        time.sleep(1)
+        time.sleep(60)
         if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:01":
             conn.close()
             break
