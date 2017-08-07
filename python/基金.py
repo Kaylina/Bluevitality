@@ -1,4 +1,3 @@
-
 # -*- coding:utf-8 -*-  
 
 import requests
@@ -27,7 +26,6 @@ def html_info(url,name,times):
         if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02":
             conn.close()
             os.exit()
-        time.sleep(times)
         html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
         v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]            #正则
         t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
@@ -35,13 +33,16 @@ def html_info(url,name,times):
         sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
         conn.execute(sql)
         conn.commit()
+        time.sleep(times)
 
-address1='http://fund.eastmoney.com/003625.html?spm=search'
-address2='http://fund.eastmoney.com/161725.html?spm=search'
+Address={}
+Address['创金合信资源股票发起式C']='http://fund.eastmoney.com/003625.html?spm=search'
+Address['招商中证白酒指数分级']='http://fund.eastmoney.com/161725.html?spm=search'
+delay_time=10
 
 if __name__ == '__main__':
     createdb(name=db_name)
-    pool = multiprocessing.Pool(processes = 3)
+    pool = multiprocessing.Pool(processes = 2)
     while True:
-        pool.apply(html_info, (address1,'创金合信资源股票发起式C',2, ))
-        pool.apply(html_info, (address2,'招商中证白酒指数分级',2, ))
+        for key,value in Address.items():
+            pool.apply(html_info, (value,key,delay_time))
