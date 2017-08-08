@@ -22,17 +22,17 @@ def createdb(name):
         print "DB name: \t %s" %(str(os.getcwd())+'\\'+name)
 
 def html_info(url,name,times=300):
-        try:
-            html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
-            v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]
-        except:
-            print 'notice!... %s' %('catch fail...')
-        t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
-        print "%s \t %s \t %s" %(name,v,t)
-        sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
-        conn.execute(sql)
-        conn.commit()
-        time.sleep(times)
+    try:
+        html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
+        v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]
+    except:
+        print 'notice!... %s' %('catch fail...')
+    t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
+    print "%s \t %s \t %s" %(name,v,t)
+    sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
+    conn.execute(sql)
+    conn.commit()
+    time.sleep(times)
         
 delay_time=300
 Address={}
