@@ -49,13 +49,13 @@ def index(result_limit=5):
     for i in fs.fetchall():
         if float(i[1]) < 0:
             convert=abs(float(i[1]))
-            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #转换&#39。。。
+            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #安全转换 --> | safe
             storage.append({'time':i[2],'value':bad})
             continue
         storage.append({'time':i[2],'value':float(i[1])})
-    return render_template("show.html",digit=storage)  
+    return render_template("show.html",digit=storage)
 
-delay_time=61
+delay_time=300
 Address={}
 Address['003625']='http://fund.eastmoney.com/003625.html?spm=search'
 Address['161725']='http://fund.eastmoney.com/161725.html?spm=search'
@@ -65,7 +65,8 @@ if __name__ == '__main__':
     pool = multiprocessing.Pool(processes=len(Address))
     for key,value in Address.items():
         print "Name: %-20s  URL:%s" %(key,value)
-        pool.apply_async(html_info, (value,key,delay_time))
+        pool.apply_async(html_info,(value,key,delay_time))
     app.run(host="0.0.0.0",debug=True)
     pool.close()
     pool.join()
+
