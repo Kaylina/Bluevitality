@@ -21,28 +21,30 @@ def createdb(name):
     else:
         print "DB name: \t %s" %(str(os.getcwd())+'\\'+name)
 
-
-def html_info(url,name,times):
-        if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02":
-            conn.close()
-            os.exit()
-        html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
-        v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]            #正则
+def html_info(url,name,times=300):
+        try:
+            html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
+            v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]
+        except:
+            print 'notice!... %s' %('catch fail...')
         t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
         print "%s \t %s \t %s" %(name,v,t)
         sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
         conn.execute(sql)
         conn.commit()
         time.sleep(times)
-
+        
+delay_time=300
 Address={}
 Address['创金合信资源股票发起式C']='http://fund.eastmoney.com/003625.html?spm=search'
 Address['招商中证白酒指数分级']='http://fund.eastmoney.com/161725.html?spm=search'
-delay_time=10
 
 if __name__ == '__main__':
     createdb(name=db_name)
-    pool = multiprocessing.Pool(processes = 2)
+    pool = multiprocessing.Pool(processes = len(Address))
     while True:
         for key,value in Address.items():
             pool.apply(html_info, (value,key,delay_time))
+            if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02":
+                conn.close()
+                os.exit()
