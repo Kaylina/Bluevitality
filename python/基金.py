@@ -42,7 +42,7 @@ fs = conn.cursor()
 
 @app.route('/')
 @app.route('/<int:result_limit>',methods=['GET'])
-def index(result_limit=5):
+def index(result_limit=100):
     storage=[]
     fs.execute("select * from %s limit %d" %('record',int(result_limit)))
     for i in fs.fetchall():
