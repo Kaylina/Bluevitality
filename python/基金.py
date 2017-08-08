@@ -39,21 +39,21 @@ def html_info(url,name,times=300):
 
 fs = conn.cursor()
 
-@app.route('/',methods=['GET'])
-def index():
-    t_v={}
-    t=[]
-    v=[]
-    fs.execute("select * from %s" %('record'))
+@app.route('/')
+@app.route('/<int:result_limit>',methods=['GET'])
+def index(result_limit=30):
+    storage=[]
+    fs.execute("select * from %s limit %d" %('record',int(result_limit)))
     for i in fs.fetchall():
-        t_v[i[2]]=i[1]
-    for i in t_v.keys():
-        t.append(i)
-    for i in t_v.values():
-        v.append(i)
-    return render_template("show.html",t=t,v=v)    #包含时间和数值的列表字典！键是time
+        if float(i[1]) < 0:
+            convert=abs(float(i[1]))
+            bad=u'''{y:%.2f,attrs:{fill:'#ff0000'}}''' %convert  #转换&#39。。。
+            storage.append({'time':i[2],'value':bad})
+            continue
+        storage.append({'time':i[2],'value':i[1]})
+    return render_template("show.html",digit=storage)  
 
-delay_time=5
+delay_time=3
 Address={}
 Address['003625']='http://fund.eastmoney.com/003625.html?spm=search'
 Address['161725']='http://fund.eastmoney.com/161725.html?spm=search'
