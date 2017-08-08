@@ -44,12 +44,11 @@ fs = conn.cursor()
 @app.route('/<int:result_limit>',methods=['GET'])
 def index(result_limit=5):
     storage=[]
-    json_list=[]
     fs.execute("select * from %s limit %d" %('record',int(result_limit)))
     for i in fs.fetchall():
         if float(i[1]) < 0:
             convert=abs(float(i[1]))
-            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #安全转换 --> | safe
+            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #安全转换 -->{{ XXX | safe }}
             storage.append({'time':i[2],'value':bad})
             continue
         storage.append({'time':i[2],'value':float(i[1])})
