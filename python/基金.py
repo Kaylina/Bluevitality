@@ -44,7 +44,7 @@ if __name__ == '__main__':
     pool = multiprocessing.Pool(processes = len(Address))
     while True:
         for key,value in Address.items():
-            pool.apply(html_info, (value,key,delay_time))
+            pool.apply_async(html_info, (value,key,delay_time))
             if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02":
                 conn.close()
                 os.exit()
