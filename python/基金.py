@@ -10,9 +10,8 @@ import time
 from bs4 import  BeautifulSoup
 import sqlite3
 
-time_value=[]
 db_name=str(time.strftime('sqlite.'+'%Y-%m',time.localtime(time.time()))+'.db')
-conn = sqlite3.connect(db_name)
+conn = sqlite3.connect(db_name,check_same_thread = False)
 
 app = Flask(__name__)
 
@@ -32,22 +31,28 @@ def html_info(url,name,times=300):
         html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
         v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]
         t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
-        time_value.append({'time':t,'value':v})
         print "%s \t %s \t %s" %(name,v,t)
         sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
         conn.execute(sql)
         conn.commit()
         time.sleep(times)
 
+fs = conn.cursor()
+
 @app.route('/',methods=['GET'])
 def index():
-    global time_value
-    return render_template("show.html",digit=time_value)    #包含时间和数值的列表字典！键是time
+    t_list=[]
+    v_list=[]
+    fs.execute("select * from %s" %('record'))
+    for i in fs.fetchall():
+        t_list.append(i[2])
+        v_list.append(i[1])[半成品！]
+    return render_template("show.html",t=t_list,v=v_list)    #包含时间和数值的列表字典！键是time
 
-delay_time=1
+delay_time=5
 Address={}
-Address['创金合信资源股票发起式C']='http://fund.eastmoney.com/003625.html?spm=search'
-Address['招商中证白酒指数分级']='http://fund.eastmoney.com/161725.html?spm=search'
+Address['003625']='http://fund.eastmoney.com/003625.html?spm=search'
+Address['161725']='http://fund.eastmoney.com/161725.html?spm=search'
 
 if __name__ == '__main__':
     createdb(name=db_name)
