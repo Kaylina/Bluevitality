@@ -29,8 +29,8 @@ def html_info(url,name,times=300):
         if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02": 
             os.exit()
         html_string=BeautifulSoup(requests.get(str(url)).text,'html.parser').select("#gz_gszzl")
-        v=re.compile(r'(?<=>).*%').findall(str(html_string))[0]
-        t=time.strftime('%Y-%m-%d:%H:%M',time.localtime(time.time()))
+        v=re.compile(r'(?<=>).*(?=%)').findall(str(html_string))[0]
+        t=time.strftime('%d-%H:%M',time.localtime(time.time()))
         print "%s \t %s \t %s" %(name,v,t)
         sql="INSERT INTO record (Name,Value,nTime) VALUES ('%s','%s','%s')" %(name,v,t)
         conn.execute(sql)
@@ -41,13 +41,17 @@ fs = conn.cursor()
 
 @app.route('/',methods=['GET'])
 def index():
-    t_list=[]
-    v_list=[]
+    t_v={}
+    t=[]
+    v=[]
     fs.execute("select * from %s" %('record'))
     for i in fs.fetchall():
-        t_list.append(i[2])
-        v_list.append(i[1])[半成品！]
-    return render_template("show.html",t=t_list,v=v_list)    #包含时间和数值的列表字典！键是time
+        t_v[i[2]]=i[1]
+    for i in t_v.keys():
+        t.append(i)
+    for i in t_v.values():
+        v.append(i)
+    return render_template("show.html",t=t,v=v)    #包含时间和数值的列表字典！键是time
 
 delay_time=5
 Address={}
