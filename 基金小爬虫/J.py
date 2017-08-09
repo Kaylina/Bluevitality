@@ -24,7 +24,6 @@ def createdb(name):
     else:   print "DB name: \t %s" %(str(os.getcwd())+'\\'+name)
 
 def html_info(url,name,times=300):
-    global time_value
     while True:
         if str(time.strftime('%H:%S',time.localtime(time.time()))) == "15:02": 
             os.exit()
@@ -45,7 +44,7 @@ def j_info(j_type,limit):
     for i in fs.fetchall():
         if float(i[1]) < 0:
             convert=abs(float(i[1]))
-            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #安全转换 -->{{ XXX | safe }}
+            bad=u''' {y:%.2f,attrs:{fill:'darkorenge'}} ''' %convert  #安全转换 -->{{ XXX | safe }}
             storage.append({'time':i[0],'value':bad})
             continue
         storage.append({'time':i[0],'value':float(i[1])})
