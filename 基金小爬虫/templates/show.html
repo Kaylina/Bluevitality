@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta http-equiv="refresh" content="60">
+    <title>Show</title>
+</head>
+<body>
+ 
+<div class="detail-section">
+    <div id="canvas">
+ 
+    </div>
+</div>
+ 
+<script src="http://g.tbcdn.cn/bui/acharts/1.0.32/acharts-min.js"></script>
+<!-- https://g.alicdn.com/bui/acharts/1.0.29/acharts-min.js -->
+ 
+ 
+  <script type="text/javascript">
+        var chart = new AChart({
+          theme : AChart.Theme.SmoothBase,
+          id : 'canvas',
+          width : 1200,
+          height : 500,
+          xAxis : {
+            categories: [ {% for i in digit1 | sort(attribute='time', reverse=false) %}'{{ i.time }}',{% endfor %}]
+          },                                                                 
+          yAxis : {                                                          
+            min : 0                                                          
+          },                                                                 
+          tooltip : {                                                        
+            shared : true                                                    
+          },                                                                 
+          seriesOptions : {                                                  
+              columnCfg : {                                                  
+                                                                             
+              }                                                              
+          },                                                                 
+          series: [ {                                                        
+                  name: '003625',                                            
+				  data: [  {% for i in digit1 | sort(attribute='time', reverse=false) %}{{ i.value |safe }},{% endfor %} ]
+              },{                                                        
+                  name: '161725',                                            
+				  data: [  {% for i in digit2 | sort(attribute='time', reverse=false) %}{{ i.value |safe }},{% endfor %} ]
+              }
+			  ]
+ 
+        });
+		
+        chart.render();
+  </script>
+ 
+</body>
+</html>
+
+
+
+
+
+
+
+
