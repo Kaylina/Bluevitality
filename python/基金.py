@@ -1,3 +1,4 @@
+
 # -*- coding:utf-8 -*-  
 
 import requests
@@ -7,7 +8,6 @@ from werkzeug.utils import secure_filename
 import os
 import re
 import time
-import json
 from bs4 import  BeautifulSoup
 import sqlite3
 
@@ -40,19 +40,24 @@ def html_info(url,name,times=300):
 
 fs = conn.cursor()
 
-@app.route('/')
-@app.route('/<int:result_limit>',methods=['GET'])
-def index(result_limit=100):
+def j_info(j_type,limit):
     storage=[]
-    fs.execute("select * from %s limit %d" %('record',int(result_limit)))
+    fs.execute("select DISTINCT nTime,Value,Name  from %s where Name = '%s' limit %d" %('record',str(j_type),int(limit)))
     for i in fs.fetchall():
         if float(i[1]) < 0:
             convert=abs(float(i[1]))
             bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert  #安全转换 -->{{ XXX | safe }}
-            storage.append({'time':i[2],'value':bad})
+            storage.append({'time':i[0],'value':bad})
             continue
-        storage.append({'time':i[2],'value':float(i[1])})
-    return render_template("show.html",digit=storage)
+        storage.append({'time':i[0],'value':float(i[1])})
+    return storage
+
+@app.route('/')
+@app.route('/<int:limit>',methods=['GET'])
+def index(limit=100):
+    a=j_info("003625",limit)
+    b=j_info("161725",limit)
+    return render_template("show.html",digit1=a,digit2=b)
 
 delay_time=300
 Address={}
@@ -68,4 +73,3 @@ if __name__ == '__main__':
     app.run(host="0.0.0.0",debug=True)
     pool.close()
     pool.join()
-
