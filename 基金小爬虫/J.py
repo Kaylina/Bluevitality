@@ -54,9 +54,10 @@ def j_info(j_type,limit):
 @app.route('/')
 @app.route('/<int:limit>',methods=['GET'])
 def index(limit=100):
-    a=j_info("003625",limit)
-    b=j_info("161725",limit)
-    return render_template("show.html",digit1=a,digit2=b)
+    tmp={}
+    tmp['digit1']=j_info(Address.keys()[1],limit)
+    tmp['digit2']=j_info(Address.keys()[0],limit)
+    return render_template("show.html",**tmp)
 
 delay_time=300
 Address={}
