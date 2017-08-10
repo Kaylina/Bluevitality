@@ -4,16 +4,14 @@ import requests
 import multiprocessing
 from flask import Flask,render_template,request,redirect,url_for
 from werkzeug.utils import secure_filename
+from bs4 import  BeautifulSoup
+import sqlite3
 import os
 import re
 import time
-from bs4 import  BeautifulSoup
-import sqlite3
 
-db_name=str(time.strftime('sqlite.'+'%Y-%m',time.localtime(time.time()))+'.db')
+db_name=str(time.strftime('sqlite.'+'%Y-%m',time.localtime(time.time()))+'.db')     #数据库按月分割
 conn = sqlite3.connect(db_name,check_same_thread = False)
-
-app = Flask(__name__)
 
 def createdb(name):
     try:
@@ -38,24 +36,29 @@ def html_info(url,name,times=300):
 
 fs = conn.cursor()
 
-def j_info(j_type,limit):
+def export_info(j_type,limit):
     storage=[]
     fs.execute("select DISTINCT nTime,Value,Name  from %s where Name = '%s' limit %d" %('record',str(j_type),int(limit)))
     for i in fs.fetchall():
         if float(i[1]) < 0:
             convert=abs(float(i[1]))
-            bad=u''' {y:%.2f,attrs:{fill:'darkorenge'}} ''' %convert  #安全转换 -->{{ XXX | safe }}
+            bad=u''' {y:%.2f,attrs:{fill:'red'}} ''' %convert    #安全转换 -->{{ XXX | safe }}
             storage.append({'time':i[0],'value':bad})
             continue
         storage.append({'time':i[0],'value':float(i[1])})
     return storage
 
+app = Flask(__name__)
+
 @app.route('/')
 @app.route('/<int:limit>',methods=['GET'])
 def index(limit=100):
+    for_num=0
     tmp={}
-    tmp['digit1']=j_info("003625",limit)
-    tmp['digit2']=j_info("161725",limit)
+    for i in Address.keys():
+        for_num+=1
+        tmp['d'+str(for_num)]=i
+        tmp['digit'+str(for_num)]=export_info(str(i),limit)    
     return render_template("show.html",**tmp)
 
 delay_time=300
@@ -67,7 +70,7 @@ if __name__ == '__main__':
     createdb(name=db_name)
     pool = multiprocessing.Pool(processes=len(Address))
     for key,value in Address.items():
-        print "Name: %-20s  URL:%s" %(key,value)
+        print u"catch!  Name: %-10s  URL:%s" %(key,value)
         pool.apply_async(html_info,(value,key,delay_time))
     app.run(host="0.0.0.0",debug=True)
     pool.close()
