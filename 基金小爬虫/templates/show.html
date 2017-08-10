@@ -9,7 +9,6 @@
  
 <div class="detail-section">
     <div id="canvas">
- 
     </div>
 </div>
  
@@ -21,43 +20,32 @@
         var chart = new AChart({
           theme : AChart.Theme.SmoothBase,
           id : 'canvas',
-          width : 1200,
+          width : 1500,
           height : 500,
           xAxis : {
-            categories: [ {% for i in digit1 | sort(attribute='time', reverse=false) %}'{{ i.time }}',{% endfor %}]
-          },                                                                 
-          yAxis : {                                                          
-            min : 0                                                          
-          },                                                                 
-          tooltip : {                                                        
-            shared : true                                                    
-          },                                                                 
-          seriesOptions : {                                                  
-              columnCfg : {                                                  
-                                                                             
-              }                                                              
-          },                                                                 
-          series: [ {                                                        
-                  name: '003625',                                            
-				  data: [  {% for i in digit1 | sort(attribute='time', reverse=false) %}{{ i.value |safe }},{% endfor %} ]
-              },{                                                        
-                  name: '161725',                                            
-				  data: [  {% for i in digit2 | sort(attribute='time', reverse=false) %}{{ i.value |safe }},{% endfor %} ]
-              }
+		categories: [ {% for i in digit1 | sort(attribute='time', reverse=false) %}'{{ i.time }}',{% endfor %}] },                                                                 
+          yAxis : {                                                       
+            min : 0                                                       
+          },                                                              
+          tooltip : {                                                     
+            shared : true                                                 
+          },                                                              
+          seriesOptions : {                                               
+              columnCfg : {                                               
+                                                                          
+              }                                                           
+          },                                                              
+          series: [ {                                                     
+		name: '{{ d1 }}',                                            
+		data: [  {% for i in digit1 | sort(attribute='time', reverse=false) %}{{ i.value | safe }},{% endfor %} ] },
+		{                                                        
+		name: '{{ d2 }}',                                            
+		data: [  {% for i in digit2 | sort(attribute='time', reverse=false) %}{{ i.value | safe }},{% endfor %} ] }
 			  ]
  
         });
 		
         chart.render();
   </script>
- 
 </body>
 </html>
-
-
-
-
-
-
-
-
