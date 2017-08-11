@@ -1,15 +1,18 @@
 
+#查密钥生成工具路径
 find / -name keytool
 
-/usr/java/jdk1.7.0_15/bin/keytool -genkey -alias tomcat -keyalg RSA -keystore /home/ubuntu/app/apache-tomcat-8.5.4/tomcat.keystore -validity 36500
+/usr/java/jdk1.7.0_15/bin/keytool -genkey -alias tomcat -keyalg RSA -keystore /usr/local/tomcat/tomcat.keystore -validity 36500
 密码：111111
 主机：访问IP或域名
 
 
+#配置SSL接口
 vim server.xml
 8080 ---> 443
 443 ---> keystoreFile="/usr/local/tomcat/apache-tomcat-7.0.37/tomcat.keystore" keystorePass="111111"
 
+#针对war的自动拦截跳转
 vim web.xml
 <login-config>
 <!-- Authorization setting for SSL -->
