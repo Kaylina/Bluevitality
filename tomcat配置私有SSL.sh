@@ -1,3 +1,4 @@
+#!/bin/bash
 
 #查密钥生成工具路径
 find / -name keytool
