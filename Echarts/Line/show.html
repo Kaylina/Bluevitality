@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html style="padding:0;margin:0;height:100%;overflow:hidden;">
+	<head>
+		<meta charset="utf-8">
+		<title>ECharts</title>
+		<!-- 引入 echarts.js -->
+		<script src="echarts.js"></script>
+		<script src="http://echarts.baidu.com/resource/echarts-gl-latest/dist/echarts-gl.min.js"></script>
+	</head>
+	<body style="padding:0;margin:0;height:100%;overflow:hidden;">
+		<!-- 为ECharts准备具备大小（宽高）的Dom -->
+		<div id="main" style="z-index:0;height:100%;  "></div>
+		<script type="text/javascript">
+		var myChart = echarts.init(document.getElementById('main'));
+		var option = {
+				title: {
+					text: 'Test...'
+				},
+				xAxis: {
+					data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+				},
+				yAxis: {},
+				series: [{
+					type: 'line',
+					data:[220, 182, 191, 234, 290, 330, 310]
+				}]
+			};
+			myChart.setOption(option);
+		</script>
+	</body>
+</html>
+
+
