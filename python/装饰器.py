@@ -28,5 +28,3 @@ def function(x,y):
 
 function(10,10)     #输出100
 
-
- 
