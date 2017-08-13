@@ -27,3 +27,6 @@ def function(x,y):
     print x*y
 
 function(10,10)     #输出100
+
+
+ 
