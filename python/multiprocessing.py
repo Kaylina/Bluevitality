@@ -25,3 +25,5 @@ if __name__ == '__main__':
     pool.join()     #主进程暂时阻塞以等待子进程退出
 
     print 'All subprocesses done.'
+
+    
