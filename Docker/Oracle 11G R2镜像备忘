@@ -1,14 +1,14 @@
 oracle：
 	docker pull wnameless/oracle-xe-11g
-	docker run -d -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true \
-	-v /date/oracle-log:/local_path/to/oracle_home:r \
-	-v /data/oracle:/u01/app/oracle wnameless/oracle-xe-11g:rw \
-	wnameless/oracle-xe-11g
+	
+	docker run -d -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g
 
 
-	默认信息：
+	连接信息：
 	hostname: localhost
 	port: 49161
 	sid: xe
 	username: system
 	password: oracle
+
+参考：https://hub.docker.com/r/fengzhou/docker-weblogic-1036/
