@@ -47,8 +47,8 @@ Stunnel可加密网络数据的TCP连接
     key=/etc/ssl/private/Mysql-master.key #私钥
     #CAfile = /etc/pki/CA/certs/rootca.crt #根证书
     [mysql] 
-    accept=3306 #监听本地的3508连接请求并对其数据加密
-    connect=192.168.1.2:99999  #监听本机192.168.1.2:3306端口的加密数据
+    accept=3306 #对本地的3306端口加密
+    connect=192.168.1.2:99999  #将本机监听到的3306数据加密后转交 <ip>:99999
 ```
     
 **Client 端：**
@@ -60,8 +60,8 @@ Stunnel可加密网络数据的TCP连接
     verify=0  #认证?（如需认证则双方都使用SSL）
     #CAfile = /etc/pki/CA/certs/rootca.crt  根证书
     [mysql] 
-    accept=99999 #监听本地的3408连接请求并对其数据加密
-    connect=192.168.1.2:3306 #即将本机监听到的3508加密数据转交给3408解密（mysql客户端连接到3408即可）
+    accept=99999 #对本地的99999端口加密
+    connect=192.168.1.2:3306 #将本机监听到的99999数据加密后转交 <ip>:3408 （同时对其返回的数据进行相反的操作）
 $$E=mc^2$$
 ```
 
