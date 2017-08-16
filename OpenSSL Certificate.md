@@ -140,10 +140,10 @@ cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
 openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key \
 -subj "/C=CN/ST=ShenZ/L=ShenZ/O=Example/OU=Web/CN=eg.cn"
 ```
-###
-1.测算法速度：	openssl speed <算法> 算法如: rsa/des
-2.生成随机数：	openssl rand [ -base64 / -hex ] <length>
-3.生成公私钥：	openssl genrsa -out private.key 2048 ; openssl rsa -in private.key -pubout -out public.pubkey
-4.文件加解密：	openssl enc -e -des3 -in sec.key -out file.secrite ; openssl enc -d -des3 -in file.secrite -out sec.key.dec
-5.计算摘要值：	openssl [md5/sha1] < file <---> echo -n "***" | [ md5sum / sh1sum ] <---> openssl dgst [-md5/sha1] < file
+### 其他常用命令
+- 测算法速度：	openssl speed <算法> 算法如: rsa/des
+- 生成随机数：	openssl rand [ -base64 / -hex ] <length>
+- 生成公私钥：	openssl genrsa -out private.key 2048 ; openssl rsa -in private.key -pubout -out public.pubkey
+- 文件加解密：	openssl enc -e -des3 -in sec.key -out file.secrite ; openssl enc -d -des3 -in file.secrite -out sec.key.dec
+- 计算摘要值：	openssl [md5/sha1] < file <---> echo -n "***" | [ md5sum / sh1sum ] <---> openssl dgst [-md5/sha1] < file
 
