@@ -25,11 +25,11 @@ Stunnel可加密网络数据的TCP连接
     #在CA端对csr请求签名：
         touch /etc/pki/CA/{index.txt,serial}
         echo "01" > /etc/pki/CA/serial
-        openssl ca -keyfile /etc/pki/CA/rootca.key -cert /etc/pki/CA/rootca.crt -in ./Mysql-master.csr -out ./Mysql-master.pem -days 365
+        openssl ca -keyfile /etc/pki/CA/rootca.key -cert /etc/pki/CA/rootca.crt \
+        -in ./Mysql-master.csr -out ./Mysql-master.pem -days 365
 ```
 
-### 隧道环境：  
-[Master@192.168.1.2:3306 -- stunnel:3508] ------  [stunnel:3408 -- Slave@192.168.1.1]
+### 隧道环境：  [Master@192.168.1.2:3306 -- stunnel:3508] ------  [stunnel:3408 -- Slave@192.168.1.1]
 
 
 ### 配置说明：/etc/stunnel/stunnel.conf
