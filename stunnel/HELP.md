@@ -17,7 +17,7 @@ Stunnel可加密网络数据的TCP连接
     openssl genrsa -des3 -out /etc/pki/CA/rootca.key 1024
     openssl req -new -x509 -key /etc/pki/CA/rootca.key -out /etc/pki/CA/rootca.crt -days 365
 ```
-##  用CA根证书对子证书授权：
+##  用CA根证书对子证书授权
 ```BASH
     openssl genrsa -des3 -out ~/Mysql-master.key 1024  #用户自身的私钥
     openssl req -new -key ~/Mysql-master.key -out ~/Mysql-master.csr  #用户自身的证书
