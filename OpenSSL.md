@@ -39,7 +39,7 @@ chmod 700 ${CA_dir:=/etc/pki/CA}/private/cakey.pem
 ```
 
 ### 4.创建CA根证书
-```
+```shell
 CA_dir="/etc/pki/CA"
 openssl req -new -x509 -days 3650 -key ${CA_dir:=/etc/pki/CA}/private/cakey.pem \
 -out ${CA_dir:=/etc/pki/CA}/cacert.pem
