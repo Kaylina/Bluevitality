@@ -1,5 +1,3 @@
-# OpenSSL
-
 > 环境：centos 6.5 - OpenSSL Version 1.0.1e
   by inmoonlight@163.com 2017.05.2
 
