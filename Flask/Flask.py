@@ -21,7 +21,7 @@ def login():
 def upload(path):                                       #接收参数path
     if request.method == 'GET':
         if os.path.isdir(os.getcwd()+"\\"+path):        #判断当前文件夹下有无URL中变量指定的文件夹,否则报错
-            return render_template("upload.html",up_path=path)  #返回渲染后的模板（传递给模板的变量为up_path,模板文件内引用的形式为：{{up_path}}）
+            return render_template("upload.html",up_path=path)  #返回渲染后的模板
         else:
             return '输入的路径不存在...'
     elif request.method == 'POST':
