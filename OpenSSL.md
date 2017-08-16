@@ -6,7 +6,7 @@
 
 ## CA环境设置
 
-### 设置CA工作目录：/etc/pki/tls/openssl.cnf 
+### 1.设置CA工作目录：/etc/pki/tls/openssl.cnf 
 ```
 [ CA_default ]
 
@@ -27,40 +27,40 @@ private_key     = $dir/private/cakey.pem # The private key
 RANDFILE        = $dir/private/.rand    # private random number file
 ```
 
-### 初始化CA证书编号初始值
+### 2.初始化CA证书编号初始值
 ```
 cd /etc/pki/CA && echo 01 > serial
 ```
-### 创建CA根私钥
+### 3.创建CA根私钥
 ```
 CA_dir="/etc/pki/CA"
 openssl genrsa -out ${CA_dir:=/etc/pki/CA}/private/cakey.pem 2048
 chmod 700 ${CA_dir:=/etc/pki/CA}/private/cakey.pem
 ```
 
-### 创建CA根证书
+### 4.创建CA根证书
 ```
 CA_dir="/etc/pki/CA"
 openssl req -new -x509 -days 3650 -key ${CA_dir:=/etc/pki/CA}/private/cakey.pem \
 -out ${CA_dir:=/etc/pki/CA}/cacert.pem
 
-Country Name (2 letter code) [XX]:CN            		        #国家（大写缩写）
-State or Province Name (full name) []:shanghai  		        #省份或洲
-Locality Name (eg, city) [Default City]:shanghai		        #城市
-Organization Name (eg, company) [Default Company Ltd]:paybay    #公司
-Organizational Unit Name (eg, section) []:yanfa  		        #部门    
-Common Name (eg, your name or your server’s hostname) []:xxx.xxx.xxx.xxx     #地址须与证书所有者能解析到的名字一致！（IP or domain）
+Country Name (2 letter code) [XX]:CN            		            #国家（大写缩写）
+State or Province Name (full name) []:shanghai  		            #省份或洲
+Locality Name (eg, city) [Default City]:shanghai		            #城市
+Organization Name (eg, company) [Default Company Ltd]:paybay        #公司
+Organizational Unit Name (eg, section) []:yanfa  		            #部门    
+Common Name (eg, your name or your server’s hostname) []:xxx.xxx.xxx.xxx     #须与证书能解析到的名字一致
 Email Address []:admin@paybay.cn
 #以上参数可通过配置文件修改：/etc/pki/tls/openssl.cnf
 ```
 
 ## Server环境设置
-### 创建服务器私钥
+### 1.创建服务器私钥
 ```
 mkdir /etc/certs && cd /etc/certs && openssl genrsa -out ./webserv.key 2048
 chmod 644 -R /etc/certs/*
 ```
-### 服务器证书申请
+### 2.服务器证书申请
 ```
 openssl req -new -key /etc/certs/webserv.key -out /etc/certs/webserv.csr
 Country Name (2 letter code) [AU]:CN                    
@@ -71,11 +71,11 @@ Organizational Unit Name (eg, section) []:yanfa
 Common Name (e.g. server FQDN or YOUR name) []:xxx.xxx.xxx.xxx
 Email Address []:admin@company.cn
 ```
-### 将证书请求:"csr" 传至CA进行签名
+### 3.将证书请求:"csr" 传至CA进行签名
 ```
 scp /etc/certs/webserv.csr root@<CA_Ip-Address>:/etc/ssl
 ```
-### 在CA机构对此csr进行签名
+### 4.在CA机构对此csr进行签名
 ```
 cd /etc/ssl
 openssl x509 -req -in /etc/ssl/webserv.csr -CA /etc/pki/CA/cacert.pem \
@@ -84,24 +84,24 @@ openssl x509 -req -in /etc/ssl/webserv.csr -CA /etc/pki/CA/cacert.pem \
 scp webserv.crt root@<Server_Ip-Adress>:/etc/certs
 ```
 
-### 在服务端的：ngixn/mqtt/apache中设置使用https
+### 5.在服务端的：ngixn/mqtt/apache中设置使用https
 ```
 nginx-example：
-http {
-		ssl_session_cache   shared:SSL:10m;		#配置共享会话缓存大小
-		ssl_session_timeout 10m;		        #设置HTTPS的会话超时时间
-		#...
+ht.. 
+		ssl_session_cache   shared:SSL:10..	
+		ssl_session_timeout 10m;	.. 
+		......
 		server {
-			listen              443 ssl;	    #ssl参数
+			listen              443 ssl;
 			server_name         example.com
-			ssl_certificate     webserv.crt;	#证书
-			ssl_certificate_key webserv.key;	#私钥（私钥作为安全实体，应被放在有一定权限限制的目录并保证Nginx主进程有存取权)
-			ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;    #ssl_protocols 和 ssl_ciphers 限制连接含 SSL/TLS 的加強版本&算法
+			ssl_certificate     webserv.crt;
+			ssl_certificate_key webserv.key;
+			ssl_protocols       TLSv1 TLSv1.1 TLSv1.2; 
 			ssl_ciphers         HIGH:!aNULL:!MD5;
-			add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;#HSTS策略	
-			add_header X-Content-Type-Options nosniff;      #禁止服务器自动解析资源类型
-			add_header X-Xss-Protection 1;		            #防XSS攻击
-			#...
+			add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
+			add_header X-Content-Type-Options nosniff;    
+			add_header X-Xss-Protection 1;		          
+			......
 			}
 	}
 	
@@ -110,29 +110,29 @@ http {
 
 ## 在CA端吊销证书
 
-### 在S端获取证书serial
+### 1.在S端获取证书serial
 ```
 openssl x509 -in /etc/serts/webserv.crt -noout -serial -subject
 #stdout-example...
 serial=01
 subject=/C=CN/ST=shanghai/O=paybay/OU=yanfa/CN=xxx.xxx.xxx.xxx	#保留输出内容供CA端验证
 ```	
-### 在CA端验证：	
+### 2.在CA端验证：	
 ```
 cat /etc/pki/CA/index.txt
 V	251227084917Z		01	unknown	/C=CN/ST=shanghai/O=paybay/OU=yanfa/CN=xxx.xxx.xxx.xxx
 #依S端提交的serial和subject信息来验证与index.txt中的信息是否一致
 ```
 
-### 在CA端吊销：
+### 3.在CA端吊销：
 ```
 openssl ca -revoke newcerts/01.pem
 ```	 
-### CA生成吊销编号（仅在第1次吊销证书时）
+### 4.CA生成吊销编号（仅在第1次吊销证书时）
 ```
 echo 01 > /etc/pki/CA/crlnumber
 ```
-### CA更新证书吊销列表:
+### 5.CA更新证书吊销列表:
 ```
 cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
 ```
