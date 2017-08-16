@@ -88,22 +88,22 @@ scp webserv.crt root@<Server_Ip-Adress>:/etc/certs
 ```
 nginx-example：
 ht.. 
-		ssl_session_cache   shared:SSL:10..	
-		ssl_session_timeout 10m;	.. 
+	ssl_session_cache   shared:SSL:10..	
+	ssl_session_timeout 10m;	.. 
+	......
+	server {
+		listen              443 ssl;
+		server_name         example.com
+		ssl_certificate     webserv.crt;
+		ssl_certificate_key webserv.key;
+		ssl_protocols       TLSv1 TLSv1.1 TLSv1.2; 
+		ssl_ciphers         HIGH:!aNULL:!MD5;
+		add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
+		add_header X-Content-Type-Options nosniff;    
+		add_header X-Xss-Protection 1;		          
 		......
-		server {
-			listen              443 ssl;
-			server_name         example.com
-			ssl_certificate     webserv.crt;
-			ssl_certificate_key webserv.key;
-			ssl_protocols       TLSv1 TLSv1.1 TLSv1.2; 
-			ssl_ciphers         HIGH:!aNULL:!MD5;
-			add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;	
-			add_header X-Content-Type-Options nosniff;    
-			add_header X-Xss-Protection 1;		          
-			......
-			}
 	}
+}
 	
 #注：由于是自建CA，客户端或浏览器自身没有此私有CA证书，需在使用前提前导入CA根证书否则S端发来的证书不被C端承认
 ```
