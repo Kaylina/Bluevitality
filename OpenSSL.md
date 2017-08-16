@@ -133,9 +133,9 @@ openssl ca -revoke newcerts/01.pem
 echo 01 > /etc/pki/CA/crlnumber
 ```shell
 ### 5.CA更新证书吊销列表:
-```
-cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
 ```shell
+cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
+```
 ## 附：以命令行方生成X509证书信息（非交互）
 ```shell
 openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key \
