@@ -16,6 +16,8 @@
 	rsync_sevip=192.168.126.156				#Rsync服务ip
 	rsync_module=rsync					#Rsync服务模块名称(需要与serv_pub_module的值相同)
 
+#----------------------------------------------------------------------------------------------------------------------
+
 #define sofrware function ...
 function install_rsync() {
 
@@ -101,75 +103,72 @@ function agen_config() {
 	selinux_config
 	install_rsync && install_inotify && install_sersync && echo -e "\033[32mRsync'Client dameon install success... \033[0m"
 
-cat >> /etc/sysctl.conf <<eof
-fs.inotify.max_queued_events=99999999
-fs.inotify.max_user_watches=99999999
-fs.inotify.max_user_instances=65535
-eof
+echo "fs.inotify.max_queued_events=99999999" >>  /etc/sysctl.conf
+echo "fs.inotify.max_user_watches=99999999"  >>  /etc/sysctl.conf
+echo "fs.inotify.max_user_instances=65535"   >>  /etc/sysctl.conf
 
 cat > /usr/local/sersync/confxml.xml <<eof
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <head version="2.5">
- <host hostip="localhost" port="8008"></host>
- <debug start="true"/>
- <fileSystem xfs="false"/>
- <filter start="false">
- <exclude expression="(.*)\.php"></exclude>
- <exclude expression="^data/*"></exclude>
- </filter> 
- <inotify>
- <delete start="true"/>
- <createFolder start="true"/>
- <createFile start="false"/>
- <closeWrite start="true"/>
- <moveFrom start="true"/>
- <moveTo start="true"/>
- <attrib start="false"/>
- <modify start="false"/>
- </inotify>
-
- <sersync>
- <localpath watch="${agen_watch_dir}">
- <remote ip="${rsync_sevip}" name="${rsync_module}"/>
- <!--<remote ip="192.168.28.39" name="tongbu"/>-->
- </localpath>
- <rsync>
- <commonParams params="-artuz"/>
- <auth start="true" users="rsync" passwordfile="/usr/local/sersync/user.pass"/> 
- <userDefinedPort start="false" port="874"/><!-- port=874 -->
- <timeout start="false" time="100"/><!-- timeout=100 -->
- <ssh start="false"/>
- </rsync>
- <failLog path="/tmp/rsync_fail_log.sh" timeToExecute="60"/>
- <crontab start="false" schedule="600">
- <crontabfilter start="false">
- <exclude expression="*.php"></exclude>
- <exclude expression="info/*"></exclude>
- </crontabfilter>
- </crontab>
- <plugin start="false" name="command"/>
- </sersync>
-
- <plugin name="command">
- <param prefix="/bin/sh" suffix="" ignoreError="true"/> <!--prefix /opt/tongbu/mmm.sh suffix-->
- <filter start="false">
- <include expression="(.*)\.php"/>
- <include expression="(.*)\.sh"/>
- </filter>
- </plugin>
-
- <plugin name="socket">
- <localpath watch="/home/demo">
- <deshost ip="210.36.158.xxx" port="8009"/>
- </localpath>
- </plugin>
- <plugin name="refreshCDN">
- <localpath watch="/data0/htdocs/cdn.markdream.com/site/">
- <cdninfo domainname="cdn.chinacache.com" port="80" username="xxxx" passwd="xxxx"/>
- <sendurl base="http://cdn.markdream.com/cms"/>
- <regexurl regex="false" match="cdn.markdream.com/site([/a-zA-Z0-9]*).cdn.markdream.com/images"/>
- </localpath>
- </plugin>
+    <host hostip="localhost" port="8008"></host>
+    <debug start="true" />
+    <fileSystem xfs="false" />
+    <filter start="false">
+        <exclude expression="(.*)\.php"></exclude>
+        <exclude expression="^data/*"></exclude>
+    </filter>
+    <inotify>
+        <delete start="true" />
+        <createFolder start="true" />
+        <createFile start="false" />
+        <closeWrite start="true" />
+        <moveFrom start="true" />
+        <moveTo start="true" />
+        <attrib start="false" />
+        <modify start="false" />
+    </inotify>
+    <sersync>
+        <localpath watch="${agen_watch_dir}">
+            <remote ip="${rsync_sevip}" name="${rsync_module}" />
+        </localpath>
+        <rsync>
+            <commonParams params="-artuz" />
+            <auth start="true" users="rsync" passwordfile="/usr/local/sersync/user.pass" />
+            <userDefinedPort start="false" port="874" />
+            <!-- port=874 -->
+            <timeout start="false" time="100" />
+            <!-- timeout=100 -->
+            <ssh start="false" />
+        </rsync>
+        <failLog path="/tmp/rsync_fail_log.sh" timeToExecute="60" />
+        <crontab start="false" schedule="600">
+            <crontabfilter start="false">
+                <exclude expression="*.php"></exclude>
+                <exclude expression="info/*"></exclude>
+            </crontabfilter>
+        </crontab>
+        <plugin start="false" name="command" />
+    </sersync>
+    <plugin name="command">
+        <param prefix="/bin/sh" suffix="" ignoreError="true" />
+        <!--prefix /opt/tongbu/mmm.sh suffix-->
+        <filter start="false">
+            <include expression="(.*)\.php" />
+            <include expression="(.*)\.sh" />
+        </filter>
+    </plugin>
+    <plugin name="socket">
+        <localpath watch="/home/demo">
+            <deshost ip="210.36.158.xxx" port="8009" />
+        </localpath>
+    </plugin>
+    <plugin name="refreshCDN">
+        <localpath watch="/data0/htdocs/cdn.markdream.com/site/">
+            <cdninfo domainname="cdn.chinacache.com" port="80" username="xxxx" passwd="xxxx" />
+            <sendurl base="http://cdn.markdream.com/cms" />
+            <regexurl regex="false" match="cdn.markdream.com/site([/a-zA-Z0-9]*).cdn.markdream.com/images" />
+        </localpath>
+    </plugin>
 </head>
 eof
 
