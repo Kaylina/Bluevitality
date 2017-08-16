@@ -29,9 +29,6 @@ Stunnel可加密网络数据的TCP连接
         -in ./Mysql-master.csr -out ./Mysql-master.pem -days 365
 ```
 
-### 隧道环境：  [Master@192.168.1.2:3306 -- stunnel:3508] ------  [stunnel:3408 -- Slave@192.168.1.1]
-
-
 ### 配置说明：/etc/stunnel/stunnel.conf
 **Server 端：**
 ```BASH
