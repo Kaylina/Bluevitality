@@ -135,10 +135,7 @@ echo 01 > /etc/pki/CA/crlnumber
 ### 5.CA更新证书吊销列表:
 ```
 cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
-```
-
-
-----------
+```shell
 ## 附：以命令行方生成X509证书信息（非交互）
 ```shell
 openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout example.key \
