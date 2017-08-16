@@ -7,7 +7,7 @@
 ## CA环境设置
 
 ### 1.设置CA工作目录：/etc/pki/tls/openssl.cnf 
-```
+```shell
 [ CA_default ]
 
 dir             = /etc/pki/CA           # <-----
