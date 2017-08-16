@@ -20,14 +20,16 @@
 function install_rsync() {
 
 	tar zxf rsync-3.1.1.tar.gz && cd rsync-3.1.1 ; ./configure ; make && make install
-	cd - ; return 0
+	cd - 
+	return 0
 	
 }
 
 function install_inotify() {
 
 	tar zxf inotify-tools-3.14.tar.gz && cd inotify-tools-3.14 ; ./configure --prefix=/usr/local/inotify ; make && make install
-	cd - ; return 0
+	cd - 
+	return 0
 	
 }
 
@@ -37,7 +39,8 @@ function install_sersync() {
 	mv ./GNU-Linux-x86 /usr/local/sersync && cd /usr/local/sersync
 	echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 	chmod 600 /usr/local/sersync/user.pass
-	cd - ; return 0
+	cd - 
+	return 0
 	
 }
 
