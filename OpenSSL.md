@@ -131,7 +131,7 @@ openssl ca -revoke newcerts/01.pem
 ### 4.CA生成吊销编号（仅在第1次吊销证书时）
 ```shell
 echo 01 > /etc/pki/CA/crlnumber
-```shell
+```
 ### 5.CA更新证书吊销列表:
 ```shell
 cd /etc/pki/CA/crl &&  openssl ca -gencrl -out ca.crl
