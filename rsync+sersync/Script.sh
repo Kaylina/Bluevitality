@@ -19,7 +19,8 @@
 #define sofrware function ...
 function install_rsync() {
 
-	tar zxf rsync-3.1.1.tar.gz && cd rsync-3.1.1 ; ./configure ; make && make install
+	tar zxf rsync-3.1.1.tar.gz && cd rsync-3.1.1
+	./configure ; make && make install
 	cd - 
 	return 0
 	
@@ -27,7 +28,8 @@ function install_rsync() {
 
 function install_inotify() {
 
-	tar zxf inotify-tools-3.14.tar.gz && cd inotify-tools-3.14 ; ./configure --prefix=/usr/local/inotify ; make && make install
+	tar zxf inotify-tools-3.14.tar.gz && cd inotify-tools-3.14
+	./configure --prefix=/usr/local/inotify ; make && make install
 	cd - 
 	return 0
 	
@@ -36,7 +38,8 @@ function install_inotify() {
 function install_sersync() {
 
 	tar zxf sersync2.5.4_64bit_binary_stable_final.tar.gz
-	mv ./GNU-Linux-x86 /usr/local/sersync && cd /usr/local/sersync
+	mv ./GNU-Linux-x86 /usr/local/sersync
+	cd /usr/local/sersync
 	echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 	chmod 600 /usr/local/sersync/user.pass
 	cd - 
@@ -46,8 +49,10 @@ function install_sersync() {
 
 function selinux_config() {
 
-	{ setenforce 0  ;  sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/selinux/config ; }  &> /dev/null 
-	echo -n "SElinux：" ; grep -oP "(?<=^SELINUX=).*" /etc/selinux/config
+	setenforce 0
+	sed -i "s/^SELINUX=.*/SELINUX=disabled/g" /etc/selinux/config 
+	echo -n "SElinux："
+	grep -oP "(?<=^SELINUX=).*" /etc/selinux/config
 	
 }
 
@@ -76,12 +81,9 @@ path=${serv_pub_dir}
 eof
 
 	echo "${serv_pub_user}:${serv_pub_pass}" > /etc/rsync.pass
-	
 	touch ${serv_log_path}
 	chmod 600 /etc/{rsyncd.conf,rsync.pass} ; chmod 755 ${serv_pub_dir}
-	
 	rm -rf /var/run/rsyncd.pid
-	
 	/usr/local/bin/rsync --daemon
 	
 	netstat -atupnl | grep -q 873  &&  {
@@ -171,12 +173,10 @@ cat > /usr/local/sersync/confxml.xml <<eof
 </head>
 eof
 
-	sysctl -p /etc/sysctl.conf ; echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
-
+	sysctl -p /etc/sysctl.conf
+	echo "${agen_rsync_pass:=12345}" > /usr/local/sersync/user.pass
 	do="nohup /usr/local/sersync/sersync2 -r -d -n ${t_num:=2} -o /usr/local/sersync/confxml.xml > /usr/local/sersync/rsync.log 2>&1 &"
-	
 	echo ${do} >> /etc/rc.local
-	
 	eval ${do} && echo -e "\033[32mSersync dameon start ok... \033[0m"
 }
 
