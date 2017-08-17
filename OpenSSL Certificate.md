@@ -145,9 +145,9 @@ openssl req -new -newkey rsa:2048 -sha256 -nodes -out example.csr -keyout exampl
 - 测算法速度：	openssl speed <算法>
 - 生成随机数：	openssl rand [ -base64 / -hex ] <length>
 - 生成公私钥：	openssl genrsa -out private.key 2048  
-				openssl rsa -in private.key -pubout -out public.pubkey
+				        openssl rsa -in private.key -pubout -out public.pubkey
 - 文件加解密：	openssl enc -e -des3 -in sec.key -out file.secrite  
-				openssl enc -d -des3 -in file.secrite -out sec.key.dec
+				        openssl enc -d -des3 -in file.secrite -out sec.key.dec
 - 计算摘要值：	openssl [md5/sha1] < file <---> echo -n "***"  
-				[ md5sum / sh1sum ] <---> openssl dgst [-md5/sha1] < file
+				        [ md5sum / sh1sum ] <---> openssl dgst [-md5/sha1] < file
 
