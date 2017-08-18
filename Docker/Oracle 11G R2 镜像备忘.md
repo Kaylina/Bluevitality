@@ -17,4 +17,4 @@ username: system
 password: oracle
 ```
 
-[参考](https://hub.docker.com/r/fengzhou/docker-weblogic-1036/)
+[官方镜像地址](https://hub.docker.com/r/fengzhou/docker-weblogic-1036/)
