@@ -2,3 +2,6 @@ vim /etc/docker/daemon.json
 {
 	"registry-mirrors": ["https://XXXXXXXX.mirror.aliyuncs.com"] 	#去阿里云申请，修改后重启docker服务
 }
+
+阿里云加速器申请页面：
+https://dev.aliyun.com/
