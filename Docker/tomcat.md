@@ -15,14 +15,14 @@ docker rm -f $(docker -aq)
 ```
 
 ## 编写Dcoekrfile
-#### Dockerfile
+##### Dockerfile
 ```Bash
 FROM docker.io/tomcat:7.0.81-jre7
 EXPOSE 8080
 VOLUME /usr/local/tomcat/conf /usr/local/tomcat/logs /usr/local/tomcat/webapps
 CMD ["catalina.sh", "run"]
 ```
-#### 制作镜像
+##### 制作镜像
 ```Bash
 docker build -t "tomcat" .
 ```
