@@ -33,7 +33,7 @@ docker run -d -p 3333:3306 mysql:5.7
 
 ## 查找挂载卷
 ```Bash
-docker inspect -f {{.Mounts}} instance1
+docker inspect -f {{.Mounts}} <container_ID>
 ```
 
 [镜像官网地址](https://hub.docker.com/_/mysql/)
