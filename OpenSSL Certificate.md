@@ -33,8 +33,7 @@ cd /etc/pki/CA && echo 01 > serial
 ### 3.创建CA根私钥
 ```shell
 CA_dir="/etc/pki/CA"
-openssl genrsa -out ${CA_dir:=/etc/pki/CA}/private/cakey.pem 2048
-chmod 700 ${CA_dir:=/etc/pki/CA}/private/cakey.pem
+(uname 077 ; openssl genrsa -out ${CA_dir:=/etc/pki/CA}/private/cakey.pem 2048 )
 ```
 
 ### 4.创建CA根证书
