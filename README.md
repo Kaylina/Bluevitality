@@ -39,3 +39,5 @@ Haproxy自动安装&配置脚本
 DNS安装&配置脚本
 
 DRBD脚本
+
+mdadm
