@@ -4,4 +4,4 @@ vim /etc/docker/daemon.json
 }
 
 阿里云加速器申请页面：
-https://dev.aliyun.com/
+https://cr.console.aliyun.com/#/accelerator
