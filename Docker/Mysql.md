@@ -10,12 +10,25 @@ docker run --name "mysql" -p 3306:3306 -e MYSQL_ROOT_PASSWORD=paybay123 -d mysql
 ```
 
 ## 编写Dockerfile
+##### 添加配置
+```Bash
+cat >> docker.cnf <<eof
+[mysqld]
+skip-host-cache
+skip-name-resolve
+character-set-server = utf8
+collation-server = utf8_general_ci
+default_storage_engine = InnoDB
+max_connections = 1000
+max_connect_errors = 30
+eof
+```
 ##### dockerfile
 ```Bash
 FROM docker.io/mysql:5.7
+ADD ADD docker.cnf /etc/mysql/conf.d/docker.cnf
 ENV MYSQL_ROOT_PASSWORD=paybay123 
 ENV MYSQL_DATABASE='signage' MYSQL_USER='remote' MYSQL_USER='paybay123'
-ENV CHARACTER_SET_SERVER=utf8 DEFAULT_CHARACTER_SET=utf
 EXPOSE 3306
 VOLUME /var/lib/mysql
 ENTRYPOINT ["docker-entrypoint.sh"]
@@ -24,7 +37,7 @@ CMD ["mysqld"]
 
 ##### 制作镜像
 ```Bash
-docker build -t "mysql:5.7" .
+docker build -t "paybay_mysql:5.7" .
 ```
 
 ## 启动容器
