@@ -1,0 +1,14 @@
+[Unit]
+Description=tomcat-7.0
+After=syslog.target network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/tomcat.pid
+ExecStart=/usr/local/tomcat/bin/startup.sh
+ExecReload=/usr/local/tomcat/bin/shutdown.sh && sleep 2 && /usr/local/tomcat/bin/startup.sh
+ExecStop=/usr/local/tomcat/bin/shutdown.sh
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
