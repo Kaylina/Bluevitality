@@ -29,7 +29,7 @@ docker build -t "mysql:5.7" .
 
 ## 启动容器
 ```Bash
-docker run -d -p 3333:3306 mysql:5.7
+docker run -d -p 3306:3306 paybay_mysql:5.7
 ```
 
 ## 查找挂载卷
