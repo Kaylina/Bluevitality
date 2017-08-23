@@ -15,6 +15,7 @@ docker run --name "mysql" -p 3306:3306 -e MYSQL_ROOT_PASSWORD=paybay123 -d mysql
 FROM docker.io/mysql:5.7
 ENV MYSQL_ROOT_PASSWORD=paybay123 
 ENV MYSQL_DATABASE='signage' MYSQL_USER='remote' MYSQL_USER='paybay123'
+ENV CHARACTER_SET_SERVER=utf8 DEFAULT_CHARACTER_SET=utf
 EXPOSE 3306
 VOLUME /var/lib/mysql
 ENTRYPOINT ["docker-entrypoint.sh"]
