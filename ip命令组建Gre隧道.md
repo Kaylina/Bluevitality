@@ -48,3 +48,20 @@ ip tunnel del gre1
             +---------+  Network  +---------+     | Network
                                                   |
                                                   | 192.168.1.0/24 
+
+
+#### ServerA
+```Bash
+ip tunnel add a2b mode ipip remote 2.2.2.2 local 1.1.1.1
+ifconfig a2b 192.168.2.1 netmask 255.255.255.0
+/sbin/route add -net 192.168.1.0/24 gw 192.168.2.2
+```
+#### ServerB
+```Bash
+ip tunnel add a2b mode ipip remote 1.1.1.1 local 2.2.2.2
+ifconfig a2b 192.168.2.2 netmask 255.255.255.0
+iptables -t nat -A POSTROUTING -s 192.168.2.1 -d 192.168.1.0/24 -j MASQUERADE
+sysctl -w net.ipv4.ip_forward=1
+sed -i '/net.ipv4.ip_forward/ s/0/1/'  /etc/sysctl.conf
+```
+至此，完成了两端的配置，ServerA可直接访问ServerB所接的私网了
