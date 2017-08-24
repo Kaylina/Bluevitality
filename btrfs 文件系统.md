@@ -118,7 +118,7 @@ Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
 ```
 Resize '/btrfssingle' of '+200M'
 ```
-对于多个块设备的btrfs，需要指定块设备ID 
+对于多个块设备的btrfs，需要指定块设备ID   
 [root@digoal ~]# `btrfs filesystem show /data01`
 ```
 Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
@@ -175,7 +175,7 @@ Resize '/data01' of '3:max'
 Resize '/data01' of '4:max'
 ```
 ## 转换
-若一开始btrfs只用了一个块设备，现要转换成raid1，如何转换?
+若一开始btrfs只用了一个块设备，现要转换成raid1，如何转换?   
 [root@digoal ~]# `mkfs.btrfs -m single -d single -n 4096 -f /dev/sdb`
 ```
 btrfs-progs v4.3.1
@@ -198,10 +198,12 @@ Devices:
 ```
 [root@digoal ~]#`mount -o ssd,ssd_spread,discard,noatime,compress=no,space_cache,defaults /dev/sdb /data01`
 [root@digoal ~]#`btrfs device add /dev/sdc /data01 -f`
-使用balance在线转换，其中-m指metadata, -d指data
+使用balance在线转换，其中-m指metadata, -d指data   
 [root@digoal ~]#`btrfs balance start -dconvert=raid1 -mconvert=raid1 /data01`
+```
 Done, had to relocate 3 out of 3 chunks
-这里的chunks指的就是block group.
+```
+这里的chunks指的就是block group.   
 
 [root@digoal ~]# `btrfs filesystem show /data01`
 ```
@@ -224,10 +226,10 @@ Done, had to relocate 1 out of 3 chunks
 这里的chunks指的就是block group.
 
 
-添加块设备并进行数据重分布，和前面的转换差不多，只是不改-d -m的profile。
-[root@digoal ~]#`btrfs device add -f /dev/sdd/data01`
-[root@digoal ~]#`btrfs device add -f /dev/sde/data01`
-[root@digoal ~]#`btrfs filesystem show /dev/sdb`
+添加块设备并进行数据重分布，和前面的转换差不多，只是不改-d -m的profile。   
+[root@digoal ~]#`btrfs device add -f /dev/sdd/data01`   
+[root@digoal ~]#`btrfs device add -f /dev/sde/data01`   
+[root@digoal ~]#`btrfs filesystem show /dev/sdb`   
 ```
 Label: none  uuid: 165f59f6-77b5-4421-b3d8-90884d3c0b40
   Total    devices 4 FS bytes used 616.00KiB
@@ -337,9 +339,9 @@ Label: none  uuid: 165f59f6-77b5-4421-b3d8-90884d3c0b40
 ERROR: error removing device '/dev/sdd': unable to go below two devices on raid1
 ```
 再加回去  
-[root@digoal ~]# `btrfs device add /dev/sdb /data01`
-[root@digoal ~]# `btrfs device add /dev/sdc /data01`
-[root@digoal ~]# `btrfs balance start /data01`
+[root@digoal ~]# `btrfs device add /dev/sdb /data01`  
+[root@digoal ~]# `btrfs device add /dev/sdc /data01`  
+[root@digoal ~]# `btrfs balance start /data01`  
 ```
 Done, had to relocate 4 out of 4 chunks
 ```
@@ -350,8 +352,8 @@ Done, had to relocate 4 out of 4 chunks
 ```
 
 可以删除1个，因为raid5最少需要3个块设备  
-[root@digoal ~]# `btrfs device delete /dev/sde /data01`
-[root@digoal ~]# `btrfs filesystem df /data01`
+[root@digoal ~]# `btrfs device delete /dev/sde /data01`  
+[root@digoal ~]# `btrfs filesystem df /data01`  
 ```
 Data, RAID5: total=2.00GiB, used=1.00GiB
 System, RAID5: total=64.00MiB, used=4.00KiB
@@ -368,12 +370,12 @@ Label: none  uuid: 165f59f6-77b5-4421-b3d8-90884d3c0b40
 ```
 
 ## 附
-透明压缩  
-[root@localhost ~]#`mount -o compress={lzo|zlib} <device> <point>`
-创建快照  
-[root@localhost ~]#`btrfs subvolume snapshot <pathname> <snap_pathname>`
-查看特定目录下的快照及子卷的信息  
-[root@localhost ~]#`btrfs subvolume list 'pathname'`
+透明压缩   
+[root@localhost ~]#`mount -o compress={lzo|zlib} <device> <point>`  
+创建快照    
+[root@localhost ~]#`btrfs subvolume snapshot <pathname> <snap_pathname>`  
+查看特定目录下的快照及子卷的信息    
+[root@localhost ~]#`btrfs subvolume list 'pathname'`  
 
 创建快照  
 [root@localhost ~]#`btrfs subvolume snapshot /btrdata/mydata /btrdata/mydata_snapshot`  
