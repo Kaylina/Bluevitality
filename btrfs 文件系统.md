@@ -66,12 +66,12 @@ Label: none  uuid: 4eef7b0c-73a3-430c-bb61-028b37d1872b
 * 第二种是先scan再mount，因为某些系统重启或btrfs模块重加载后需重新scan来识别
 
 #### 例如
-[root@digoal ~]# `btrfs device scan`
+[root@digoal ~]# `btrfs device scan`  
 ```
 Scanning for Btrfs filesystems
 ```
-[root@digoal ~]# `mount /dev/sdb /data01`
-[root@digoal ~]# `btrfs filesystem show /data01`
+[root@digoal ~]# `mount /dev/sdb /data01`  
+[root@digoal ~]# `btrfs filesystem show /data01`  
 ```
 Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
   Total devices 4 FS bytes used 1.03MiB
@@ -81,8 +81,8 @@ Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
   devid    4 size 20.00GiB used 2.01GiB path /dev/sde
 ```
 #### 或者
-[root@digoal ~]# `mount -o device=/dev/sdb,device=/dev/sdc,device=/dev/sdd,device=/dev/sde /dev/sdb /data01`
-[root@digoal ~]# `btrfs filesystem show /data01`
+[root@digoal ~]# `mount -o device=/dev/sdb,device=/dev/sdc,device=/dev/sdd,device=/dev/sde /dev/sdb /data01`  
+[root@digoal ~]# `btrfs filesystem show /data01`  
 ```
 Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
   Total devices 4 FS bytes used 1.03MiB
@@ -92,8 +92,8 @@ Label: none  uuid: 00036b8e-7914-41a9-831a-d35c97202eeb
   devid    4 size 20.00GiB used 2.01GiB path /dev/sde
 ```
 #### 或者
-[root@digoal ~]#`vi /etc/fstab`  
-`UUID=00036b8e-7914-41a9-831a-d35c97202eeb /data01 btrfs ssd,ssd_spread,space_cache,recovery,defaults 0 0`
+[root@digoal ~]#`vi /etc/fstab`    
+`UUID=00036b8e-7914-41a9-831a-d35c97202eeb /data01 btrfs ssd,ssd_spread,space_cache,recovery,defaults 0 0`  
 
 ## resize btrfs
 > btrfs整合了块设备管理，其存储了data, metadata, system三种数据类型  
