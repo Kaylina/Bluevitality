@@ -10,6 +10,8 @@ host B : `111.2.33.28`
 ip tunnel add GRE1 mode gre remote 111.2.33.28 local 121.207.22.123 ttl 255
 ip link set GRE1 up
 ip address add 10.10.10.1 peer 10.10.10.2 dev GRE1
+sysctl -w net.ipv4.ip_forward=1
+sysctl -p
 ```
 
 #### HostB
@@ -17,6 +19,8 @@ ip address add 10.10.10.1 peer 10.10.10.2 dev GRE1
 ip tunnel add GRE1 mode gre remote 121.207.22.123 local 111.2.33.28 ttl 255
 ip link set GRE1 up
 ip addr add 10.10.10.2 peer 10.10.10.1 dev GRE1
+sysctl -w net.ipv4.ip_forward=1
+sysctl -p
 ```
 
 #### 检测连通性
@@ -33,3 +37,14 @@ PING 10.10.10.2 (10.10.10.2) 56(84) bytes of data.
 ip link set gre1 down
 ip tunnel del gre1
 ```
+------
+
+## 例2
+#### 环境
+                                                  |
+            1.1.1.1               2.2.2.2         |
+            +---------+  Public   +---------+     | Private
+            | ServerA +-----------+ ServerB +-----+
+            +---------+  Network  +---------+     | Network
+                                                  |
+                                                  | 192.168.1.0/24 
