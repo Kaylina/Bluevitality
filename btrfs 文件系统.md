@@ -196,10 +196,10 @@ Devices:
    ID        SIZE       PATH
     1        20.00GiB   /dev/sdb
 ```
-[root@digoal ~]#`mount -o ssd,ssd_spread,discard,noatime,compress=no,space_cache,defaults /dev/sdb /data01`
-[root@digoal ~]#`btrfs device add /dev/sdc /data01 -f`
-使用balance在线转换，其中-m指metadata, -d指data   
-[root@digoal ~]#`btrfs balance start -dconvert=raid1 -mconvert=raid1 /data01`
+[root@digoal ~]#`mount -o ssd,ssd_spread,discard,noatime,compress=no,space_cache,defaults /dev/sdb /data01`  
+[root@digoal ~]#`btrfs device add /dev/sdc /data01 -f`   
+使用balance在线转换，其中-m指metadata, -d指data     
+[root@digoal ~]#`btrfs balance start -dconvert=raid1 -mconvert=raid1 /data01`  
 ```
 Done, had to relocate 3 out of 3 chunks
 ```
