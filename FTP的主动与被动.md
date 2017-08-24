@@ -1,13 +1,13 @@
 #### 主动模式
 > 主动模式默认情况下不能通过客户端的防火墙！  
 > 客户端并没有实际建立到服务器数据端口的连接，它只是简单的告诉服务器自己监听的端口，服务器再回来连接客户端这个指定的端口。  
-**client->server:** 21端口 控制指令（其发送的PORT指令指定client端开放的待连接端口）  
-**server->client:** 20端口 数据传输（server端使用PORT指定的目的端与源20端口建立SYN套接字...）  
+`**client->server:**` 21端口 控制指令（其发送的PORT指令指定client端开放的待连接端口）  
+`**server->client:**` 20端口 数据传输（server端使用PORT指定的目的端与源20端口建立SYN套接字...）  
 
 
 #### 被动模式
 > 在被动方式中，命令连接和数据连接都由客户端，这样就可以解决从服务器到客户端的数据端口的入方向连接被防火墙过滤掉问题。  
-**client->server:** 21端口 控制指令（其发送的PASV指令说明clinet端为被动模式）  
-**server->client:** 21端口 控制指令（server端使用PORT指令指定client端需要连接的端口）  
-**server->client:** 20端口 数据传输（client端主动连接至server端指定的端口）  
+`**client->server:**` 21端口 控制指令（其发送的PASV指令说明clinet端为被动模式）  
+`**server->client:**` 21端口 控制指令（server端使用PORT指令指定client端需要连接的端口）  
+`**server->client:**` 20端口 数据传输（client端主动连接至server端指定的端口）  
 
