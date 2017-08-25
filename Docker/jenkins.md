@@ -21,7 +21,7 @@ docker build -t "paybay_jenkins" .
 ```
 ### 随系统自启动本容器
 ```Bash
-docker run --restart=always --name jenkins -p 8080:8080 -p 50000:50000 paybay_jenkins
+docker run -d --restart=always --name jenkins -p 8080:8080 -p 50000:50000 paybay_jenkins
 ```
 ### 查找挂载点
 ```Bash
