@@ -6,7 +6,7 @@
 userlist=(shangftp wangftp)             #数组形式的账号名（密码默认随机产生，或修改循环中的Password变量）
 chroot_dir=/data                        #FTP根路径
 
-[ -d ${chroot_dir} ] ||  echo -e "\033[31mdirectory not exist!......\033[0m" && exit 1
+[ -d ${chroot_dir} ] ||  { echo -e "\033[31mdirectory not exist!......\033[0m" ; exit 1 ; }
 
 #check user
 if [ $(id -u) != "0" ]
@@ -32,11 +32,11 @@ done
 #查找vsftpd服务的配置文件（默认不需要）
 config_file=$(awk 'BEGIN{while("rpm -qc vsftpd"|getline)/vsftpd.conf/;print}')
 
-#写入配置文件
+#写入配置文件 (实际使用需要把注释去掉！否则会报语法错误)
 cat > ${config_file} <<eof
 #连接及端口
 listen_port=21                  #监听端口
-connect_from_port_20=YES        #是否用20作为数据传输端口
+#connect_from_port_20=YES        #是否用20作为数据传输端口
 ftp_data_port=20                #在PORT方式下数据传输端口
 pasv_enable=YES                 #是否使用PASV模式；若NO则使用PORT模式。默认YES
 pasv_max_port=0                 #在PASV模式下数据连接可使用的端口范围的最大端口，0：任意端口
@@ -108,9 +108,7 @@ eof
 echo -e "\033[32mConfig：${config_file}\033[0m"
 
 #执行
-create_user  \
-&& systemctl restart vsftpd \
-&& systemctl enable vsftpd
+systemctl restart vsftpd && systemctl enable vsftpd
 
 
 # 注：
