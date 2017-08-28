@@ -1,6 +1,6 @@
 #!/bin/bash
-#仅适用于RPM或YUM安装的Vsftp服务。默认吧随机产生的账号密码输出到当前目录
-#默认情况下每个账户的主目录都在/tmp下
+#仅适用于RPM或YUM安装的Vsftp服务。默认将随机产生的账号密码输出到脚本所在目录:Ftp_Userinfo.txt
+#默认情每个账户主目录都在${chroot_dir}下
 
 #定义变量
 userlist=(shangftp wangftp)             #数组形式的账号名（密码默认随机产生，或修改循环中的Password变量）
@@ -21,10 +21,10 @@ do
         if id ${username} 2>&- ; then
                 echo -e "\033[31m user ${username} already  exist...\033[0m" 
         else
-                Password=${RANDOM}   #需要统一密码的话修改这里
-                useradd -d ${chroot_dir:=/tmp}  -M ${username}
+                Password=${RANDOM}   #统一密码则修改这里
+                useradd -d ${chroot_dir} -M ${username}
                 echo $Password | passwd  ${username} --stdin 2>&-
-                echo -e "$username \t $Password" >> ./Ftp_Userinfo.txt          #输出账号与其密码到当前目录文件中
+                echo -e "$username   $Password" >> ./Ftp_Userinfo.txt
                 echo -e "\033[32mFTP user create  success...\033[0m"
         fi
 done
