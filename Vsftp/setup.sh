@@ -29,14 +29,13 @@ do
         fi
 done
 
-#查找vsftpd服务的配置文件（默认不需要）
+#查找RPM安装时的配置文件（默认不需要）
 config_file=$(awk 'BEGIN{while("rpm -qc vsftpd"|getline)/vsftpd.conf/;print}')
 
-#写入配置文件 (实际使用需要把注释去掉！否则会报语法错误)
+#写入配置文件 (使用时需把注释去掉！否则报语法错误)
 cat > ${config_file} <<eof
-#连接及端口
-listen_port=21                  #监听端口
-#connect_from_port_20=YES        #是否用20作为数据传输端口
+listen_port=21
+connect_from_port_20=YES        #是否用20作为数据传输端口
 ftp_data_port=20                #在PORT方式下数据传输端口
 pasv_enable=YES                 #是否使用PASV模式；若NO则使用PORT模式。默认YES
 pasv_max_port=0                 #在PASV模式下数据连接可使用的端口范围的最大端口，0：任意端口
@@ -47,9 +46,9 @@ max_clients=0                   #允许的最大连接数，默认为：0，即�
 max_per_ip=0                    #每个IP允许与FTP同时建立连接的数目。默认：0，即不受限制。仅standalone模式有效
 #listen_address=IP地址          #设置FTP在指定的地址侦听用户请求。若不设置则对所有IP地址侦听。仅standalone模式有效
 setproctitle_enable=YES         #每个与连接是否以不同进程展现。设为NO时使用："ps -ef|grep ftp"仅1个vsftpd进程                 
-#传输模式
-ascii_upload_enable=NO          #是否用ASCII模式上传
-ascii_download_enable=NO        #是否用ASCII模式下载
+ascii_upload_enable=NO          
+ascii_download_enable=NO
+
 #匿名用户
 anonymous_enable=NO             #是否启用匿名。登陆名：ftp或anonymous
 no_anon_password=NO             #启用则匿名登录时不询问密码
@@ -62,6 +61,7 @@ anon_other_write_enable=NO      #是否允许匿名更多于上传或建立目�
 chown_uploads= NO               #是否改变匿名上传文件（非目录）的属主。默认：NO。
 chown_username=root             #匿名上传文件（非目录）的属主名。建议不要设为root！
 anon_umask=077                  #匿名新增或上传档案时的umask。默认：077
+
 #本地用户
 local_enable=YES                #是否允许本地用户登陆
 local_root=${chroot_dir:=/tmp}  #本地用户登入时被chroot的目录。默认为自身的家目录
@@ -77,6 +77,7 @@ message_file=.message           #设置目录消息文件名，可将要显示�
 chroot_list_enable=NO                           #是否启用chroot_list_file配置项指定的用户列表文件。默认：NO
 chroot_list_file=/etc/vsftpd.chroot_list        #指定用户列表文件，用于控制哪些用户可切换到家目录上级路径
 chroot_local_user=NO                            #用于指定用户列表文件中的用户是否允许切换到上级目录。默认：NO
+
 #访问控制
 tcp_wrappers=NO                         #是否与tcp wrapper结合进行ACL。默认：YES。启用则检查：/etc/hosts.allow与/etc/hosts.deny
 userlist_enable=NO                      #是否启用vsftpd.user_list文件
@@ -85,6 +86,7 @@ userlist_deny=NO                        #决定vsftpd.user_list中的用户是�
 download_enable=YES                     #如果设置为NO，所有的文件都不能下载到本地，文件夹不受影响。默认值为YES。
 allow_writeable_chroot=YES              #开启...
 pam_service_name=vsftpd                 #PAM认证相关
+
 #速率设置
 anon_max_rate=0                         #匿名的最大传输速度，单位：B/s，不限速：0。默认：0
 local_max_rate=0                        #本地用户的最大传输速度，单位：B/s，不限速：0。预设：0
@@ -94,11 +96,13 @@ accept_timeout=45                       #建立21端口连接的超时时间，�
 connect_timeout=45                      #PORT模式下建立数据连接的超时时间，单位s。默认：60
 data_connection_timeout=60              #设置建立FTP数据连接的超时时间，单位s。默认：120
 idle_session_timeout=120                #多长时间不对FTP服务器进行操作则断开连接，单位s。默认：300
+
 #日志设置
 xferlog_enable=YES                      #是否启用上传/下载日志。若启用则相应信息将被纪录在xferlog_file定义的文件内。默认：YES
 xferlog_file=/var/log/vsftpd.log        #日志文件，默认：/var/log/vsftpd.log
 xferlog_std_format=NO                   #若启用则日志将写成xferlog标准格式。默认关闭
 log_ftp_protocol=NO                     #所有FTP请求和响应是否被记录到日志，若启用额xferlog_std_format不能被激活。默认：NO
+
 #用户配置文件
 #user_config_dir=/etc/vsftpd/userconf  
 #用户配置文件所在目录。当设置该项后用户登陆时系统会到指定目录下读取与当前用户名相同的文件，并据文件中的配置命令对当前用户进行更进一步的配置
@@ -108,7 +112,17 @@ eof
 echo -e "\033[32mConfig：${config_file}\033[0m"
 
 #执行
-systemctl restart vsftpd && systemctl enable vsftpd
+[ -e /usr/bin/systemctl ] && {
+  systemctl restart vsftpd
+  systemctl enable vsftpd
+  echo "Vsftp start ..."
+}
+
+[ -e /usr/bin/systemctl ] || {
+  chkconfig vsftpd --level 235 on
+  service vsftpd start
+  echo "Vsftp start ..."
+}
 
 
 # 注：
