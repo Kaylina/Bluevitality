@@ -61,6 +61,6 @@ actions: -delete -print0 -printf FORMAT -fprintf FILE FORMAT -print
       -exec COMMAND ; -exec COMMAND {} + -ok COMMAND ;
       -execdir COMMAND ; -execdir COMMAND {} + -okdir COMMAND ;
 ```
-参考：
+参考：  
 http://www.oschina.net/translate/15-practical-unix-linux-find-command-examples-part-2
 http://www.oschina.net/translate/15-practical-linux-find-command-examples
