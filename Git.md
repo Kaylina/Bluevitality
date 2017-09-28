@@ -32,7 +32,7 @@
   
 将工作区改变的文件数据添加到暂存区：（在对文件完成修改操作后执行）  
 `git add filename`  
-`git add .` 或：`git add *` 
+`git add .` 或：`git add *`   
 将工作区改变的文件数据添加到暂存区：（包括删除对象的操作，默认仅添加修改或新增的对象）  
 `git add --all` 或： `git add -A`   
 对文件改名：（相当于执行了 *mv .. .. ; git rm .. ; git add ..*）  
