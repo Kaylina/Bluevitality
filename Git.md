@@ -1,7 +1,7 @@
 ﻿git执行流程：
 > **工作区** ---> **暂存区** ---> **版本库** ---> **远程仓库**
 
-生成公私钥：
+生成公私钥：  
 `ssh-keygen -t rsa -C "youremail@example.com"`
 
 全局设置：  
@@ -32,9 +32,9 @@
   
 将工作区改变的文件数据添加到暂存区：（在对文件完成修改操作后执行）  
 `git add filename`  
-`git add .`  
-`git add *`  
-  
+`git add .` 或：`git add *` 
+将工作区改变的文件数据添加到暂存区：（包括删除对象的操作，默认仅添加修改或新增的对象）  
+`git add --all` 或： `git add -A`   
 对文件改名：（相当于执行了 *mv .. .. ; git rm .. ; git add ..*）  
 `git mv oldname newname`  
 删除文件：（若要删除已修改并提交到暂存区的文件则去添加参数-f）  
@@ -43,9 +43,6 @@
 `git rm --cached filename`  
 恢复误删的文件：（一键还原，从版本库中恢复）  
 `git checkout -- filename`  
-  
-将工作区改变的文件数据添加到暂存区：（包括删除对象的操作，默认仅添加修改或新增的对象）  
-`git add --all` 或： `git add -A`  
 与git add命令合并为一条命令并提交到本地仓库：  
 `git commit -a -m "commit info.."`  
 将本暂存区要要提交的信息与最后一次的提交并为一个提交（若暂存区未发生改变也相当于重写了提交信息）  
