@@ -13,7 +13,7 @@ print(soup.head.meta['content'])                        #输出所得标签属�
 print(soup.span.string)                                 #返回标签的text
 print(soup.span.text)                                   #两个效果一样，返回标签的text
 
-print(soup.find_all(attrs={'name':'keywords'})) #attrs方法搜索name属性是‘’的标签的<ResultSet>类，是一个由<Tag>组成的list
+print(soup.find_all(attrs={'name':'keywords'})) #attrs方法搜索name属性是‘’的标签的<ResultSet>类，是由<Tag>组成的list
 print(soup.find_all(class_='site_name'))                #class属性是‘’的<Tag>的list,即<ResultSet>
 print(soup.find_all(class_='site_name')[0])             #这是一个<Tag>
  
@@ -203,3 +203,5 @@ soup.select('p[lang|=en]')
 #查找第一个元素
 soup.select_one(".sister")
 ```
+
+
