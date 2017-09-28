@@ -1,0 +1,87 @@
+LVS 
+
+	无论使用什么算法，LVS持久力连接都能在一定时间内,将来自同一客户端请求派发至此前选定的RS
+	
+	持久连接模板（内存缓冲区）：
+		每一个客户端 及分配给它的RS映射关系
+	
+	
+	ipvsadm -A|E ... -p timeout
+	
+	
+	在基于SSL的应用中，最需要持久连接
+	如果lvs集群定义了多个端口的服务（即director开启多集群配置，realserver也启动多个端口对外服务），lvs能将的来自同一客户端对不同端口请求都定向至同一后端realserver.
+		
+	PPC(persistent client connections): 将来自同一个客户端，对同一个服务始终定向至同一个realserver
+	
+	
+	PCC（persistent port connections ）:
+		1.将来自同一个客户端对所有端口的请求，始终定向至此前选定的RS
+		2. 将所有端口都定义为集群服务
+						
+	PNMPP： 持久防火墙标记连接
+	
+	ipvsadm -E -t 192.168.0.30:80 -s rr 
+	ipvsadm -L -n
+	
+	
+	实验1：
+	将后端rs启动telnet服务，将telnet定义为集群服务，telnet 典型的需要持久连接
+		安装telnet server,
+			在本机启动telnet服务
+				1. 在本机创建用户
+				2. 安装telnet-server
+				  yum install telnet-server
+				3. 编辑xinetd配置
+				  vim /etc/xinetd.d/telnet ，  disable: no
+				4. 启动服务
+				  service xinetd start
+				5. 验证测试
+				  netstat -ntlp | grep 23
+				  telnet IP 
+		配置dr
+			ipvsadm -A -t 192.168.0.30:23 -s rr
+			ipvsadm -a -t 192.168.0.30:23 -r 192.168.0.21:23 -g -w 2
+			ipvsadm -a -t 192.168.0.30:23 -r 192.168.0.22:23 -g -w 2		
+					
+		此时web服务和telnet服务都开启，但不保证将来自同一个客户端对所有端口（23和80）的请求，始终定向至此前选定的RS，此时算法为PPC
+		
+		如何启动PCC呢？
+		
+		把0端口定义成集群服务意味着所有端口都是集群服务
+		
+			ipvsadm -C
+			ipvsadm -A -t 192.168.0.30:0 -s rr -p 600
+			ipvsadm -a -t 192.168.0.30:0 -r 192.168.0.21 -g -w 2
+			ipvsadm -a -t 192.168.0.30:0 -r 192.168.0.22 -g -w 2		
+		
+		实验2：
+		防火墙标记：
+			PREROUTING
+				80:10
+				23:10 
+				
+		在PREROUTING链上对目标端口为80和23都标记为10，然后将标记为10定义为集群服务
+			
+			ipvsadm -C
+			iptables  -t mangle -A PREROUTING -d 192.168.0.30 -i eth0 -p tcp  --dport 80 -j MARK --set-mark 8
+			iptables  -t mangle -A PREROUTING -d 192.168.0.30 -i eth0 -p tcp  --dport 23 -j MARK --set-mark 8 
+			ipvsadm -A -f 8 -s rr -p 600
+			ipvsadm -a -f 8 -r 192.168.0.21 -g -w 2
+			ipvsadm -a -f 8 -r 192.168.0.22 -g -w 2
+
+		实验3：	
+		lvs将80和443端口用防火墙标记进行绑定
+					
+					
+					
+					
+					
+		如果各server间能够session共享的话，就不需要持久连接，
+		
+		
+		sersync 支持大文件同步，多线程并发
+		
+		
+		
+		

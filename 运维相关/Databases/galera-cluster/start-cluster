@@ -1,0 +1,4 @@
+#!/bin/bash
+service mysql stop
+/etc/init.d/mysql start --wsrep-new-cluster
+mysql -u root -p -e "show status like 'wsrep%'"

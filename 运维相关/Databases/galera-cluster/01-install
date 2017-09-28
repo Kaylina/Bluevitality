@@ -1,0 +1,4 @@
+#!/bin/bash
+cp MariaDB.repo /etc/yum.repos.d/
+sudo yum install MariaDB-Galera-server MariaDB-client rsync galera socat
+
