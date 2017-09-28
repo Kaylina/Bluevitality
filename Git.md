@@ -52,7 +52,7 @@
 `git commit --amend -m "add fix ...."`  
 添加远程仓库设置别名为"origin"：（删除远程仓库使用：**git remote rm xxx**）  
 `git remote add origin git@github.com/bluevitality/xxxxx.git`  
-提交到远程仓库origin的master分支：（参数**-u**可将本地的分支与远程分支关联）  
+提交到远程仓库origin的master分支：（参数-u可将本地的分支与远程分支关联）  
 `git push -u origin master`  
 将本地other分支的内容推送到远程的master分支：  
 `git push origin other:master`  
@@ -68,7 +68,7 @@
 `git pull origin master`  
 新建并切换到一个分支：（相当于两条命令：**git branch Name ; git checkout Name**）  
 `git checkout -b Name`  
-合并特定分支到当前分支：（建议增加 **--no-ff** 参数，使得执行快速合并时历史记录中仍保留此分支的信息）  
+合并特定分支到当前分支：（建议增加 ** --no-ff** 参数，使得执行快速合并时历史记录中仍保留此分支的信息）  
 `git merge --no-ff Name`  
 用户A在本地创建和远程分支对应的分支：  
 `git checkout -b other origin/other`  
@@ -76,7 +76,7 @@
 `git branch --set-upstram othser osrigin/other`  
 查看本地及远程仓库的分支信息：（参数-v附加显示各分支的最后一次提交信息，若仅查看远程仓库信息则使用**-v**  参数）  
 `git branch -av`  
-删除分支：（未进行合并时需要使用强制删除参数**-D**）  
+删除分支：（未进行合并时需要使用强制删除参数-D）  
 `git branch -d Name`  
 在本地创建一个分支后推送到远程仓库：  
 `git checkout -b BName  ;  git push BName origin:BName`  
@@ -84,7 +84,7 @@
 `git push origin :Bname`  
 查看哪些分支已经并入了当前的分支中：（若不需要保留可用**git branch -d Name**进行删除）  
 `git branch --merged`  
-查看尚未进行合并的分支：（删除未合并的分支时应使用branch的大写**-D**参数）  
+查看尚未进行合并的分支：（删除未合并的分支时应使用branch的大写 -D 参数）  
 `git branch --no-merged`  
 查看暂存区与工作区间的状态：  
 `git status`  
@@ -96,7 +96,7 @@
 `git tag -d v1.0` 再从远程删除： `git push origin :refs/tags/v1.0`  
 针对当前分支的最新commit提交创建一个标签：  
 `git tag v1.0`  
-查看标签信息：（仅查看v1系列的标签：**git tag -l "v1.*"**）  
+查看标签信息：（仅查看v1系列的标签：git tag -l "v1."）  
 `git tag`  
 查看提交历史：（-n 使用**数字**作为参数则仅显示最近的几次提交信息）  
 `git log  --pretty=oneline --pretty=format:"%h %ad :%s" --graph`  
