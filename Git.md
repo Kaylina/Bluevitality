@@ -2,10 +2,10 @@
 > **工作区** ---> **暂存区** ---> **版本库** ---> **远程仓库**
 
 生成公私钥：
-`ssh-keygen -t rsa -C "youremail@example.com"`
+`ssh-keygen -t rsa -C "youremail@example.com"`  
 
-全局设置：
-设置默认的编辑器：
+全局设置：  
+设置默认的编辑器：  
 `git config --system core.editor vim`
 设置差异分析工具：
 `git config --system merge.tool vimdiff`
