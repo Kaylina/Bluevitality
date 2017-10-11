@@ -88,7 +88,7 @@
 `git checkout -b other origin/other`  
 用户B设置本地分支与远程分支的对应关系：  
 `git branch --set-upstram othser osrigin/other`  
-查看本地及远程仓库的分支信息：（参数-v附加显示各分支的最后一次提交信息，若仅查看远程仓库信息则使用-r参数）  
+查看本地及远程仓库的分支信息：(参数-v附加显示各分支的最后一次提交信息，若仅查看远程仓库信息则使用-r)      
 `git branch -av`  
 删除分支：（未进行合并时需要使用强制删除参数-D）  
 `git branch -d Name`  
