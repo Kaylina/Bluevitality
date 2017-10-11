@@ -25,11 +25,13 @@
 >>> class Student(object):
 ...
 ...     @property
-...     def get_score(self):
+...     def score(self):
 ...         return self._score
 ...
-...     @score.setter               #格式：装饰函数名.setter
-...     def score(self, value):     #将此赋值并判断的函数转为属性，在对其赋值时进行判断若不符合则抛出异常
+... #说明：首先装饰了score方法使其成为getter后接着将刚刚装饰过的score方法的setter属性装饰了此方法，而这个方法的名字与之前的方法名字是一样的
+...
+...     @score.setter               #格式：之前的被装饰函数名.setter
+...     def score(self, value):     #将此赋值并判断的函数转为属性，在对其赋值时进行判断若不符合则抛出异常
 ...         if not isinstance(value, int):
 ...             raise ValueError('score must be an integer!')
 ...         if value < 0 or value > 100:
