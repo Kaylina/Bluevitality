@@ -13,7 +13,7 @@
 针对特定作用范围的conf文件直接进行编辑：   
 `git config -e [--global | --system | --local]`   
    
-设置用户信息：（用户信息位于 ~/.gitconfig ，若 --system 则位于 /etc/gitconfig，工作目录的 .git/conf    仅当前项目生效）  
+设置用户信息：（用户信息位于 ~/.gitconfig ，若 --system 则位于 /etc/gitconfig，工作目录的 .git/conf 仅当前项目生效）  
 `git config --global user.name "bluevitality"`  
 `git config --global user.email "inmoonlight@163.com"`  
 设置默认的编辑器：  
@@ -35,9 +35,9 @@
 隐藏当前现场处理其他任务：（即保存当前工作区与暂存区的状态）  
 `git stash`  
 查看隐藏的现场列表：  
-`git stash --list`
+`git stash --list`  
 恢复or删除现场：
-`git stash [apply | drop]`
+`git stash [apply | drop]`  
 回到隐藏现场的分支后恢复并删除保存的现场并继续处理：  
 `git stash pop`  
   
@@ -46,7 +46,7 @@
 `git add .` 或：`git add *`   
 将工作区改变的文件数据添加到暂存区：（包括删除对象的操作，默认仅添加修改或新增的对象）  
 `git add --all` 或： `git add -A`   
-对文件改名：（相当于执行 *mv .. .. ; git rm .. ; git add ..*）  
+对文件改名：（相当于执行 mv .. .. ; git rm .. ; git add ..）  
 `git mv oldname newname`  
 删除文件：（若要删除已修改并提交到暂存区的文件则去添加参数 -f）  
 `git rm filename`  
@@ -54,23 +54,23 @@
 `git rm --cached filename`  
 恢复误删的文件：（若修改后还未执行add则将指定文件返回至版本库的最新状态，若已添加至暂存区后又进行了   则将其回退至add时最初的暂存区保存的状态，即让文件回退至最近的一次commit或add后的状态）  
 `git checkout -- filename`  
-用HEAD所指向的分支的全部或部分文件来替换暂存区和工作区：
-`git checkout HEAD [. | filename]`
-与git add命令合并为一条命令并提交到本地仓库：  
-`git commit -a -m "commit info.."`  
-将当前本暂存区要提交的信息与上一次的提交并为**1**个提交（若暂存区未发生改变则相当于重写了提交信息）   
-`git commit --amend -m "add fix ...."`  
-添加远程仓库设置别名为"origin"：（删除远程仓库使用：**git remote rm xxx**）  
-`git remote add origin git@github.com/bluevitality/xxxxx.git`
-查看远程仓库"origin"的信息：  
-`git remote show origin`
+用HEAD所指向的分支的全部或部分文件来替换暂存区和工作区：  
+`git checkout HEAD [. | filename]`  
+与git add命令合并为一条命令并提交到本地仓库：    
+`git commit -a -m "commit info.."`    
+将当前本暂存区要提交的信息与上一次的提交并为**1**个提交（若暂存区未发生改变则相当于重写了提交信息）     
+`git commit --amend -m "add fix ...."`    
+添加远程仓库设置别名为"origin"：（删除远程仓库使用：**git remote rm xxx**）    
+`git remote add origin git@github.com/bluevitality/xxxxx.git`  
+查看远程仓库"origin"的信息：    
+`git remote show origin`  
 
-将本地的master分支提交到origin远程仓库：
+将本地的master分支提交到origin远程仓库：  
 `git push origin master`  
 将本地other分支的内容推送到远程仓库origin的master分支：  
-`git push origin other:master`
-建立本地分支和远程分支的关联：
-`git branch --set-upstream 本地分支名 origin/远程分支名`
+`git push origin other:master`  
+建立本地分支和远程分支的关联：  
+`git branch --set-upstream 本地分支名 origin/远程分支名`  
 
 修改远程仓库名称：  
 `git remote rename Oldname Newname`  
@@ -81,14 +81,14 @@
 从远程仓库拉取本地仓库还没有的数据并且进行合并操作！  
 `git pull origin master`  
 新建并切换到一个分支：（相当于两条命令：**git branch Name ; git checkout Name**）  
-`git checkout -b Name`  
+`git checkout -b Name`   
 合并特定分支到当前分支：（建议增加 ** --no-ff** 参数，使得执行快速合并时历史记录中仍保留此分支的信   
 `git merge --no-ff Name`  
 用户A在本地创建和远程分支对应的分支：  
 `git checkout -b other origin/other`  
 用户B设置本地分支与远程分支的对应关系：  
 `git branch --set-upstram othser osrigin/other`  
-查看本地及远程仓库的分支信息：（参数-v附加显示各分支的最后一次提交信息，若仅查看远程仓库信息则使用*     参数）  
+查看本地及远程仓库的分支信息：（参数-v附加显示各分支的最后一次提交信息，若仅查看远程仓库信息则使用-r参数）  
 `git branch -av`  
 删除分支：（未进行合并时需要使用强制删除参数-D）  
 `git branch -d Name`  
