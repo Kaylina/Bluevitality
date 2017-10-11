@@ -36,7 +36,7 @@
 `git stash`  
 查看隐藏的现场列表：  
 `git stash --list`  
-恢复or删除现场：
+恢复or删除现场：  
 `git stash [apply | drop]`  
 回到隐藏现场的分支后恢复并删除保存的现场并继续处理：  
 `git stash pop`  
