@@ -1,4 +1,4 @@
-setnu               "显示行号
+set nu              "显示行号
 set numberwidth=2   "行号宽度
 set encoding=utf-8  "编码
 set cursorline      "突出显示当前行
