@@ -1,4 +1,4 @@
-#### LEGB 规则及 global / nolocal
+#### LEGB 规则及 global / nonlocal
 - 在Python中当引用1个变量时，对这个变量的搜索是按照 **LEGB** 规则顺序进行的：  
 1. 本地作用域 (Local)  
 2. 嵌套作用域 (Enclosing function locals)  
