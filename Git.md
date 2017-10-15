@@ -148,23 +148,23 @@
 `git reset --soft HEAD^`   
 模拟amend提交（覆盖上一次的提交）：   
 `git reset --soft HEAD^ ; git -a -m "amend...."`   
-   
-查看版本库中最新的文件与工作区的文件的区别：（HEAD指针永远指向当前分支的最后一次提交）     
-`git diff HEAD -- filename`     
+      
 查看尚未暂存文件的改变：（即尚未暂存的改动）     
 `git diff`     
 查看已暂存的文件与上次提交的差异：     
 `git diff --cached`   
-   
+查看版本库中最新的文件与工作区的文件的区别：（HEAD指针永远指向当前分支的最后一次提交）     
+`git diff HEAD -- filename`  
+
 查看哪些文件/目录将被删除：   
 `git clean -nd`   
 清除工作区中未加入版本库的文件/目录：   
 `git clean -fd`   
 
-克隆某个分支  
+克隆某个分支  
 `git clone -b b1 https://github.com/...`  
 
-克隆所有分支  
+克隆所有分支  
 `git clone https://github.com/...`  
 `git branch -r`  
 `* master`  
