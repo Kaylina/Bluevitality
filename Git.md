@@ -1,4 +1,4 @@
-﻿git执行流程：
+﻿流程：
 > **工作区** ---> **暂存区** ---> **版本库** ---> **远程仓库**  
 > Git中文件的三种状态：已修改（还未add到Index）---> 已暂存（所有的修改还未提交）---> 已提交（存在版本库中）  
 > HEAD：这是当前分支版本顶端的别名，即在当前分支最近的一个提交  
@@ -160,5 +160,16 @@
 `git clean -nd`   
 清除工作区中未加入版本库的文件/目录：   
 `git clean -fd`   
-   
+
+clone 某个分支：
+`git clone -b b1 https://github.com/...`
+
+clone所有分支
+`git clone https://github.com/...`
+`git branch -r`
+`* master`
+`  origin/HEAD -> origin/master`
+`  origin/master`
+`  origin/b1`
+`git checkout b1`
    
