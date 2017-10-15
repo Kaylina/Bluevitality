@@ -161,15 +161,15 @@
 清除工作区中未加入版本库的文件/目录：   
 `git clean -fd`   
 
-clone 某个分支：
-`git clone -b b1 https://github.com/...`
+clone 某个分支：  
+`git clone -b b1 https://github.com/...`  
 
-clone所有分支
-`git clone https://github.com/...`
-`git branch -r`
-`* master`
-`  origin/HEAD -> origin/master`
-`  origin/master`
-`  origin/b1`
-`git checkout b1`
+clone所有分支  
+`git clone https://github.com/...`  
+`git branch -r`  
+`* master`  
+`  origin/HEAD -> origin/master`  
+`  origin/master`  
+`  origin/b1`  
+`git checkout b1`  
    
