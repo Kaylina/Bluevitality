@@ -153,8 +153,11 @@
 `git diff`     
 查看已暂存的文件与上次提交的差异：     
 `git diff --cached`   
+查看本地版本库最后一次提交与工作目录间的差异  
+`git diff HEAD`  
 查看版本库中最新的文件与工作区的文件的区别：（HEAD指针永远指向当前分支的最后一次提交）     
-`git diff HEAD -- filename`  
+`git diff HEAD -- filename`  
+
 
 查看哪些文件/目录将被删除：   
 `git clean -nd`   
