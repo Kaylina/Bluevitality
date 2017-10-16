@@ -29,7 +29,7 @@ def log(argument):
 def function(x,y):
     print x*y
 
-function(10,10)     #输出100
+function(10,10) 
 
 #---------------------------------------------------
 
