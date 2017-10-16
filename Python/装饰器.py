@@ -34,13 +34,12 @@ function(10,10)
 #---------------------------------------------------
 
 #在类的外部定义一个类的装饰器对类方法进行装饰并使其能够调用类中的其他方法
-def catch_exception(origin_func):
+def catch_exception(func):
     def wrapper(self, *args, **kwargs):
         try:
-            u = origin_func(self, *args, **kwargs)
-            return u
+            return func(self, *args, **kwargs)
         except Exception:
-            self.revive() #不用顾虑，直接调用原来的类的方法
+            self.revive()   #不用顾虑，直接调用原来的类的方法
             return 'an Exception raised.'
     return wrapper
 
