@@ -47,3 +47,6 @@ Traceback (most recent call last):
   ...
 ValueError: score must between 0 ~ 100!
 ```
+
+参考：
+http://www.cnblogs.com/wupeiqi/p/4766801.html
