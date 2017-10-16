@@ -10,7 +10,10 @@ def log(func):
 def function(x,y):
     print x*y
 
-function(10,10)    #输出100
+function(10,10)    
+#输出
+print "Testing..."
+100
 
 #---------------------------------------------------
 
@@ -27,22 +30,6 @@ def function(x,y):
     print x*y
 
 function(10,10)     #输出100
-
-#---------------------------------------------------
-
-# 定义一个装饰器
-def mydecorator(func):
-    def wrapper(*args,**kw):
-        print('hi,now is:')
-        return func(*args,**kw)
-    return wrapper
-
-# 使用装饰器
-@mydecorator
-def now():
-    print('2015-12-9')
-
-now()
 
 #---------------------------------------------------
 
