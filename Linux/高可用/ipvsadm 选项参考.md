@@ -1,6 +1,9 @@
+* Director Server:          提供"Load Balancer"功能的服务器
 * virtual-service-address:  是指虚拟服务器的ip地址  
 * real-service-address:     是指真实服务器的ip地址  
-* scheduler:   调度方法
+* scheduler:                调度方法
+
+
 #### 格式
 ```
 ipvsadm -A|E -t|u|f virutal-service-address:port [-s scheduler] [-p [timeout]] [-M netmask]
