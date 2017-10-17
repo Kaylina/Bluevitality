@@ -113,7 +113,7 @@ case "$1" in
 start)  
 echo " start LVS of REALServer"  
 modprobe ipip  #加载好ipip模块后会有默认的tunl0隧道
-echo 1 > /proc/sys/net/ipv4/ip_forward
+echo "0" > /proc/sys/net/ipv4/ip_forward
 /sbin/ifconfig tunl0 $VIP netmask 255.255.255.255 broadcast $VIP  
 echo "1" > /proc/sys/net/ipv4/conf/tunl0/arp_ignore  
 echo "2" > /proc/sys/net/ipv4/conf/tunl0/arp_announce  
