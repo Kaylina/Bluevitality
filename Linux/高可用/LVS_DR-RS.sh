@@ -1,8 +1,7 @@
 #!/bin/bash
-# description: Config realserver lo and apply noarp.
  
 SNS_VIP=10.0.2.245
- 
+
 /etc/rc.d/init.d/functions
  
 case "$1" in
@@ -15,7 +14,6 @@ start)
        echo "2" >/proc/sys/net/ipv4/conf/all/arp_announce
        sysctl -p >/dev/null 2>&1
        echo "RealServer Start OK"
- 
        ;;
 stop)
        ifconfig lo:0 down
