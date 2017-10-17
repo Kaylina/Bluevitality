@@ -34,7 +34,8 @@ ipvsadm -h
 --start-daemon 启动同步守护进程。后面可以是master或backup，来说明其主备身份。也可用keepalived的VRRP功能
 --stop-daemon 停止同步守护进程
 -h --help 
-其他的选项:
+
+其他选项:
 -t --tcp-service service-address 说明虚拟服务器提供的是tcp服务 [vip:port] or [real-server-ip:port]
 -u --udp-service service-address 说明虚拟服务器提供的是udp服务 [vip:port] or [real-server-ip:port]
 -f --fwmark-service fwmark 说明是经过iptables 标记过的服务类型。
