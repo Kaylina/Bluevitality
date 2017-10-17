@@ -21,13 +21,13 @@ ipvsadm -h
 ```
 -A --add-service 在内核的虚拟服务器表中添加一条新的虚拟服务器记录。也就是增加一台新的虚拟服务器。
 -E --edit-service 编辑内核虚拟服务器表中的一条虚拟服务器记录 ( 修改LB算法：ipvsadm -E -t 172.16.1.253:80 -s wrr )
--D --delete-service 删除内核虚拟服务器表中的一条虚拟服务器记录。
--C --clear 清除内核虚拟服务器表中的所有记录。
--R --restore 恢复虚拟服务器规则
--S --save 保存虚拟服务器规则，输出为-R 选项可读的格式
+-D --delete-service 删除内核虚拟服务器表中的一条虚拟服务器记录 eg: ipvsadm -D -t 172.16.1.253:80
+-C --clear 清除内核虚拟服务器表中的所有记录 
+-R --restore 恢复虚拟服务器规则 eg: ipvsadm -S > /path/to/somefile
+-S --save 保存虚拟服务器规则，输出为-R 选项可读的格式 eg: ipvsadm -R < /path/form/somefile
 -a --add-server 在内核虚拟服务器表的一条记录里添加一条新的真实服务器记录。
--e --edit-server 编辑一条虚拟服务器记录中的某条真实服务器记录
--d --delete-server 删除一条虚拟服务器记录中的某条真实服务器记录
+-e --edit-server 编辑一条虚拟服务器记录中的某条真实服务器记录 ( 修改RS权重：ipvsadm -e -t 1.1.1.1:80 -r 1.1.1.2 –g -w 3 )
+-d --delete-server 删除一条虚拟服务器记录中的某条真实服务器记录 eg:  ipvsadm -d -t 172.16.1.253:80 -r 172.16.1.101
 -L|-l --list 显示内核虚拟服务器表
 -Z --zero 虚拟服务表计数器清零（清空当前的连接数量等）
 --set tcp tcpfin udp 设置连接超时值
