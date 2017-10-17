@@ -20,7 +20,7 @@ ipvsadm -h
 #### 命令选项解释
 ```
 -A --add-service 在内核的虚拟服务器表中添加一条新的虚拟服务器记录。也就是增加一台新的虚拟服务器。
--E --edit-service 编辑内核虚拟服务器表中的一条虚拟服务器记录。
+-E --edit-service 编辑内核虚拟服务器表中的一条虚拟服务器记录 ( 修改LB算法：ipvsadm -E -t 172.16.1.253:80 -s wrr )
 -D --delete-service 删除内核虚拟服务器表中的一条虚拟服务器记录。
 -C --clear 清除内核虚拟服务器表中的所有记录。
 -R --restore 恢复虚拟服务器规则
@@ -43,10 +43,10 @@ ipvsadm -h
 -p --persistent [timeout] 持久稳固的服务。来自同1个客户的多次请求将被同一台RS处理。timeout 的默认值为300s
 -M --netmask netmask persistent granularity mask
 -r --real-server server-address 真实的服务器 [Real-Server:port]
--g --gatewaying 指定LVS 的工作模式为直接路由模式（也是LVS 默认的模式）
--i --ipip 指定LVS 的工作模式为隧道模式
--m --masquerading 指定LVS 的工作模式为NAT 模式
--w --weight weight 真实服务器的权值
+-g --gatewaying 指定工作模式为DR模式（也是LVS 默认的模式）
+-i --ipip 指定工作模式为隧道模式
+-m --masquerading 指定工作模式为NAT模式
+-w --weight weight 后端RS的权值
 --mcast-interface interface 指定组播的同步接口
 -c --connection 显示LVS 目前的连接 如：ipvsadm -L -c
 --timeout 显示tcp tcpfin udp 的timeout 值 如：ipvsadm -L --timeout
