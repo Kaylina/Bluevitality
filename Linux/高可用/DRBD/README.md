@@ -26,12 +26,12 @@
 一般使用协议C，但选择C协议将影响流量，从而影响网络时延  
 本地和对方写成功确认后返回。若双机掉电或磁盘同时损坏则数据可能丢失  
 
-### DRBD配置工具
+#### DRBD配置工具
 * drbdadm：       高级管理工具，管理/etc/drbd.conf，向drbdsetup和drbdmeta发送指令
 * drbdsetup：     配置装载进kernel的DRBD模块，平时很少用
 * drbdmeta：      管理META数据结构，平时很少用
 
-### 主配置文件
+#### 主配置文件
 为了管理的便捷性通常会将些配置文件分多个部分，但都保存至**/etc/drbd.d**目录  
 主配置文件中仅使用"include"指令将这些配置文件片断整合  
 通常/etc/drbd.d中的文件为global_common.conf和所有以.res结尾的文件  
