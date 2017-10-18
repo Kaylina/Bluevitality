@@ -77,7 +77,88 @@ DRBD所支持的底层设备有以下这些类：
 这种模式默认是禁用的，如果要是用的话必须在配置文件中进行声明。  
 
 
+## 部署
+```bash
+#在两台主机之间配置host文件将名字指向对方：
+cat /etc/hosts
+10.0.0.7 data-1.localdomain     #建议增加去往此网段的路由到指定出接口
+10.0.0.8 data-2.localdomain     #建议增加去往此网段的路由到指定出接口
 
+#在两端主机内创建分区：
+parted /dev/sda mklabel gpt  &&  parted /dev/sda mkpart logical ext3 20GB 20GB   #数据区
+partprobe && cat /proc/partions     #重读分区
+
+#关闭防火墙限制及软件安装
+service iptables stop && setenforce 0
+yum -y install gcc kernel-devel kernel-headers flex ； export LC_ALL=C
+wget http://oss.linbit.com/drbd/8.4/drbd-8.4.1.tar.gz &&  tar xzf drbd-8.4.1.tar.gz
+cd drbd-8.4.1
+./configure --prefix=/usr/local/drbd --with-km --with-heartbeat --sysconfdir=/etc/drbd     
+# --with-km 激活内核模块 
+# --with-heartbeat 激活heartbeat相关配置
+make KDIR=/usr/src/kernels/$(uname -r)/    # KDIR=指定内核源码路径，依实际情况设置（查内核路径：ls -l /usr/src/kernels/$(uname -r)/）
+make install 
+mkdir -p /usr/local/drbd/var/run/drbd  
+cp /usr/local/drbd/etc/rc.d/init.d/drbd /etc/rc.d/init.d  
+chkconfig --add drbd  && chkconfig drbd on    
+cd drbd     #安装drbd模块
+make clean  &&  make KDIR=/usr/src/kernels/2.6.32-220.17.1.el6.x86_64/  
+cp drbd.ko /lib/modules/`uname -r`/kernel/lib/  
+depmod
+modprobe drbd && lsmod | grep -i drbd
+
+#编辑配置文件
+vim /etc/drbd.conf
+vim /etc/drbd.d/global_common.conf
+vim /etc/drbd.d/r0.res
+
+dd if=/dev/zero of=/dev/sda{1..2} bs=1M count=100       #将一些数据放入需同步的设备中以防止create-md时出错
+sync         
+drbdadm dreate-md Mysqls    #对指定的资源进行初始化（创建drbd元数据信息）drbd管理命令：drbdadm --help
+drdbadm attach all          #附加到备份设置。这步将drbd资源和后端设备连接
+drbdadm <up/down> all       #启动DRBD，或指定资源名进行启动
+/etc/init.d/drbd start      #启动服务
+
+#注：以上每个步骤都需在主备服务器上进行操作！( 使用"scp" )
+
+#查看DRBD信息：
+cat /proc/drbd
+version: 8.3.11 (api:88/proto:86-96) 
+GIT-hash: 0de839cee13a4160eed6037c4bddd066645e23c5 build by root@drbd2.localdomain, 2011-07-08  
+11:10:20 
+1: cs:Connected ro:Secondary/Primary ds:UpToDate/UpToDate C r-----  #注：ro:Secondary/Primary即: ro:自身/对端角色
+    ns:0 nr:32 dw:32 dr:0 al:0 bm:1 lo:0 pe:0 ua:0 ap:0 ep:1 wo:b oos:0 
+ 
+#cs:    连接状态！可能出现的有Connected,WFC,Stanalone,SyncSource 
+#ro:    角色！ 正常会出现主辅，不正常的会现unkown. 
+#ds:    同步更新的状态！ 正常的话是UpToDate/UpToDate,正在更新UpToDate/Inconsistent
+#ns:    network send 
+#nr:    network receive
+#dr:    disk read
+#pe:    pending(waiting forack)
+
+#在指定host执行使其成为指定资源的主：（默认各节点启动时都处于secondary，需手工将其设成primary才能正常被挂载工作）
+drbdadm  --  --overwrite-data-of-peer  primary  --force 资源名    #--overwrite-data-of-peer 覆盖对端的数据
+ 
+#格式化并挂载：（mount只能在Primary端使用）
+#只需将数据写入/dData，drbd即把其同步到backupNode的/dev/sda2（仅需挂载逻辑设备，不挂载其下层的分区而由DRBD后台挂载用）
+mkfs.ext4 /dev/drbd1 && mount /dev/drbd1 /dData
+
+
+#主备切换
+#首先在主上先将设备卸载，同时将主降为备：
+umount /dev/drbd1  && drbdadm secondary 资源名  
+ 
+#然后登录备，将备升为主，同时挂载drbd1设备到/dData。最后进入/dData就可看到之前在另一host写入的数据，若没有则同步失败
+drbdadm primary 资源名 &&　mount /dev/drbd1 /dData/ 
+ 
+#查看节点的角色：
+drbdadm role 资源名
+
+#一个DRBD设备(即/dev/drbdX),叫做一个"资源"。
+#里面包含DRBD设备的主备节点的ip信息，底层存储设备名称及设备大小，meta信息存放方式，drbd对外提供的设备名等
+
+```
 
 
 
