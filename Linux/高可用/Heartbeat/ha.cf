@@ -1,0 +1,53 @@
+#日志
+logfile /var/log/ha-log
+
+#是否开启Cluster Resource Manager（集群资源管理）功能，很少用
+#crm yes
+
+#指明心跳在eth1接口进行（以太网广播方式）
+bcast eth1
+
+#指明心跳端口
+udpport 694
+
+#采用网卡eth0的udp单播来心跳，后面跟的IP地址应为备节点地址（此选项在备节点时指向主）   
+#ucast eth0 192.168.1.2 694
+
+#采用网卡eth0的Udp多播来心跳并指定端口为694，一般在备节点不止一台时使用（Bcast、ucast、mcast分别代表广播、单播、多播，是心跳的三种方式） 
+#mcast eth0 225.0.0.1 694 1 0
+
+#指定心跳使用的串行设备，用于双机使用串口线连接的场合（若双机用以太网连接则应关闭该选项） 
+#serial /dev/ttyS0
+
+#串行接口波特率
+#baud 19200
+
+#心跳间隔
+keepalive 2
+
+#死亡计时器，若20s未收到主心跳则立即接管主的服务资源
+deadtime 10
+
+#警告心跳延迟。当10s内备不能接收到主心跳时即写入日志警告但不切换服务 
+warntime 10
+
+#在某些OS启动或重启后需经一段时间网络才能正常工作，其用于解决这种情况产生的时间间隔。取值至少为deadtime两倍
+initdead 20
+
+#当主恢复后是否将服务自动还回去（若"off"则当主恢复后将变为备!）
+auto_failback on
+
+#stonith的主要是使出现问题的节点从集群环境脱离进而释放集群资源，避免两个节点争用一个资源的情形发生。保证共享数据的安全和完整性
+#stonith baytech /etc/ha.d/conf/stonith.baytech
+
+#HA集群中的节点，确保主机名称符合：uname -n（若干主机名可写在一行，主机名设定：etc/sysconfig/network ---> hostname ）
+node node1               
+node node2
+node node3
+
+#Ping的节点选择的越好集群就越强壮，可选择固定的路由器作Ping节点，但最好不要选择集群的成员作为Ping节点（其仅用来测试网络连接）
+ping 192.168.60.1
+
+#（可选）列出与heartbeat一起启动和关闭的进程，一般是和heartbeat集成的插件，当这些进程遇到故障可自动重新启动。
+#最常用进程是ipfail，此进程用于检测和处理网络故障，需配合ping语句指定的ping node来检测网络的连通性。其中hacluster表示启动ipfail进程的身份
+respawn hacluster /usr/lib/heartbeat/ipfail   
