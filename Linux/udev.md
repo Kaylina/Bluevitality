@@ -1,7 +1,7 @@
 
 #### Example
 ```bash
-~ #]vim /etc/udev/rules.d/<number>..rules
+~ #]vim /etc/udev/rules.d/<number>.rules
 KERNEL==sd*, PROGRAM=/lib/udev/scsi_id -g -s %p, RESULT==123456, SYMLINK=%k_%c
 #若有一个内核设备名称以 sd 开头，且 SCSI ID 为 123456，则为设备文件产生符号链接: "sda_123456"
 
@@ -24,10 +24,24 @@ KERNEL==”hd[a-z]”, BUS==”ide”, SYSFS{removable}==”1″, SYSFS{device/m
 #表示ATA CDROM驱动器。这个规则创建和上面的规则相同的符号连接。ATA
 #CDROM驱动器需要sysfs值以来区别别的ATA设备，因为SCSI CDROM可以被内核唯一识别。
 
+KERNEL==”sd[b-z]”,RUN+=”/usr/local/bin/myprogram %k”
+#表示识别出sdb、sdc…sdz设备的时候，运行外部程序/usr/local/bin/myprogram
+#并将%k这个udev的操作符作为一个环境变量传给该程序作为一个选项。
+#要注意的是udev不会在任何活动的terminal下运行这些外部程序，
+#并且不会在shell上下文环境去执行（也就是说既有shell环境的变量如PATH、HOME等不会传递给该程序文件）
+#所以你的程序必须是具有可执行权限（chmod +x），如果是一个shell脚本，那么必须具有shebang标示
+
 ACTION==”add”, SUBSYSTEM==”scsi_device”, RUN+=”/sbin/modprobe sg”
 #它告诉udev增加 /sbin/modprobe sg
 #到命令列表，当任意SCSI设备增加到系统后，这些命令将执行。
 #其效果就是计算机应该会增加sg内核模块来侦测新的SCSI设备。
+
+SUBSYSTEM==”block”, ATTR{size}==”234441873”,SYMLINK+=”mydisk”
+#表示识别sysfs属性，子系统是block，同时该设备的size为234441873，将为该设备创建符号链接mydisk
+#ATTR{size}可以通过cat /sys/block/<device>/size查看，SUBSYSTEM可以通过udevadm info –a –p %p查看
+
+KERNEL==”hdc”,SYMLINK+=”cdrom cdrom0”
+#表示创建两个符号链接/dev/cdrom和/dev/cdrom0指向同一个设备即/dev/hdc
 ```
 
 #### 关键字
