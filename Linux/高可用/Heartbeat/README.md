@@ -6,7 +6,7 @@
 依次安装libnet和heartbeat源码包，安装完毕后在备份节点使用scp命令把主节点配置文件传输到备份节点  
 
 [root@node2 ~]#`scp -r node1:/etc/ha.d/*  /etc/ha.d/`  
-[root@node1 ~]# `/etc/init.d/heartbeat`  
+[root@node1 ~]#`/etc/init.d/heartbeat`  
 Usage: /etc/init.d/heartbeat {start|stop|status|restart|reload|force-reload}   
 
 #### 设置主备份节点时间同步
