@@ -122,7 +122,7 @@ and the attributes from one single parent device.
     ATTR{alignment_offset}=="0"
     ATTR{discard_alignment}=="0"
     ATTR{capability}=="50"
-    ATTR{stat}=="       9       26      280       90        0        0        0        0        0       90       90"
+    ATTR{stat}=="     9     26    280     90      0      0      0      0      0     90     90"
     ATTR{inflight}=="       0        0"
   looking at parent device '/devices/platform/omap/ti81xx-usbss/musb-hdrc.0/usb1/1-1/1-1:1.0
   /host1/target1:0:0/1:0:0:0':
