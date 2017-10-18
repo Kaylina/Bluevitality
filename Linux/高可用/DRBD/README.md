@@ -96,7 +96,8 @@ cd drbd-8.4.1
 ./configure --prefix=/usr/local/drbd --with-km --with-heartbeat --sysconfdir=/etc/drbd     
 # --with-km 激活内核模块 
 # --with-heartbeat 激活heartbeat相关配置
-make KDIR=/usr/src/kernels/$(uname -r)/    # KDIR=指定内核源码路径，依实际情况设置（查内核路径：ls -l /usr/src/kernels/$(uname -r)/）
+make KDIR=/usr/src/kernels/$(uname -r)/
+# KDIR=指定内核源码路径，依实际情况设置（查内核路径：ls -l /usr/src/kernels/$(uname -r)/）
 make install 
 mkdir -p /usr/local/drbd/var/run/drbd  
 cp /usr/local/drbd/etc/rc.d/init.d/drbd /etc/rc.d/init.d  
@@ -144,6 +145,7 @@ drbdadm  --  --overwrite-data-of-peer  primary  --force 资源名    #--overwrit
 #只需将数据写入/dData，drbd即把其同步到backupNode的/dev/sda2（仅需挂载逻辑设备，不挂载其下层的分区而由DRBD后台挂载用）
 mkfs.ext4 /dev/drbd1 && mount /dev/drbd1 /dData
 
+#-------------------------------------------------------------------------------
 
 #主备切换
 #首先在主上先将设备卸载，同时将主降为备：
