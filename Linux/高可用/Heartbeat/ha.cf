@@ -41,9 +41,8 @@ auto_failback on
 #stonith baytech /etc/ha.d/conf/stonith.baytech
 
 #HA集群中的节点，确保主机名称符合：uname -n（若干主机名可写在一行，主机名设定：etc/sysconfig/network ---> hostname ）
-node node1               
-node node2
-node node3
+node node1      #Master       
+node node2      #Slave
 
 #Ping的节点选择的越好集群就越强壮，可选择固定的路由器作Ping节点，但最好不要选择集群的成员作为Ping节点（其仅用来测试网络连接）
 ping 192.168.60.1
