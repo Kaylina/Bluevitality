@@ -63,7 +63,7 @@ SLAVE=yes
 
 [root@test ~]# vim /etc/modprobe.d/bonding.conf
 alias bond0 bonding
-options bonding mode=0 miimon=200   #在一般的实际应用中，0和1用的比较多
+options bonding mode=0 miimon=100   #自动切换时间为100毫秒（在一般的实际应用中，0和1用的比较多）
 
 [root@test ~]# modprobe bonding && lsmod | grep bonding
 [root@test ~]# /etc/init.d/network restart
