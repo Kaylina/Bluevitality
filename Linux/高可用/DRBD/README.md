@@ -150,7 +150,7 @@ GIT-hash: 0de839cee13a4160eed6037c4bddd066645e23c5 build by root@drbd2.localdoma
 #在指定host执行使其成为指定资源的主：（默认各节点启动时都处于secondary，需手工将其设成primary才能正常被挂载工作）
 drbdadm  --  --overwrite-data-of-peer  primary  --force 资源名    #--overwrite-data-of-peer 覆盖对端的数据
  
-#格式化并挂载：（mount只能在Primary端使用）
+#在主节点格式化并挂载：（mount只能在Primary端使用）
 #只需将数据写入/dData，drbd即把其同步到backupNode的/dev/sda2（仅需挂载逻辑设备，不挂载其下层的分区而由DRBD后台挂载用）
 mkfs.ext4 /dev/drbd1 && mount /dev/drbd1 /dData
 
