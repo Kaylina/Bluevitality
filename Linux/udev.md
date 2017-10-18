@@ -98,6 +98,8 @@ KERNEL==”hdc”,SYMLINK+=”cdrom cdrom0”
 |+=     |     赋值       |      追加特定的值给已经存在的键|
 |:=     |       赋值     |            分配一个特定的值给该键，后面的规则不可能覆盖它|
 
+重新启动UDEV：start_udev  
+
 #### devadm info -ap /sys/block/sda  
 打印出设备总线的所有位置的父子关系  
 ```bash
