@@ -9,7 +9,7 @@
 
 node1 IPaddr::192.168.60.200/24/eth0/  Filesystem::/dev/sdb5::/webdata::ext3  httpd tomcat
 
-#在哪个服务器的哪个网卡上启动什么服务
+#在主节点的哪个网卡上启动什么服务
 #其中node1是HA集群主节点，IPaddr为heartbeat自带脚本，首先执行"/etc/ha.d/resource.d/IPaddr 192.168.60.200/24 start"（格式：脚本名::参数）
 #即虚拟出一个192.168.60.200/24的对外提供服务的VIP，同时指定此VIP使用的网络接口为eth0
 #接着将执行共享磁盘分区的挂载操作，"Filesystem::/dev/sdb5::/webdata::ext3" 相当于命令行执行"mount -t ext3 /dev/sdb5 /webdata"
