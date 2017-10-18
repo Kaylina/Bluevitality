@@ -1,7 +1,7 @@
 
 #### Example
 ```bash
-~ #]vim /etc/udev/rules.d/<number>.
+~ #]vim /etc/udev/rules.d/<number>..rules
 KERNEL==sd*, PROGRAM=/lib/udev/scsi_id -g -s %p, RESULT==123456, SYMLINK=%k_%c
 #若有一个内核设备名称以 sd 开头，且 SCSI ID 为 123456，则为设备文件产生符号链接: "sda_123456"
 
