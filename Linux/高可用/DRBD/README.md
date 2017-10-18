@@ -89,22 +89,30 @@ cat /etc/hosts
 parted /dev/sda mklabel gpt  &&  parted /dev/sda mkpart logical ext3 20GB 20GB   #数据区
 partprobe && cat /proc/partions     #重读分区
 
-#关闭防火墙限制及软件安装
+#软件安装
 service iptables stop && setenforce 0
-yum -y install gcc kernel-devel kernel-headers flex ； export LC_ALL=C
-wget http://oss.linbit.com/drbd/8.4/drbd-8.4.1.tar.gz &&  tar xzf drbd-8.4.1.tar.gz
+yum -y install gcc kernel-devel kernel-headers flex
+export LC_ALL=C
+wget http://oss.linbit.com/drbd/8.4/drbd-8.4.1.tar.gz
+tar xzf drbd-8.4.1.tar.gz
 cd drbd-8.4.1
 ./configure --prefix=/usr/local/drbd --with-km --with-heartbeat --sysconfdir=/etc/drbd     
 # --with-km 激活内核模块 
 # --with-heartbeat 激活heartbeat相关配置
+# --with-heartbeat 安装完成后会在/usr/local/drbd/etc/ha.d/resource.d生成drbddisk和drbdupper文件
+# 把这两个文件复制到/usr/local/heartbeat/etc/ha.d/resource.d目录
+# 命令cp -R /usr/local/drbd/etc/ha.d/resource.d/* /etc/ha.d/resource.d
 make KDIR=/usr/src/kernels/$(uname -r)/
 # KDIR=指定内核源码路径，依实际情况设置（查内核路径：ls -l /usr/src/kernels/$(uname -r)/）
 make install 
+
 mkdir -p /usr/local/drbd/var/run/drbd  
 cp /usr/local/drbd/etc/rc.d/init.d/drbd /etc/rc.d/init.d  
 chkconfig --add drbd  && chkconfig drbd on    
-cd drbd     #安装drbd模块
-make clean  &&  make KDIR=/usr/src/kernels/2.6.32-220.17.1.el6.x86_64/  
+cd drbd
+#安装drbd模块
+make clean
+make KDIR=/usr/src/kernels/2.6.32-220.17.1.el6.x86_64/  
 cp drbd.ko /lib/modules/`uname -r`/kernel/lib/  
 depmod
 modprobe drbd && lsmod | grep -i drbd
