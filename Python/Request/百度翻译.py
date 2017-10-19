@@ -20,3 +20,6 @@ def py():
 
 if __name__=="__main__":
     py()
+
+    
+#官方API文档：http://api.fanyi.baidu.com/api/trans/product/apidoc
