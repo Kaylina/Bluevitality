@@ -85,7 +85,8 @@ gluster volume create gfs_disk stripe 4 gfs-server{1..4}:/data/gfs/brick0
 #### Replicated-Stripe-Distributed
 ```bash
 #Other Example：
-gluster volume create gfs_disk stripe 2 replica 2 192.168.2.{100,101,102}:/mnt/sdb1 192.168.2.{100,101,102}:/mnt/sdc1 192.168.2.{100,101}:/mnt/sdd1
+gluster volume create gfs_disk stripe 2 \
+replica 2 192.168.2.{100,101,102}:/mnt/sdb1 192.168.2.{100,101,102}:/mnt/sdc1 192.168.2.{100,101}:/mnt/sdd1
 #使用8个brick创建一个组合卷，即brick数是stripe*replica的倍数，则创建三种基本卷的组合卷
 #若刚好等于stripe*replica则为stripe-Distrbuted卷
 ```
