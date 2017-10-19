@@ -8,7 +8,7 @@ def py():
     data={
       'from':'en',
       'to':'zh',
-      'query':"captain",        #单词
+      'query':"captain",        #单词 or 短语
       'transtype':'translang',
       'simple_means_flag':'3'
       }        
