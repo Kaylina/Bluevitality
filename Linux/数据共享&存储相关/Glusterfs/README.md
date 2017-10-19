@@ -1,4 +1,3 @@
-
 #### 备忘
 GlusterFS 具有高扩展、高可性、高性能、可横向扩展等特点  
 全局命名空间、分布式前端的高性能文件系统，没有元数据服务器的设计，使其没有单点故障问题  
@@ -85,8 +84,7 @@ gluster volume create gfs_disk stripe 4 gfs-server{1..4}:/data/gfs/brick0
 #### Replicated-Stripe-Distributed
 ```bash
 #Other Example：
-gluster volume create gfs_disk stripe 2 \
-replica 2 192.168.2.{100,101,102}:/mnt/sdb1 192.168.2.{100,101,102}:/mnt/sdc1 192.168.2.{100,101}:/mnt/sdd1
+gluster volume create gfs_disk stripe 2 replica 2 192.168.2.{100,101,102}:/mnt/sdb1 192.168.2.{100,101,102}:/mnt/sdc1 192.168.2.{100,101}:/mnt/sdd1
 #使用8个brick创建一个组合卷，即brick数是stripe*replica的倍数，则创建三种基本卷的组合卷
 #若刚好等于stripe*replica则为stripe-Distrbuted卷
 ```
@@ -122,7 +120,19 @@ gluster volume <start|stop> <卷名>
 gluster volume info [卷名]
 
 #卷状态：（当前卷状态，包括其中各brick状态，NFS状态及当前task执行情况，一些系统设置状态等）
-gluster volume status            
+gluster volume status
+
+#使用以下命令显示特定卷的信息：
+gluster volume status \
+    [all|VOLNAME [nfs | shd | BRICKNAME]] [detail |clients | mem | inode | fd |callpool]
+
+    detail - 显示砖的附加信息。
+    clients - 显示连接至卷的客户端列表。
+    mem - 显示砖的内存使用率和内存池的详细信息。
+    inode - 显示卷的i节点表。
+    fd - 显示音量的打开文件描述符表。
+    callpool - 显示卷的待处理调用。
+
 
 #删除卷：     
 gluster volume stop <卷名> ; gluster volume delete <卷名>
@@ -216,7 +226,119 @@ mount -t nfs -o vers=3 host/ip:/path mnt-port
 #Whatever：     libgfapi
 #Back ends：     files、BD、DB
 ```
+#### 性能监控
+```bash
+#监控Gluster工作负载
+#开始分析
+gluster volume profile test-volume start
 
+#显示I/O信息
+gluster volume profile test-volume info
+
+#要查看NFS服务器的I/O信息
+gluster volume profile test-volume info nfs
+
+#停止分析
+gluster volume profile test-volume stop
+
+#要查看打开的文件描述符数和最大文件描述符数，请使用以下命令：
+gluster volume top VOLNAME open [nfs | brick BRICK-NAME] [list-cnt cnt]
+#例如：要查看打开的文件描述符数和最大文件描述符数砖块server:/export，列出前10名打开调用
+gluster volume top test-volume open brick server:/export  list-cnt 10 
+
+#查看最大的文件读取调用
+#最高的文件上的每块砖读取调用，您可以查看文件的列表volume top命令。
+#如果没有指定砖名，100文件的列表，是默认显示。
+#要查看最高read()调用，请使用以下命令：
+gluster volume top VOLNAME read [nfs | brick BRICK-NAME] [list-cnt cnt] 
+#例如，以查看test-volume卷的server:/export砖上的最高读取调用：
+gluster volume top test-volume read brick server:/export list-cnt 10
+
+#查看最大的文件写入调用
+#最高的文件上的每块砖写入调用，您可以查看文件的列表volume top命令。
+#如果没有指定砖名，100文件的列表，是默认显示。
+#要查看最高write()调用，请使用以下命令：
+gluster volume top VOLNAME write [nfs | brick BRICK-NAME] [list-cnt cnt] 
+#例如，以查看test-volume卷的server:/export砖上的最高写入调用：
+gluster volume top test-volume write brick server:/export list-cnt 10
+
+#查看读取性能
+#您可以查看读取吞吐量的文件使用volume #top命令为每一块砖，如果没有指定砖的名称，将显示所有属于该卷砖的指标。输出是读吞吐量。
+#此命令启动一个read()调用为指定的计数和块大小，并测量直接在后端出口相应的吞吐量，绕过glusterFS进程。  
+#要查看每块砖的读取性能，使用命令，指定选项需要：
+gluster volume top VOLNAME read-perf [bs blk-size count count] [nfs | brick BRICK-NAME] [list-cnt cnt]
+#例如，要查看砖的读取性能server:/export/ 的test-volume卷，指定一个256块的大小，并列出前10个结果：
+gluster volume top test-volume read-perf bs 256 count 1 brick server:/export/ list-cnt 10
+
+#查看写入性能
+#您可以查看每块砖或NFS服务器与volume #top命令文件的写入吞吐量。如果没有指定砖的名称，则所有属于该卷砖的指标将被显示。输出将是写吞吐量。
+#此命令启动对指定的计数和块大小写入操作和相应的通过直接测量后端出口，绕过glusterFS进程。
+#要在每块砖查看写入性能，使用以下命令，指定选项需要：
+gluster volume top VOLNAME write-perf [bs blk-size count count] [nfs | brick BRICK-NAME] [list-cnt cnt] 
+#例如，要查看砖的写入性能server:/export/ 的test-volume卷，指定一个256块的大小，并列出前10个结果：
+gluster volume top test-volume write-perf bs 256 count 1 brick server:/export/ list-cnt 10
+```
+#### 配额
+```bash
+#管理目录配额
+#启用配额
+#启用卷上的配额使用以下命令：
+gluster volume quota VOLNAME enable 
+#例如，为test-volume启用配额：
+gluster volume quota test-volume enable
+
+#设置限制
+#设置硬性限制卷的目录使用以下命令，指定在MB，GB，TB或PB的硬限制大小：
+gluster volume quota VOLNAME limit-usage path hard_limit 
+#例如：要设置100GB的一个硬性限制/目录：
+gluster volume quota VOLNAME limit-usage /dir 100GB
+#要设置1TB的硬限制卷：
+gluster volume quota VOLNAME limit-usage / 1TB
+
+#设置默认软限制
+#默认软限制是指定为卷的百分比的一个属性。任何卷的默认软限制为80％。
+#使用以下命令来配置默认的软限制值：
+gluster volume quota VOLNAME default-soft-limit soft_limit
+#例如，默认的软限制设置为90％的test-volume运行以下命令：
+gluster volume quota test-volume default-soft-limit 90%
+#确保值是使用以下命令来设置：
+gluster volume quota test-volume list
+#如果您在目录级别更改软限制，然后更改卷的默认软限制，原来配置的目录级软限制将保持不变。
+
+#显示配额限制信息
+#要显示所有在其上限制设置的目录配额限制信息，请使用以下命令：
+gluster volume quota VOLNAME list
+#例如，要查看test-volume设置配额限制：
+gluster volume quota test-volume list
+#要显示上限值设定在一个特定的目录盘限制的信息，请使用以下命令：
+gluster volume quota VOLNAME list /<directory_name>
+#例如，以查看test-volume卷/dir目录设置的限制：
+gluster volume quota test-volume list /dir
+#要显示其上限制设置多个目录的磁盘限额的信息，使用下面的命令：
+gluster volume quota VOLNAME list /<directory_name1> /<directory_name2>
+#例如，要查看test-volume卷目录上/dir、/dir/dir2设置配额限制：
+gluster volume quota test-volume list /dir /dir/dir2
+
+#显示配额限制信息使用df工具
+#要使用报告磁盘使用情况DF工具，采取配额限制的考虑，运行以下命令：
+gluster volume set VOLNAME quota-deem-statfs on
+
+#删除磁盘限制
+#使用以下命令的特定目录删除磁盘使用限制设置：
+gluster volume quota VOLNAME remove /<directory-name>
+#例如，要取消对test-volume卷/data目录的磁盘使用限制：
+gluster volume quota test-volume remove /data
+#例如，从卷中删除配额：
+gluster vol quota test-volume remove /
+#从卷中除去配额限制（“/”在上面的例子中）不影响目录配额限制的使用。
+
+#禁用配额
+#您可以使用以下命令禁用目录配额：
+gluster volume quota VOLNAME disable 
+#例如，要禁用test-volume上目录配额：
+gluster volume quota test-volume disable
+#如果禁用配额，所有先前配置的限制，从卷中删除。
+```
 #### 流程
 ```
 applications ---> VFS ---> /dev/fuse ---> GlusterFS ~~~~TCP/IP或RDMA~~~~ GlusterFS ---> [ext3/xfs/...]
@@ -244,5 +366,6 @@ GlusterFS的卷类型：
     哈希条带卷：     ........
     复制条带卷：     ........
     哈希复制条带卷：     ........
+
 ```
 
