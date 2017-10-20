@@ -95,7 +95,8 @@ systemctl restart network
 --disk path=/opt/vms/centos63-webtest.img,format=qcow2,size=7,bus=virtio \     
 --accelerate  \     
 --location http://111.205.130.4/centos63 \     
---extra-args "linux ip=59.151.73.22 netmask=255.255.255.224 gateway=59.151.73.1 \ ks=http://111.205.130.4/ks/xen63.ks console=ttyS0  serial" \
+--extra-args "linux ip=59.151.73.22 netmask=255.255.255.224 gateway=59.151.73.1 \ 
+ks=http://111.205.130.4/ks/xen63.ks console=ttyS0  serial" \
 --vnc --vncport=5910 --vnclisten=0.0.0.0 \     
 --network bridge=br0,model=virtio \     
 --network bridge=br1,model=virtio \     
