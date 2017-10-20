@@ -1,0 +1,38 @@
+<domain type='kvm'>
+   <name>test_ubuntu</name>                 //虚拟机名称
+   <memory>1048576</memory>                 //最大内存，单位k
+   <currentMemory>1048576</currentMemory>   //可用内存，单位k
+   <vcpu>8</vcpu>                           //虚拟cpu个数
+   <os>
+     <type arch='x86_64' machine='pc'>hvm</type>
+     <boot dev='cdrom'/>                    //光盘启动
+  </os>
+  <features>
+    <acpi/>
+    <apic/>
+    <pae/>
+  </features>
+  <clock offset='localtime'/>
+  <on_poweroff>destroy</on_poweroff>
+  <on_reboot>restart</on_reboot>
+  <on_crash>destroy</on_crash>
+  <devices>
+    <emulator>/usr/libexec/qemu-kvm</emulator>
+    <disk type='file' device='disk'>
+     <driver name='qemu' type='qcow2'/>
+      <source file='/var/lib/libvirt/images/test.qcow2'/>   //目的镜像路径
+      <target dev='hda' bus='ide'/>
+    </disk>
+    <disk type='file' device='cdrom'>
+      <source file='/var/lib/libvirt/images/ubuntu.iso'/>   //光盘镜像路径
+      <target dev='hdb' bus='ide'/>
+    </disk>
+   <interface type='bridge'>                  //虚拟机网络连接方式
+     <source bridge='kvmbr0'/>                //当前主机网桥的名称
+     <mac address="00:16:3e:5d:aa:a8"/>       //为虚拟机分配mac地址，务必唯一，否则dhcp获得同样ip,引起冲突
+   </interface>
+   <input type='mouse' bus='ps2'/>
+    <graphics type='vnc' port='-1' autoport='yes' listen = '0.0.0.0' keymap='en-us'/> 
+    //vnc方式登录，端口号自动分配，自动加1，可以通过virsh vncdisplay来查询
+  </devices>
+</domain>
