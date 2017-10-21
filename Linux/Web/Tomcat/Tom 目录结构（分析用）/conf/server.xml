@@ -3,29 +3,29 @@
 <!-- Note:  A "Server" is not itself a "Container", so you may not
      define subcomponents such as "Valves" at this level.
      Documentation at /docs/config/server.html
-	 Í¬Ò»¸öÎïÀí»úÅäÖÃ¶à¸öServerÊµÀý£¬±ØÐëÊ¹ÓÃ²»Í¬¶Ë¿Ú
+	 åŒä¸€ä¸ªç‰©ç†æœºé…ç½®å¤šä¸ªServerå®žä¾‹ï¼Œå¿…é¡»ä½¿ç”¨ä¸åŒç«¯å£
  -->
 
-<!-- ServerÊµÀý£¬¼´Ò»¸öJVM
-	className: ÓÃÓÚÊµÏÖ´ËServerÈÝÆ÷µÄÍêÈ«ÏÞ¶¨ÀàµÄÃû³Æ£¬Ä¬ÈÏÎªorg.apache.catalina.core.StandardServer£»
+<!-- Serverå®žä¾‹ï¼Œå³ä¸€ä¸ªJVM
+	className: ç”¨äºŽå®žçŽ°æ­¤Serverå®¹å™¨çš„å®Œå…¨é™å®šç±»çš„åç§°ï¼Œé»˜è®¤ä¸ºorg.apache.catalina.core.StandardServerï¼›
  -->
 <Server port="8005" shutdown="SHUTDOWN">
   <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
-  <!-- °²È«¼àÌý. Documentation at /docs/config/listeners.html
+  <!-- å®‰å…¨ç›‘å¬. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
   -->
   <!--APR library loader. Documentation at /docs/apr.html -->
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
   <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
   <Listener className="org.apache.catalina.core.JasperListener" />
-  <!-- ·ÀÖ¹ÄÚ´æÐ¹Â¶ due to use of particular java/javax APIs-->
+  <!-- é˜²æ­¢å†…å­˜æ³„éœ² due to use of particular java/javax APIs-->
   <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 
-  <!-- È«¾ÖÃüÃû×ÊÔ´£¬À´¶¨ÒåÒ»Ð©Íâ²¿·ÃÎÊ×ÊÔ´£¬
-	Æä×÷ÓÃÊÇÎªËùÓÐÒýÇæÓ¦ÓÃ³ÌÐòËùÒýÓÃµÄÍâ²¿×ÊÔ´µÄ¶¨Òå
-	¿ÉÒÔ±ÜÃâÃ¿¸öWebÓ¦ÓÃ³ÌÐò¶¼ÐèÒªÔÚ¸÷×ÔµÄweb.xml´´½¨£¬ÕâÔÚwebÓ¦ÓÃ³ÌÐòÒÔWARµÄÐÎÊ½´æÔÚÊ±ÓÈÎªÓÐÓÃ¡£
+  <!-- å…¨å±€å‘½åèµ„æºï¼Œæ¥å®šä¹‰ä¸€äº›å¤–éƒ¨è®¿é—®èµ„æºï¼Œ
+	å…¶ä½œç”¨æ˜¯ä¸ºæ‰€æœ‰å¼•æ“Žåº”ç”¨ç¨‹åºæ‰€å¼•ç”¨çš„å¤–éƒ¨èµ„æºçš„å®šä¹‰
+	å¯ä»¥é¿å…æ¯ä¸ªWebåº”ç”¨ç¨‹åºéƒ½éœ€è¦åœ¨å„è‡ªçš„web.xmlåˆ›å»ºï¼Œè¿™åœ¨webåº”ç”¨ç¨‹åºä»¥WARçš„å½¢å¼å­˜åœ¨æ—¶å°¤ä¸ºæœ‰ç”¨ã€‚
 	Environment
 	Resource
 	ResourceEnvRef
@@ -39,9 +39,9 @@
               pathname="conf/tomcat-users.xml" />
   </GlobalNamingResources>
 
-  <!-- ServiceÖ÷ÒªÓÃÓÚ¹ØÁªÒ»¸öÒýÇæºÍÓë´ËÒýÇæÏà¹ØµÄÁ¬½ÓÆ÷,Ã¿¸öÁ¬½ÓÆ÷Í¨¹ýÒ»¸öÌØ¶¨µÄ¶Ë¿ÚºÍÐ­Òé½ÓÊÕÈëÕ¾ÇëÇó½»½«Æä×ª·¢ÖÁ¹ØÁªµÄÒýÇæ½øÐÐ´¦Àí 
-	className£º ÓÃÓÚÊµÏÖserviceµÄÀàÃû£¬Ò»°ã¶¼ÊÇorg.apache.catalina.core.StandardService¡£
-	ServiceÒª°üº¬Ò»¸öÒýÇæ¡¢Ò»¸ö»ò¶à¸öÁ¬½ÓÆ÷
+  <!-- Serviceä¸»è¦ç”¨äºŽå…³è”ä¸€ä¸ªå¼•æ“Žå’Œä¸Žæ­¤å¼•æ“Žç›¸å…³çš„è¿žæŽ¥å™¨,æ¯ä¸ªè¿žæŽ¥å™¨é€šè¿‡ä¸€ä¸ªç‰¹å®šçš„ç«¯å£å’Œåè®®æŽ¥æ”¶å…¥ç«™è¯·æ±‚äº¤å°†å…¶è½¬å‘è‡³å…³è”çš„å¼•æ“Žè¿›è¡Œå¤„ç† 
+	classNameï¼š ç”¨äºŽå®žçŽ°serviceçš„ç±»åï¼Œä¸€èˆ¬éƒ½æ˜¯org.apache.catalina.core.StandardServiceã€‚
+	Serviceè¦åŒ…å«ä¸€ä¸ªå¼•æ“Žã€ä¸€ä¸ªæˆ–å¤šä¸ªè¿žæŽ¥å™¨
   -->
   <Service name="Catalina">
 
@@ -51,59 +51,59 @@
         maxThreads="150" minSpareThreads="4"/>
     -->
 
-    <!-- HTTPÁ¬½ÓÆ÷ ÊôÐÔ£ºaddress£ºÖ¸¶¨Á¬½ÓÆ÷¼àÌýµÄµØÖ·£¬Ä¬ÈÏÎªËùÓÐµØÖ·£¬¼´0.0.0.0-->
+    <!-- HTTPè¿žæŽ¥å™¨ å±žæ€§ï¼šaddressï¼šæŒ‡å®šè¿žæŽ¥å™¨ç›‘å¬çš„åœ°å€ï¼Œé»˜è®¤ä¸ºæ‰€æœ‰åœ°å€ï¼Œå³0.0.0.0-->
     <Connector port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" />
-    <!-- Ê¹ÓÃ¹²ÏíÏß³Ì³ØµÄConnector -->
+    <!-- ä½¿ç”¨å…±äº«çº¿ç¨‹æ± çš„Connector -->
     <!--
     <Connector executor="tomcatThreadPool"
                port="8080" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443" />
     -->
-    <!-- SSLÁ¬½ÓÆ÷ -->
+    <!-- SSLè¿žæŽ¥å™¨ -->
     <!--
     <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
                maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
                clientAuth="false" sslProtocol="TLS" />
     -->
-    <!-- AJPÁ¬½ÓÆ÷ 
-		redirectPort£ºÈç¹ûÄ³Á¬½ÓÆ÷Ö§³ÖµÄÐ­ÒéÊÇHTTP£¬µ±½ÓÊÕ¿Í»§¶Ë·¢À´µÄHTTPSÇëÇóÊ±£¬Ôò×ª·¢ÖÁ´ËÊôÐÔ¶¨ÒåµÄ¶Ë¿Ú
-		acceptCount£ºÉèÖÃµÈ´ý¶ÓÁÐµÄ×î´ó³¤¶È
+    <!-- AJPè¿žæŽ¥å™¨ 
+		redirectPortï¼šå¦‚æžœæŸè¿žæŽ¥å™¨æ”¯æŒçš„åè®®æ˜¯HTTPï¼Œå½“æŽ¥æ”¶å®¢æˆ·ç«¯å‘æ¥çš„HTTPSè¯·æ±‚æ—¶ï¼Œåˆ™è½¬å‘è‡³æ­¤å±žæ€§å®šä¹‰çš„ç«¯å£
+		acceptCountï¼šè®¾ç½®ç­‰å¾…é˜Ÿåˆ—çš„æœ€å¤§é•¿åº¦
 	-->
     <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
 
-    <!-- EngineÊÇServlet´¦ÀíÆ÷µÄÒ»¸öÊµÀý£¬¼´servletÒýÇæ£¬Ä¬ÈÏÎª¶¨ÒåÔÚserver.xmlÖÐµÄCatalina -->
+    <!-- Engineæ˜¯Servletå¤„ç†å™¨çš„ä¸€ä¸ªå®žä¾‹ï¼Œå³servletå¼•æ“Žï¼Œé»˜è®¤ä¸ºå®šä¹‰åœ¨server.xmlä¸­çš„Catalina -->
 	
-    <!-- ÅäÖÃ¸ºÔØ¾ùºâÊ±ÒªÉèÖÃjvmRoute, via AJP ie : -->
+    <!-- é…ç½®è´Ÿè½½å‡è¡¡æ—¶è¦è®¾ç½®jvmRoute, via AJP ie : -->
 	<!--
     <Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1">
     -->
 	
-	<!-- defaultHostÊôÐÔ:¶¨ÒåÒ»¸ö½ÓÊÕËùÓÐ·¢Íù·ÇÃ÷È·¶¨ÒåÐéÄâÖ÷»úµÄÇëÇóµÄhost×é¼þ
-		Èçlocalhost¶ÔÓ¦nameÎªlocalhostµÄHost
-		Ò»¸öHost¿ÉÒÔÓÐÒ»¸ö»ò¶à¸öHost
+	<!-- defaultHostå±žæ€§:å®šä¹‰ä¸€ä¸ªæŽ¥æ”¶æ‰€æœ‰å‘å¾€éžæ˜Žç¡®å®šä¹‰è™šæ‹Ÿä¸»æœºçš„è¯·æ±‚çš„hostç»„ä»¶
+		å¦‚localhostå¯¹åº”nameä¸ºlocalhostçš„Host
+		ä¸€ä¸ªHostå¯ä»¥æœ‰ä¸€ä¸ªæˆ–å¤šä¸ªHost
 	-->
     <Engine name="Catalina" defaultHost="localhost">
       <!--
-		×¨ÓÃÓÚÅäÖÃTomcat¼¯ÈºµÄÔªËØ£¬¿ÉÓÃÓÚEngineºÍHostÈÝÆ÷ÖÐ
-		ÔÚÓÃÓÚEngineÈÝÆ÷ÖÐÊ±£¬EngineÖÐµÄËùÓÐHost¾ùÖ§³Ö¼¯Èº¹¦ÄÜ
-		ÔÚClusterÔªËØÖÐ£¬
-		   ÐèÒªÖ±½Ó¶¨ÒåÒ»¸öManagerÔªËØ£¬Õâ¸öManagerÔªËØÓÐÒ»¸öÆäÖµÎªorg.apache.catalina.ha.session.DeltaManager»òorg.apache.catalina.ha.session.BackupManagerµÄclassNameÊôÐÔ¡£
-		   Í¬Ê±£¬ClusterÖÐ»¹ÐèÒª·Ö±ð¶¨ÒåÒ»¸öChannelºÍClusterListenerÔªËØ¡£
+		ä¸“ç”¨äºŽé…ç½®Tomcaté›†ç¾¤çš„å…ƒç´ ï¼Œå¯ç”¨äºŽEngineå’ŒHostå®¹å™¨ä¸­
+		åœ¨ç”¨äºŽEngineå®¹å™¨ä¸­æ—¶ï¼ŒEngineä¸­çš„æ‰€æœ‰Hostå‡æ”¯æŒé›†ç¾¤åŠŸèƒ½
+		åœ¨Clusterå…ƒç´ ä¸­ï¼Œ
+		   éœ€è¦ç›´æŽ¥å®šä¹‰ä¸€ä¸ªManagerå…ƒç´ ï¼Œè¿™ä¸ªManagerå…ƒç´ æœ‰ä¸€ä¸ªå…¶å€¼ä¸ºorg.apache.catalina.ha.session.DeltaManageræˆ–org.apache.catalina.ha.session.BackupManagerçš„classNameå±žæ€§ã€‚
+		   åŒæ—¶ï¼ŒClusterä¸­è¿˜éœ€è¦åˆ†åˆ«å®šä¹‰ä¸€ä¸ªChannelå’ŒClusterListenerå…ƒç´ ã€‚
 		   
-		    Channel ÓÃÓÚClusterÖÐ¸ø¼¯ÈºÖÐÍ¬Ò»×éÖÐµÄ½Úµã¶¨ÒåÍ¨ÐÅ¡°ÐÅµÀ¡±¡£
-				ChannelÖÐÐèÒªÖÁÉÙ¶¨ÒåMembership¡¢ReceiverºÍSenderÈý¸öÔªËØ£¬´ËÍâ»¹ÓÐÒ»¸ö¿ÉÑ¡ÔªËØInterceptor¡£
-				Membership ÓÃÓÚChannelÖÐÅäÖÃÍ¬Ò»Í¨ÐÅÐÅµÀÉÏ½Úµã¼¯Èº×éÖÐµÄ³ÉÔ±Çé¿ö£¬¼´¼à¿Ø¼ÓÈëµ±Ç°¼¯Èº×éÖÐµÄ½Úµã²¢ÔÚ¸÷½Úµã¼ä´«µÝÐÄÌøÐÅÏ¢£¬¶øÇÒ¿ÉÒÔÔÚ½ÓÊÕ²»µ½Ä³³ÉÔ±µÄÐÄÌøÐÅÏ¢Ê±½«Æä´Ó¼¯Èº½ÚµãÖÐÒÆ³ý¡£
-				    TomcatÖÐMembershipµÄÊµÏÖÊÇorg.apache.catalina.tribes.membership.McastService¡£
-				Sender ÓÃÓÚChannelÖÐÅäÖÃ¡°¸´ÖÆÐÅÏ¢¡±µÄ·¢ËÍÆ÷£¬ÊµÏÖ·¢ËÍÐèÒªÍ¬²½¸øÆäËü½ÚµãµÄÊý¾ÝÖÁ¼¯ÈºÖÐµÄÆäËü½Úµã¡£·¢ËÍÆ÷²»ÐèÒªÊôÐÔµÄ¶¨Òå£¬µ«¿ÉÒÔÔÚÆäÄÚ²¿¶¨ÒåÒ»¸öTransportÔªËØ¡£
-					Transport ÓÃÓÚSenderÄÚ²¿£¬ÅäÖÃÊý¾ÝÈçºÎ·¢ËÍÖÁ¼¯ÈºÖÐµÄÆäËü½Úµã¡£TomcatÓÐÁ½ÖÖTransportµÄÊµÏÖ£º 
+		    Channel ç”¨äºŽClusterä¸­ç»™é›†ç¾¤ä¸­åŒä¸€ç»„ä¸­çš„èŠ‚ç‚¹å®šä¹‰é€šä¿¡â€œä¿¡é“â€ã€‚
+				Channelä¸­éœ€è¦è‡³å°‘å®šä¹‰Membershipã€Receiverå’ŒSenderä¸‰ä¸ªå…ƒç´ ï¼Œæ­¤å¤–è¿˜æœ‰ä¸€ä¸ªå¯é€‰å…ƒç´ Interceptorã€‚
+				Membership ç”¨äºŽChannelä¸­é…ç½®åŒä¸€é€šä¿¡ä¿¡é“ä¸ŠèŠ‚ç‚¹é›†ç¾¤ç»„ä¸­çš„æˆå‘˜æƒ…å†µï¼Œå³ç›‘æŽ§åŠ å…¥å½“å‰é›†ç¾¤ç»„ä¸­çš„èŠ‚ç‚¹å¹¶åœ¨å„èŠ‚ç‚¹é—´ä¼ é€’å¿ƒè·³ä¿¡æ¯ï¼Œè€Œä¸”å¯ä»¥åœ¨æŽ¥æ”¶ä¸åˆ°æŸæˆå‘˜çš„å¿ƒè·³ä¿¡æ¯æ—¶å°†å…¶ä»Žé›†ç¾¤èŠ‚ç‚¹ä¸­ç§»é™¤ã€‚
+				    Tomcatä¸­Membershipçš„å®žçŽ°æ˜¯org.apache.catalina.tribes.membership.McastServiceã€‚
+				Sender ç”¨äºŽChannelä¸­é…ç½®â€œå¤åˆ¶ä¿¡æ¯â€çš„å‘é€å™¨ï¼Œå®žçŽ°å‘é€éœ€è¦åŒæ­¥ç»™å…¶å®ƒèŠ‚ç‚¹çš„æ•°æ®è‡³é›†ç¾¤ä¸­çš„å…¶å®ƒèŠ‚ç‚¹ã€‚å‘é€å™¨ä¸éœ€è¦å±žæ€§çš„å®šä¹‰ï¼Œä½†å¯ä»¥åœ¨å…¶å†…éƒ¨å®šä¹‰ä¸€ä¸ªTransportå…ƒç´ ã€‚
+					Transport ç”¨äºŽSenderå†…éƒ¨ï¼Œé…ç½®æ•°æ®å¦‚ä½•å‘é€è‡³é›†ç¾¤ä¸­çš„å…¶å®ƒèŠ‚ç‚¹ã€‚Tomcatæœ‰ä¸¤ç§Transportçš„å®žçŽ°ï¼š 
 					1) PooledMultiSender 
-					   »ùÓÚJava×èÈûÊ½IO£¬¿ÉÒÔ½«Ò»´Î½«¶à¸öÐÅÏ¢²¢·¢·¢ËÍÖÁÆäËü½Úµã£¬µ«Ò»´ÎÖ»ÄÜ´«ËÍ¸øÒ»¸ö½Úµã¡£ 
+					   åŸºäºŽJavaé˜»å¡žå¼IOï¼Œå¯ä»¥å°†ä¸€æ¬¡å°†å¤šä¸ªä¿¡æ¯å¹¶å‘å‘é€è‡³å…¶å®ƒèŠ‚ç‚¹ï¼Œä½†ä¸€æ¬¡åªèƒ½ä¼ é€ç»™ä¸€ä¸ªèŠ‚ç‚¹ã€‚ 
 					2)PooledParallelSener 
-					   »ùÓÚJava·Ç×èÈûÊ½IO£¬¼´NIO£¬¿ÉÒÔÒ»´Î·¢ËÍ¶à¸öÐÅÏ¢ÖÁÒ»¸ö»ò¶à¸ö½Úµã¡£
-				Receiver ÓÃÓÚChannel¶¨ÒåÄ³½ÚµãÈçºÎ´ÓÆäËü½ÚµãµÄSender½ÓÊÕ¸´ÖÆÊý¾Ý£¬TomcatÖÐÊµÏÖµÄ½ÓÊÕ·½Ê½ÓÐÁ½ÖÖBioReceiverºÍNioReceiver¡£
+					   åŸºäºŽJavaéžé˜»å¡žå¼IOï¼Œå³NIOï¼Œå¯ä»¥ä¸€æ¬¡å‘é€å¤šä¸ªä¿¡æ¯è‡³ä¸€ä¸ªæˆ–å¤šä¸ªèŠ‚ç‚¹ã€‚
+				Receiver ç”¨äºŽChannelå®šä¹‰æŸèŠ‚ç‚¹å¦‚ä½•ä»Žå…¶å®ƒèŠ‚ç‚¹çš„SenderæŽ¥æ”¶å¤åˆ¶æ•°æ®ï¼ŒTomcatä¸­å®žçŽ°çš„æŽ¥æ”¶æ–¹å¼æœ‰ä¸¤ç§BioReceiverå’ŒNioReceiverã€‚
 	  -->
       <!--
       <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
@@ -131,18 +131,18 @@
 	</Cluster>
       -->
 
-      <!-- °²È«ÉÏÏÂÎÄ 
+      <!-- å®‰å…¨ä¸Šä¸‹æ–‡ 
 		JAASRealm
-		JDBCRealm Í¨¹ýJDBC·ÃÎÊÄ³¹ØÏµÐÍÊý¾Ý¿â±íÊµÏÖÓÃ»§ÈÏÖ¤£»
-		JNDIRealm »ùÓÚJNDIÊ¹ÓÃÄ¿Â¼·þÎñÊµÏÖÈÏÖ¤ÐÅÏ¢µÄ»ñÈ¡£»
-		MemoryRealm ²éÕÒtomcat-user.xmlÎÄ¼þÊµÏÖÓÃ»§ÐÅÏ¢µÄ»ñÈ¡£»
-		UserDatabaseRealm£º»ùÓÚUserDatabaseÎÄ¼þ(Í¨³£ÊÇtomcat-user.xml)ÊµÏÖÓÃ»§ÈÏÖ¤£¬
-		ËüÊµÏÖÊÇÒ»¸öÍêÈ«¿É¸üÐÂºÍ³Ö¾ÃÓÐÐ§µÄMemoryRealm£¬Òò´ËÄÜ¹»¸ú±ê×¼µÄMemoryRealm¼æÈÝ
+		JDBCRealm é€šè¿‡JDBCè®¿é—®æŸå…³ç³»åž‹æ•°æ®åº“è¡¨å®žçŽ°ç”¨æˆ·è®¤è¯ï¼›
+		JNDIRealm åŸºäºŽJNDIä½¿ç”¨ç›®å½•æœåŠ¡å®žçŽ°è®¤è¯ä¿¡æ¯çš„èŽ·å–ï¼›
+		MemoryRealm æŸ¥æ‰¾tomcat-user.xmlæ–‡ä»¶å®žçŽ°ç”¨æˆ·ä¿¡æ¯çš„èŽ·å–ï¼›
+		UserDatabaseRealmï¼šåŸºäºŽUserDatabaseæ–‡ä»¶(é€šå¸¸æ˜¯tomcat-user.xml)å®žçŽ°ç”¨æˆ·è®¤è¯ï¼Œ
+		å®ƒå®žçŽ°æ˜¯ä¸€ä¸ªå®Œå…¨å¯æ›´æ–°å’ŒæŒä¹…æœ‰æ•ˆçš„MemoryRealmï¼Œå› æ­¤èƒ½å¤Ÿè·Ÿæ ‡å‡†çš„MemoryRealmå…¼å®¹
 	  -->
       <Realm className="org.apache.catalina.realm.LockOutRealm">
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                resourceName="UserDatabase"/>
-		<!-- Ê¹ÓÃJDBC·½Ê½»ñÈ¡ÓÃ»§ÈÏÖ¤ÐÅÏ¢ -->
+		<!-- ä½¿ç”¨JDBCæ–¹å¼èŽ·å–ç”¨æˆ·è®¤è¯ä¿¡æ¯ -->
 		<!--
 		<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99"
 		 driverName="org.gjt.mm.mysql.Driver"
@@ -154,37 +154,37 @@
 		-->
       </Realm>
 			
-	  <!-- Î»ÓÚEngineÈÝÆ÷ÖÐÓÃÓÚ½ÓÊÕÇëÇó²¢½øÐÐÏàÓ¦´¦ÀíµÄÖ÷»ú»òÐéÄâÖ÷»ú
-		unpackWARs ÔÚÆôÓÃ´ËÓ¦ÓÃÊ±ÊÇ·ñ¶Ôwar¸ñÊ½µÄÎÄ¼þÏÈ½øÐÐÕ¹¿ª
+	  <!-- ä½äºŽEngineå®¹å™¨ä¸­ç”¨äºŽæŽ¥æ”¶è¯·æ±‚å¹¶è¿›è¡Œç›¸åº”å¤„ç†çš„ä¸»æœºæˆ–è™šæ‹Ÿä¸»æœº
+		unpackWARs åœ¨å¯ç”¨æ­¤åº”ç”¨æ—¶æ˜¯å¦å¯¹waræ ¼å¼çš„æ–‡ä»¶å…ˆè¿›è¡Œå±•å¼€
 	  -->
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
-		<!-- ÅäÖÃÓ¦ÓÃcontext,Ò»¸öContext±íÊ¾tomcatÊµÀýÖÐµÄÒ»¸öWebÓ¦ÓÃ³ÌÐò 
-			docBase£ºÏàÓ¦µÄWebÓ¦ÓÃ³ÌÐòµÄ´æ·ÅÎ»ÖÃ
-			Ò²¿ÉÒÔÊ¹ÓÃÏà¶ÔÂ·¾¶£¬ÆðÊ¼Â·¾¶Îª´ËContextËùÊôHostÖÐappBase¶¨ÒåµÄÂ·¾¶
-			ÇÐ¼Ç£¬docBaseµÄÂ·¾¶Ãû²»ÄÜÓëÏàÓ¦µÄHostÖÐappBaseÖÐ¶¨ÒåµÄÂ·¾¶ÃûÓÐ°üº¬¹ØÏµ£¬±ÈÈç£¬Èç¹ûappBaseÎªdeploy£¬¶ødocBase¾ø²»ÄÜÎªdeploy-bbsÀàµÄÃû×Ö£»
-			path£ºÏà¶ÔÓÚWeb·þÎñÆ÷¸ùÂ·¾¶¶øÑÔµÄURI£»Èç¹ûÎª¿Õ""£¬Ôò±íÊ¾Îª´ËwebappµÄ¸ùÂ·¾¶
+		<!-- é…ç½®åº”ç”¨context,ä¸€ä¸ªContextè¡¨ç¤ºtomcatå®žä¾‹ä¸­çš„ä¸€ä¸ªWebåº”ç”¨ç¨‹åº 
+			docBaseï¼šç›¸åº”çš„Webåº”ç”¨ç¨‹åºçš„å­˜æ”¾ä½ç½®
+			ä¹Ÿå¯ä»¥ä½¿ç”¨ç›¸å¯¹è·¯å¾„ï¼Œèµ·å§‹è·¯å¾„ä¸ºæ­¤Contextæ‰€å±žHostä¸­appBaseå®šä¹‰çš„è·¯å¾„
+			åˆ‡è®°ï¼ŒdocBaseçš„è·¯å¾„åä¸èƒ½ä¸Žç›¸åº”çš„Hostä¸­appBaseä¸­å®šä¹‰çš„è·¯å¾„åæœ‰åŒ…å«å…³ç³»ï¼Œæ¯”å¦‚ï¼Œå¦‚æžœappBaseä¸ºdeployï¼Œè€ŒdocBaseç»ä¸èƒ½ä¸ºdeploy-bbsç±»çš„åå­—ï¼›
+			pathï¼šç›¸å¯¹äºŽWebæœåŠ¡å™¨æ ¹è·¯å¾„è€Œè¨€çš„URIï¼›å¦‚æžœä¸ºç©º""ï¼Œåˆ™è¡¨ç¤ºä¸ºæ­¤webappçš„æ ¹è·¯å¾„
 			
-			Èç¹ûcontext¶¨ÒåÔÚÒ»¸öµ¥¶ÀµÄxmlÎÄ¼þÖÐ£¬´ËÊôÐÔ²»ÐèÒª¶¨Òå£»
+			å¦‚æžœcontextå®šä¹‰åœ¨ä¸€ä¸ªå•ç‹¬çš„xmlæ–‡ä»¶ä¸­ï¼Œæ­¤å±žæ€§ä¸éœ€è¦å®šä¹‰ï¼›
 		-->
 		<!--
 			<Context path="/examples" docBase="D:\" reloadable="true" />
 			<Context path="/examples" docBase="D:\" reloadable="true" />
 		-->
-        <!-- ÀàËÆÓÚ¹ýÂËÆ÷ 
-		AccessLogValve£º·ÃÎÊÈÕÖ¾Valve
-		ExtendedAccessValve£ºÀ©Õ¹¹¦ÄÜµÄ·ÃÎÊÈÕÖ¾Valve
-		JDBCAccessLogValve£ºÍ¨¹ýJDBC½«·ÃÎÊÈÕÖ¾ÐÅÏ¢·¢ËÍµ½Êý¾Ý¿âÖÐ£»
-		RequestDumperValve£ºÇëÇó×ª´¢Valve£»
-		RemoteAddrValve£º»ùÓÚÔ¶³ÌµØÖ·µÄ·ÃÎÊ¿ØÖÆ£»
-		RemoteHostValve£º»ùÓÚÔ¶³ÌÖ÷»úÃû³ÆµÄ·ÃÎÊ¿ØÖÆ£»
-		SemaphoreValve£ºÓÃÓÚ¿ØÖÆTomcatÖ÷»úÉÏÈÎºÎÈÝÆ÷ÉÏµÄ²¢·¢·ÃÎÊÊýÁ¿£»
-		JvmRouteBinderValve£ºÔÚÅäÖÃ¶à¸öTomcatÎªÒÔApacheÍ¨¹ýmod_proxy»òmod_jk×÷ÎªÇ°¶ËµÄ¼¯Èº¼Ü¹¹ÖÐ£¬µ±ÆÚÍûÍ£Ö¹Ä³½ÚµãÊ±£¬¿ÉÒÔÍ¨¹ý´ËValve½«ÓÃ¼ÇÇëÇó¶¨ÏòÖÁ±¸ÓÃ½Úµã£»Ê¹ÓÃ´ËValve£¬±ØÐëÊ¹ÓÃJvmRouteSessionIDBinderListener£»
-		ReplicationValve£º×¨ÓÃÓÚTomcat¼¯Èº¼Ü¹¹ÖÐ£¬¿ÉÒÔÔÚÄ³¸öÇëÇóµÄsessionÐÅÏ¢·¢Éú¸ü¸ÄÊ±´¥·¢sessionÊý¾ÝÔÚ¸÷½Úµã¼ä½øÐÐ¸´ÖÆ£»
-		SingleSignOn£º½«Á½¸ö»ò¶à¸öÐèÒª¶ÔÓÃ»§½øÐÐÈÏÖ¤webappÔÚÈÏÖ¤ÓÃ»§Ê±Á¬½ÓÔÚÒ»Æð£¬¼´Ò»´ÎÈÏÖ¤¼´¿É·ÃÎÊËùÓÐÁ¬½ÓÔÚÒ»ÆðµÄwebapp£»
-		ClusterSingleSingOn£º¶ÔSingleSignOnµÄÀ©Õ¹£¬×¨ÓÃÓÚTomcat¼¯Èºµ±ÖÐ£¬ÐèÒª½áºÏClusterSingleSignOnListener½øÐÐ¹¤×÷£»
+        <!-- ç±»ä¼¼äºŽè¿‡æ»¤å™¨ 
+		AccessLogValveï¼šè®¿é—®æ—¥å¿—Valve
+		ExtendedAccessValveï¼šæ‰©å±•åŠŸèƒ½çš„è®¿é—®æ—¥å¿—Valve
+		JDBCAccessLogValveï¼šé€šè¿‡JDBCå°†è®¿é—®æ—¥å¿—ä¿¡æ¯å‘é€åˆ°æ•°æ®åº“ä¸­ï¼›
+		RequestDumperValveï¼šè¯·æ±‚è½¬å‚¨Valveï¼›
+		RemoteAddrValveï¼šåŸºäºŽè¿œç¨‹åœ°å€çš„è®¿é—®æŽ§åˆ¶ï¼›
+		RemoteHostValveï¼šåŸºäºŽè¿œç¨‹ä¸»æœºåç§°çš„è®¿é—®æŽ§åˆ¶ï¼›
+		SemaphoreValveï¼šç”¨äºŽæŽ§åˆ¶Tomcatä¸»æœºä¸Šä»»ä½•å®¹å™¨ä¸Šçš„å¹¶å‘è®¿é—®æ•°é‡ï¼›
+		JvmRouteBinderValveï¼šåœ¨é…ç½®å¤šä¸ªTomcatä¸ºä»¥Apacheé€šè¿‡mod_proxyæˆ–mod_jkä½œä¸ºå‰ç«¯çš„é›†ç¾¤æž¶æž„ä¸­ï¼Œå½“æœŸæœ›åœæ­¢æŸèŠ‚ç‚¹æ—¶ï¼Œå¯ä»¥é€šè¿‡æ­¤Valveå°†ç”¨è®°è¯·æ±‚å®šå‘è‡³å¤‡ç”¨èŠ‚ç‚¹ï¼›ä½¿ç”¨æ­¤Valveï¼Œå¿…é¡»ä½¿ç”¨JvmRouteSessionIDBinderListenerï¼›
+		ReplicationValveï¼šä¸“ç”¨äºŽTomcaté›†ç¾¤æž¶æž„ä¸­ï¼Œå¯ä»¥åœ¨æŸä¸ªè¯·æ±‚çš„sessionä¿¡æ¯å‘ç”Ÿæ›´æ”¹æ—¶è§¦å‘sessionæ•°æ®åœ¨å„èŠ‚ç‚¹é—´è¿›è¡Œå¤åˆ¶ï¼›
+		SingleSignOnï¼šå°†ä¸¤ä¸ªæˆ–å¤šä¸ªéœ€è¦å¯¹ç”¨æˆ·è¿›è¡Œè®¤è¯webappåœ¨è®¤è¯ç”¨æˆ·æ—¶è¿žæŽ¥åœ¨ä¸€èµ·ï¼Œå³ä¸€æ¬¡è®¤è¯å³å¯è®¿é—®æ‰€æœ‰è¿žæŽ¥åœ¨ä¸€èµ·çš„webappï¼›
+		ClusterSingleSingOnï¼šå¯¹SingleSignOnçš„æ‰©å±•ï¼Œä¸“ç”¨äºŽTomcaté›†ç¾¤å½“ä¸­ï¼Œéœ€è¦ç»“åˆClusterSingleSignOnListenerè¿›è¡Œå·¥ä½œï¼›
 		
-		RemoteHostValveºÍRemoteAddrValve¿ÉÒÔ·Ö±ðÓÃÀ´ÊµÏÖ»ùÓÚÖ÷»úÃû³ÆºÍ»ùÓÚIPµØÖ·µÄ·ÃÎÊ¿ØÖÆ,¿ØÖÆ±¾Éí¿ÉÒÔÍ¨¹ýallow»òdenyÀ´½øÐÐ¶¨Òå
+		RemoteHostValveå’ŒRemoteAddrValveå¯ä»¥åˆ†åˆ«ç”¨æ¥å®žçŽ°åŸºäºŽä¸»æœºåç§°å’ŒåŸºäºŽIPåœ°å€çš„è®¿é—®æŽ§åˆ¶,æŽ§åˆ¶æœ¬èº«å¯ä»¥é€šè¿‡allowæˆ–denyæ¥è¿›è¡Œå®šä¹‰
 		<Context path="/probe" docBase="probe">
 			<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\.0\.0\.1"/>
 		</Context>
@@ -192,7 +192,7 @@
         <!--
         <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
         -->
-		<!-- ¶¨Òå¸ÃÖ÷»úµÄ·ÃÎÊÈÕÖ¾ -->
+		<!-- å®šä¹‰è¯¥ä¸»æœºçš„è®¿é—®æ—¥å¿— -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="localhost_access_log." suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
@@ -202,11 +202,10 @@
 
 	  <Host name="www.wangwanchao.wang"  appBase="/web"
             unpackWARs="true" autoDeploy="true">
-		<!-- Èç¹ûÒ»¸öÖ÷»úÓÐÁ½¸ö»òÁ½¸öÒÔÉÏµÄÖ÷»úÃû£¬¶îÍâµÄÃû³Æ¾ù¿ÉÒÔÒÔ±ðÃûµÄÐÎÊ½½øÐÐ¶¨Òå -->
+		<!-- å¦‚æžœä¸€ä¸ªä¸»æœºæœ‰ä¸¤ä¸ªæˆ–ä¸¤ä¸ªä»¥ä¸Šçš„ä¸»æœºåï¼Œé¢å¤–çš„åç§°å‡å¯ä»¥ä»¥åˆ«åçš„å½¢å¼è¿›è¡Œå®šä¹‰ -->
 	    <Alias>wanchao.wang</Alias>
 		<Context path="/" docBase="webapp"/>
 	  </Host>
-
     </Engine>
   </Service>
 </Server>
