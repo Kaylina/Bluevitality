@@ -110,3 +110,13 @@ echo 123
 > eof
 echo $a
 ```
+
+#### basename & dirname
+```bash
+[root@localhost modules]# pwd
+/etc/sysconfig/modules
+[root@localhost modules]# basename `pwd`
+modules
+[root@localhost modules]# dirname `pwd`    
+/etc/sysconfig
+```
