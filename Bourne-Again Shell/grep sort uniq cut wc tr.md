@@ -94,3 +94,19 @@ cat file | tr -s [a-z] > new_file       删除file中重复的小写字符，仅
 [root@localhost ~]# echo ${arry[@]}
 1 2 3 4 5
 ```
+
+### cat写入时不展开变量
+```
+[root@localhost ~]# a=123
+[root@localhost ~]# cat <<eof
+> echo $a
+> 
+> eof
+echo 123
+
+[root@localhost ~]# cat <<'eof'
+> echo $a
+> 
+> eof
+echo $a
+```
