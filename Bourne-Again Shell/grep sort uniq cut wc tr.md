@@ -84,8 +84,13 @@ cat file | tr -s [a-z] > new_file       删除file中重复的小写字符，仅
 ```
 
 ### read
-```
-read: 用法:read 
-[-ers] [-a 数组] [-d 分隔符] [-i 缓冲区文字] [-n 读取字符数]
-[-N 读取字符数] [-p 提示符] [-t 超时] [-u 文件描述符] [名称 ...]
+```bash
+#read: 用法:read 
+#[-ers] [-a 数组] [-d 分隔符] [-i 缓冲区文字] [-n 读取字符数]
+#[-N 读取字符数] [-p 提示符] [-t 超时] [-u 文件描述符] [名称 ...]
+
+[root@localhost ~]# read -p "提示" -t 10 -n 100 -a arry
+提示1 2 3 4 5
+[root@localhost ~]# echo ${arry[@]}
+1 2 3 4 5
 ```
