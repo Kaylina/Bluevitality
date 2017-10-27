@@ -1,5 +1,5 @@
 #### Example
-```
+```bash
 nc -u -l -p 3306    #以UDP模式监听本地3306端口
 
 nc -s 192.168.1.2 192.168.1.1 3306  #使用本地的192.168.1.2连接远程的192.168.1.1:3306
@@ -23,7 +23,7 @@ printf “set key 0 10 6\r\nresult\r\n” |nc 192.168.2.34 11211  	#存储数据
 printf “get key\r\n” |nc 192.168.2.34 11211                   	#获取数据
 printf “delete key\r\n” |nc 192.168.2.34 11211                	#删除数据
 printf “stats\r\n” |nc 192.168.2.34 11211                     	#查看状态
-watch “echo stats” |nc 192.168.2.34 11211						#模拟top命令查看状态
+watch “echo stats” |nc 192.168.2.34 11211      #模拟top命令查看状态
 printf “flush_all\r\n” |nc 192.168.2.34 11211 					#清空缓存
 ```
 
