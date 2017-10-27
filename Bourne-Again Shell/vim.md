@@ -13,6 +13,7 @@
 	NG			到第N行，或命令行下：vim +number filename
 	gg、G			至档头、档尾
 	n<Enter>		向下移动n行，或：ngg
+	n<space>		向右移动n个字符
 	Ctrl + N 、P		在当前文本内向下、上查找以自动补全或提示
 	Ctrl + a、x	  	为变量自增、自减（<num> ctl+a  加指定值）
 	Ctrl + f、b	  	上下翻页
