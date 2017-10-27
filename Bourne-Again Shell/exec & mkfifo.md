@@ -26,6 +26,10 @@ exec ${@}     #原进程的代码段，数据段，堆栈段被新的进程所
 #find和exec
 #在当前目录下(包含子目录)，查找所有txt文件并找出含有字符串"bin"的行
 find ./ -name "*.txt" -exec grep "bin" {} \; 
+
+# exec与system的区别：
+# exec是直接用新的进程去代替原来的程序运行，运行完毕之后不回到原先的程序中去。
+# system是调用shell执行你的命令，system=fork+exec+waitpid,执行完毕之后，回到原先的程序中去。继续执行下面的部分。
 ```
 #### 调整文件描述符
 ```bash
