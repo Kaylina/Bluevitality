@@ -135,15 +135,20 @@ hello world hello bash
 hello world
 ```
 
-#### cat写入时不展开变量
-```
+#### cat
+```bash
+# -b  对非空行输出编号
+# -n  对输出的所有行编号 ( 附：显示文本文件行号也可使用 "nl" 命令)
+# -s  将连续的多空行压缩为1个空行
+# -E  在每行结束处显示"$"
+
+#写入时不展开变量（ eof ---> 'eof'）
 [root@localhost ~]# a=123
 [root@localhost ~]# cat <<eof
 > echo $a
 > 
 > eof
 echo 123
-
 [root@localhost ~]# cat <<'eof'
 > echo $a
 > 
