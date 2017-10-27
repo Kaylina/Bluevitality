@@ -17,7 +17,7 @@ ulimit -n 1024
 ```bash
 [root@localhost ~]# cat test.sh 
 #!/bin/bash
-exec ${@}
+exec ${@}     #原进程的代码段，数据段，堆栈段被新的进程所代替。
 [root@localhost ~]# bash test.sh ls -lh   #脚本后接入的参数将被exec捕获并理解为命令进行解析执行
 总用量 4.0K
 -rw-r--r-- 1 root root 23 8月  15 10:47 test.sh
