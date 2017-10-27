@@ -55,5 +55,11 @@ now time: 17-08-15 22:24:36
 [root@localhost tmp]# date -s "20:49:30 2017-10-27"
 2017年 10月 27日 星期五 20:49:30 CST
 
+#一年中的第几天
+[root@localhost tmp]# date "+%j"
+300
 
+#偷懒的方法
+[root@localhost tmp]# date "+%F %T"
+2017-10-27 20:52:33
 ```
