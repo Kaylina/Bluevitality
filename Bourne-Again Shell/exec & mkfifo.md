@@ -30,6 +30,7 @@ find ./ -name "*.txt" -exec grep "bin" {} \;
 # exec与system的区别：
 # exec是直接用新的进程去代替原来的程序运行，运行完毕之后不回到原先的程序中去。
 # system是调用shell执行你的命令，system=fork+exec+waitpid,执行完毕之后，回到原先的程序中去。继续执行下面的部分。
+# exec常用来替代当前 shell 并重新启动一个 shell
 ```
 #### 调整文件描述符
 ```bash
@@ -54,6 +55,26 @@ find ./ -name "*.txt" -exec grep "bin" {} \;
 [root@localhost ~]# echo $line2
 [root@localhost ~]# exec 0<&100 100>&-          #恢复默认标准输出并关闭文件描述符100
 [root@localhost ~]# read custom
+
+#查看特定PID的文件描述符
+[root@localhost tmp]# ls /proc/818/fd
+3  4  7
+
+#从文件描述符读取4个字符
+[root@localhost tmp]# read -n 4 <&3    
+
+#代码块重定向
+#!/bin/bash
+{
+  command .... ; command ... ; command ...
+} 1> record.log 2>&1
+
+#注：
+# tee是在不影响原本 I/O 的情况下，将 stdout 复制一份到档案去
+# n<&-        关闭输入文件描述符n
+# n>&-        关闭输出文件描述符n.
+# 0<&-, <&-   关闭stdin
+# 1>&-, >&-   关闭stdout
 ```
 ## mkfifo
 ```说明
