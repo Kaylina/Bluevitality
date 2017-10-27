@@ -51,3 +51,21 @@ find ./ -name "*.txt" -exec grep "bin" {} \;
 [root@localhost ~]# exec 0<&100 100>&-          #恢复默认标准输出并关闭文件描述符100
 [root@localhost ~]# read custom
 ```
+## mkfifo
+```说明
+mkfifo会创建FIFO特殊文件（文件类型为p），它是个命名管道（可用来做进程间通信的桥梁）
+管道也是一种文件，一般是linux中的一个页大小，4k，管道数据一旦被读取就没了。另外，管道是单方向的
+```
+#### Example
+```bash
+#窗口1
+[root@localhost tmp]# mkfifo tmp.fifo           #创建管道
+[root@localhost tmp]# ls -l tmp.fifo            #可看到文件类型：p
+prw-r--r-- 1 root root 0 8月  15 17:41 tmp.fifo
+[root@localhost tmp]# ls -l > tmp.fifo          #执行ls进程并将结果写入管道（此时若其他进程未读取此管道内容则一直被阻塞！）
+
+#窗口2
+[root@localhost tmp]# cat tmp.fifo              #因为被阻塞住了，所以在另一个窗口用cat读取管道内容，此时窗口1将执行完毕
+总用量 0
+prw-r--r-- 1 root root 0 8月  15 17:41 tmp.fifo
+```
