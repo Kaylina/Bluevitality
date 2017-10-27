@@ -1,11 +1,3 @@
-#!/bin/bash
-## rsync限速  2016-07-14
-## http://www.aqzt.com
-##email: ppabc@qq.com
-##robert yu
-##centos 6
-##dd命令使用详解
-
 1.命令简介 
 dd 的主要选项：
 
