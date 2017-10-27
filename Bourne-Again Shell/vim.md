@@ -69,3 +69,19 @@ nnoremap jyh o<esc>k "当前行后再插入一行
 nnoremap fgx i#---------------------------------------------------<esc>j    "分割线  
 nnoremap 2gp <esc>:vsplit<cr>   #竖屏分割
 ```
+#### 执行当前正在编辑的SHELL脚本（需调整）
+```txt
+function! Setup_ExecNDisplay()
+  execute "w"
+  execute "silent !chmod +x %:p"
+  let n=expand('%:t')
+  execute "silent !%:p 2>&1 | tee ~/.vim/output_".n
+  " I prefer vsplit
+  "execute "split ~/.vim/output_".n
+  execute "vsplit ~/.vim/output_".n
+  execute "redraw!"
+  set autoread
+endfunction
+
+:nmap <F5> :call Setup_ExecNDisplay()<CR>
+```
