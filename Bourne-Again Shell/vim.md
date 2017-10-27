@@ -66,6 +66,6 @@ map l dd            "使用l替代dd
 map <space> 2j      "使用空格替代跳转到下2行
 map <c-d>   dd      "Ctrl+d ---> dd
 nnoremap jyh o<esc>k "当前行后再插入一行
-nnoremap fgx i#---------------------------------------------------<esc>j    "分割线                                                                          
+nnoremap fgx i#---------------------------------------------------<esc>j    "分割线  
 nnoremap 2gp <esc>:vsplit<cr>   #竖屏分割
 ```
