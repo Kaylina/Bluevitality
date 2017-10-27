@@ -1,3 +1,21 @@
+#### enable
+```txt
+用于临时关闭或者激活指定的shell内部命令。
+若要执行的文件名与shell内建命令相同时则可用 enable -n 关闭shell内建命令。若不加-n选项时可重新启动被关闭的命令
+
+参数：
+-n： 关闭指定的内部命令
+-a： 显示所有激活的内部命令
+-f： 从指定文件中读取内部命令
+
+#Example：
+[root@localhost tmp]# enable -n cd
+[root@localhost tmp]# cd /
+[root@localhost tmp]# enable cd
+[root@localhost tmp]# cd /
+[root@localhost /]# 
+
+```
 #### grep
 ```bash
 -a	不忽略二进制的数据
@@ -83,16 +101,38 @@ cat file | tr -d "\n\t" > new_file      删除file中出现的换行符和制表
 cat file | tr -s [a-z] > new_file       删除file中重复的小写字符，仅留其1个
 ```
 
-#### read
+#### read & readarry
 ```bash
-#read: 用法:read 
-#[-ers] [-a 数组] [-d 分隔符] [-i 缓冲区文字] [-n 读取字符数]
-#[-N 读取字符数] [-p 提示符] [-t 超时] [-u 文件描述符] [名称 ...]
-
+#read参数
+-a arry   读入数组
+-p  提示信息
+-t  等待时间
+-n  读取长度（字符数）
+-s  不显示输入
+-u  文件描述符
+-d  分隔符
+#Example
 [root@localhost ~]# read -p "提示" -t 10 -n 100 -a arry
 提示1 2 3 4 5
 [root@localhost ~]# echo ${arry[@]}
 1 2 3 4 5
+
+#readarry参数
+#readarray用于从标准输入或选项 -u 指定的文件描述符fd中读取文本行，然后赋值给索引"下标"数组
+-t  删除文本结尾的换行符
+-u  从文件描述符读取
+-C callback 每当读取选项-c指定的quantum行时（默认5000）就执行一次回调callback
+#Example
+[root@localhost ~]# readarray foo
+hello world
+hello bash
+^C
+[root@localhost ~]# echo ${foo[@]}
+hello world hello bash
+[root@localhost ~]# echo ${#foo[@]}
+2
+[root@localhost ~]# echo ${foo[0]}
+hello world
 ```
 
 #### cat写入时不展开变量
