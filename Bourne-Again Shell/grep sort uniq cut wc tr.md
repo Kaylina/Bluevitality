@@ -246,6 +246,38 @@ split:
 	-b	根据容量分割：block（单位byte，如：split -b 10k -a 3 -d  date.file ）
 	-l n	根据行数分割（ 注：合并时： cat file* >> file ）
 ```
+#### find
+```bash
+-name       按文件名查找： find -name "*.txt" cp -ap {} {}.bkup \;
+-iname      按文件名查找：find -iname "MyCProgram.c"（不匹配大小写，相当于grep -rl "MyCProgram.c" .）
+-maxdepth   最大目录搜索深度：find / -maxdepth 10 -exec basename {} \; (仅输出指定目录深度下的文件名 )
+-mindepth   最小目录搜索深度：find / -maxdepth 5 -mindepth 2 -name "*.conf" -exec ls -l {} \;
+-exec       对搜索结果执行的操作：find -name "*.html" -exec ./bash_script.sh '{}' \;
+-not        相反匹配：find -maxdepth 1 -not -iname "被排除的文件名"
+-inum       使用文件系统inode号查找文件：find -inum 804180 -exec rm {} \;
+-perm       按对象权限类型搜索（格式：-perm -u=rwx / -perm 0777 ）
+-type       搜索文件类型（f,d,s,c,b,...）：find . -type f -iname “*.mp3″ -exec rename “s/ /_/g” {} \;
+-empty      内容为空的文件：find / -empty （注：当搜索路径被指定为绝对路径时其输出也是绝对路径！）
+-size       指定小于或大于特定大小的文件：find / -size +60k -exec ls -hl {} \;
+-mmin       指定小于或大于分钟范围内容被修改过的文件
+-mtime      指定小于或大于天数范围内容被修改过的文件：find -iname "*.conf" -exec md5sum {} \;
+-amin       指定小于或大于分钟范围被访问过的：find -mmin -/+60 -exec ls -l {} \;
+-atime      指定小于或大于天数范围被访问过的：find -atime -/+1
+-cmin       指定小于或大于分钟范围被修改过内容的
+-ctime      指定小于或大于天数范围被修改过内容的
+-never      查找比某一文件修改时间还要新的文件：find -newer /etc/passwd
+-anewer     查找比某一文件访问时间还要新的文件
+-cnever     查找比某一文件状态改变时间还要新的文件
+-xdev       仅在当前文件系统中搜索： find / -xdev -name "*.log"
+-user       指定用户的文件：find / -user root
+-nouser     无属主的
+-nogroup    无属组的
+-readable   可读的
+-writable   可写的
+-fstype     属于特定文件类型的
+-gid        特定属组ID的文件
+-delete     对搜索结果直接执行删除动作
+```
 #### basename & dirname
 ```bash
 [root@localhost modules]# pwd
