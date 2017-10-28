@@ -1,5 +1,6 @@
 # 工作，学习，记录
 
+- BASH 与 Python 的不断完善
 - LVM
 - Quota的配置流程记录（加注释）
 - mdadm的README
