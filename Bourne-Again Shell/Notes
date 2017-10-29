@@ -237,29 +237,38 @@
 	    source filename
 	来在一个脚本文件中包含一个外部脚本，被包含脚本不必有可执行权限
 
-附：
-	for的形式多种多样：
+附 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+for的形式多种多样：
+
 	for var  in  value1  value2  value3		支持任何可迭代的命令，如：seq 10   或：ls -l   或：echo 1 2 3
 	for  i  in   {n..m}				{} 可表示Items： a{1,2} 相当于 a1 a2   {1,2,3} 相当于 {1..3}
 	for (( int i = 0 ; i < 10 ; i++ ))		标准C语言格式。((b=102)) 等于let b=102   <----	算术运算（不加$符）
 	for i in `*.jpg`		
 	
 	
-	0为真！（未初始化或者初始化了赋null值则为false，“if COMMAND”结构将返回COMMAND的退出码）
-	if [ 0 ]
-	then
-	    echo "0 is true."
-	else
-	    echo "0 is false."
-	fi
-	
-	
-	LIMIT=10
-	for ((a=1; a<=LIMIT; a++))	#LIMIT没有使用$，在((....))中变量的$符号可省略
-	do
-	    echo $a
-	done
+0为真！（未初始化或者初始化了赋null值则为false，“if COMMAND”结构将返回COMMAND的退出码）
+if [ 0 ]
+then
+    echo "0 is true."
+else
+    echo "0 is false."
+fi
 
+
+LIMIT=10
+for ((a=1; a<=LIMIT; a++))	#LIMIT没有使用$，在((....))中变量的$符号可省略
+do
+    echo $a
+done
+
+动态生成数组：
+
+	start=0;
+	total=0;
+	for i in $(seq $start 2 1000); do
+		total=$(($total+$i));
+	done;
 
 shell中的函数虽然可通过return返回，但这里的return相当于exit，只能是个状态值用于测试而不能像其它语言一样返回复杂的结果
 其处理结果只能通过输出到标准输出经过 `` 
