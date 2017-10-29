@@ -286,13 +286,19 @@ Linux系统快捷键：
 	ctrl + c | d		终止/输入结束
 	ctrl + m	 	回车
 	ctrl + z		后台暂停（使用 jobs -l 查看）
-	ctrl + l清屏
+	ctrl + l		清屏
+	ctrl + z		转入后台运行
+	ctrl + s		刷屏信息过快，可用来停留在当前屏
+	ctrl + q		恢复刷屏
 	
 	Pg / Up	 		翻屏
 	Alt + c	 		改为大写
 	Alt + u	 		全部大写 
 	Alt + l  	 	全部小写
 	Shift+alt+F1-F6		切换窗口
+
+fock炸弹：
+	:(){:|:&;};
 
 sysctl：
 	-a		显示系统核心设置
