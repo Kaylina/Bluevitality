@@ -376,6 +376,32 @@ trap是Shell内建命令，用于在脚本中指定信号如何处理：
 	58) SIGRTMAX-6  	59) SIGRTMAX-5  	60) SIGRTMAX-4  	61) SIGRTMAX-3  	62) SIGRTMAX-2
 	63) SIGRTMAX-1  	64) SIGRTMAX
 
+
+检查远程端口是否对bash开放：	echo >/dev/tcp/8.8.8.8/53 && echo "open"
+让进程转入后台：	Ctrl + z
+将进程转到前台：	fg
+产生随机的十六进制数，其中n是字符数：	openssl rand -hex n
+SSH with pem key:		ssh user@ip_address -i key.pem
+用wget抓取完整的网站目录结构，存放到本地目录：	wget -r --no-parent --reject "index.html*" http://hostname/ -P /data
+创建 war 文件:		jar -cvf name.war file
+测试硬盘写入速度：	dd if=/dev/zero of=/tmp/output.img bs=8k count=256k; rm -rf /tmp/output.img
+测试硬盘读取速度：	hdparm -Tt /dev/sda
+获取文本的md5 hash：	echo -n "text" | md5sum
+检查xml格式：	xmllint --noout file.xml
+将tar.gz提取到新目录里：	tar zxvf package.tar.gz -C new_dir
+用wget命令执行ftp下载：	wget -m ftp://username:password@hostname
+访问Windows共享目录：	smbclient -U "DOMAIN\user" //dc.domain.com/share/test/dir
+执行历史记录里的命令(这里是第100行):
+qcow2镜像文件转换：	qemu-img convert -f qcow2 -O raw precise-server-amd64-disk1.img \precise-server-amd64-disk1.raw
+重复运行文件，显示其输出（缺省是2秒一次）：	watch ps -ef
+所有用户列表：	getent passwd
+创建临时RAM文件系统 – ramdisk (先创建/tmpram目录):		mount -t tmpfs tmpfs /tmpram -o size=512m
+扫描网络寻找开放的端口：	nmap -p 8081 172.20.0.0/16
+将文件按行并列显示：	paste test.txt test1.txt
+使用curl获取HTTP status code:		curl -sL -w "%{http_code}\\n" www.example.com -o /dev/null
+获取文件owner:		stat -c %U file.txt
+block设备列表：		lsblk -f
+
 参考自：
 http://izualzhy.cn/bash/2015/04/18/advanced-bash-scripting-guide-booknote
 http://www.jb51.net/article/52392.htm
