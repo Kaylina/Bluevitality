@@ -286,6 +286,8 @@ Linux系统快捷键：
 	ctrl + c | d		终止/输入结束
 	ctrl + m	 	回车
 	ctrl + z		后台暂停（使用 jobs -l 查看）
+	ctrl + l清屏
+	
 	Pg / Up	 		翻屏
 	Alt + c	 		改为大写
 	Alt + u	 		全部大写 
