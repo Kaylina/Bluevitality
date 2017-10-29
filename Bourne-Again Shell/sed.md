@@ -73,9 +73,9 @@ sed '2,$d'      删除文件的第2行到末尾所有行
 sed '$d' file   删除文件最后一行
 sed '$!N;$!D'   显示后两行，模拟tail -2
 sed '/^$/d'     删除空白行
-sed '表达式;表达式'	        等价于：sed '表达式' | sed '表达式'
-sed -n '/test/,/check/p' 	输出含test的行到check的行之间的数据
-sed -n '5,/^test/p' 		输出第5行到以test开头的行之间的数据
+sed '表达式;表达式'	         等价于：sed '表达式' | sed '表达式'
+sed -n '/test/,/check/p' 	  输出含test的行到check的行之间的数据
+sed -n '5,/^test/p' 		    输出第5行到以test开头的行之间的数据
 sed '$!N;s/\n/ /'           将2行链接生成一行，模拟paste
 sed -n '/regexp/{g;1!p;};h' 查找"regexp"并仅将匹配行的上一行输出
 sed -n '/regexp/{n;p;}'     查找找"regexp"并仅将匹配行的下一行输出
@@ -83,7 +83,49 @@ sed -n '/^.\{65\}/p'        显示包含65个或以上字符的行
 sed '/baz/!s/foo/bar/g'     将“foo”替换成“bar”，且只在行未出现字串“baz”时替换
 sed -e :a -e '$d;N;2,10ba' -e 'P;D'             删除最后10行
 sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//'   模拟rev命令倒置行字串输出
-sed -n '3~7p'   从第3行开始，每7行显示一次（或：sed -n '3,${p;n;n;n;n;n;n;}'）
-gsed '0~8d'     删除8的倍数行
-sed -n '$='     模拟wc -l
+sed -n '3~7p'               从第3行开始，每7行显示一次（或：sed -n '3,${p;n;n;n;n;n;n;}'）
+gsed '0~8d'                 删除8的倍数行
+sed -n '$='                 模拟wc -l
+sed G 	                    在每一行后面增加一空行 
+sed 'G;G' 	                在每一行后面增加两行空行
+sed '/^$/d;G' 	            将原来的所有空行删除并在每一行后面增加一空行,这样在输出的文本中每一行后面将有且只有一空行。 
+sed 'n;d' 	                将第一个脚本所产生的所有空行删除（即删除所有偶数行）和sed '/^$/d'的效果一样。  
+sed '/regex/{x;p;x;}' 	    在匹配式样“regex”的行之前插入一空行 
+sed '/regex/G' 	            在匹配式样“regex”的行之后插入一空行 
+sed '/regex/{x;p;x;G;}'     在匹配式样“regex”的行之前和之后各插入一空行 
+sed = filename | sed 'N;s/\n/\t/' 	                      为文件中的每一行进行编号（简单的左对齐方式）。这里使用了“制表符” 
+sed = filename | sed 'N; s/^/ /; s/ *\(.\{6,\}\)\n/\1 /'  对文件中的所有行编号（行号在左，文字右端对齐）。 
+sed '/./=' filename | sed '/./N; s/\n/ /' 	              对文件中的所有行编号，但只显示非空白行的行号。 
+sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//' 	          将行中的字符逆序排列，第一个字成为最后一字，……（模拟“rev”） 
+sed '$!N;s/\n/ /'	                      将每两行连接成一行（类似“paste”） 
+sed -e :a -e '/\\$/N; s/\\\n//; ta'     如果当前行以反斜杠“\”结束，则将下一行并到当前行末尾并去掉原来行尾的反斜杠 
+gsed -r ':a;s/(^|[^0-9.])([0-9]+)([0-9]{3})/\1\2,\3/g;ta'           为带有小数点和负号的数值增加逗号分隔符（GNU sed） 
+gsed '0~5G'                             只对GNU sed有效 #在每5行后增加一空白行 （在第5，10，15，20，等行后增加一空白行） 
+sed -e :a -e '$q;N;11,$D;ba'            显示文件中的最后10行 （模拟“tail”） 
+sed '$!N;$!D' 	                        显示文件中的最后2行（模拟“tail -2”命令） 
+sed -e '/./{H;$!d;}' -e 'x;/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d 	  显示包含“AAA”、“BBB”、“CCC”三者中任一字串的段落 （任意次序） 
+sed '$!N; s/^\(.*\)\n\1$/\1/; t; D' 	  删除除重复行外的所有行（模拟“uniq -d”） 
+sed 's/\(.*\)foo\(.*foo\)/\1bar\2/' 	  替换倒数第二个“foo” 
+sed 's/\(.*\)foo/\1bar/' 		  替换最后一个“foo” 
+sed '/baz/!s/foo/bar/g' 		  将“foo”替换成“bar”，并且只在行中未出现字串“baz”的情况下替换 
+
+#不管是“scarlet”“ruby”还是“puce”，一律换成“red” 
+sed 's/scarlet/red/g;s/ruby/red/g;s/puce/red/g' 对多数的sed都有效 
+gsed 's/scarlet\|ruby\|puce/red/g'              只对GNU sed有效 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ```
