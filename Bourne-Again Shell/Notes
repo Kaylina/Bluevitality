@@ -238,6 +238,11 @@
 	来在一个脚本文件中包含一个外部脚本，被包含脚本不必有可执行权限
 
 附 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+脚本内直接定义函数则一旦退出shell则定义将失效。可将其定义在Shell每次启动时重新载入的位置：如.bashrc，并用source或点操作符引用
+shell中的函数虽然可通过return返回，但这里的return相当于exit，只能是个状态值用于测试而不能像其它语言一样返回复杂的结果
+其处理结果只能通过输出到标准输出经过 `` 
+$()取得eval是对Bash Shell命令行处理规则的灵活应用，进而构造"智能"命令实现复杂的功能。
+在SHELL的函数中默认使用脚本的全局变量，若需要定义函数内部命名空间的变量需要使用关键字：local
 
 for的形式多种多样：
 
@@ -245,7 +250,12 @@ for的形式多种多样：
 	for  i  in   {n..m}				{} 可表示Items： a{1,2} 相当于 a1 a2   {1,2,3} 相当于 {1..3}
 	for (( int i = 0 ; i < 10 ; i++ ))		标准C语言格式。((b=102)) 等于let b=102   <----	算术运算（不加$符）
 	for i in `*.jpg`		
-	
+
+按行读取文件：
+	While read LINE ; do ..... ; done < $Filename
+	for line in `cat file ; do ...... ; done
+	cat file | while read line ; do ...... ; done
+		
 	
 0为真！（未初始化或者初始化了赋null值则为false，“if COMMAND”结构将返回COMMAND的退出码）
 if [ 0 ]
@@ -270,9 +280,96 @@ done
 		total=$(($total+$i));
 	done;
 
-shell中的函数虽然可通过return返回，但这里的return相当于exit，只能是个状态值用于测试而不能像其它语言一样返回复杂的结果
-其处理结果只能通过输出到标准输出经过 `` 
-$()取得eval是对Bash Shell命令行处理规则的灵活应用，进而构造"智能"命令实现复杂的功能。
+Linux系统快捷键：
+	ctrl + a | e		行首/行尾
+	ctrl + u | k		删到行首/行尾
+	ctrl + c | d		终止/输入结束
+	ctrl + m	 	回车
+	ctrl + z		后台暂停（使用 jobs -l 查看）
+	Pg / Up	 		翻屏
+	Alt + c	 		改为大写
+	Alt + u	 		全部大写 
+	Alt + l  	 	全部小写
+	Shift+alt+F1-F6		切换窗口
 
+sysctl：
+	-a		显示系统核心设置
+	-w 		设置环境变量，如：sysctl -w net.ipv4.tcp_max_syn_backlog=256
+	-p		使配置生效
+
+batch：			在系统平均负载量降到0.8以下时执行某项一次性任务
+	#batch 
+	at> echo 1234	
+	at> <EOT>
+	
+记录操作：
+	scrtipt -a <input-record.log>		开始记录，并指定记录位置
+	...........
+	.............
+	exit					退出记录
+	
+
+直接运行：bash script.sh or . script.sh	
+在当前Shell运行：source script.sh		
+赋予权限运行：	chmod a+x script.sh ; . /script.sh
+脚本加密：gzexe Filename		将生成脚本乱码文件，源文件加后缀"~"
+语法检查：bash -t  Filename		执行并输出执行过程：bash -x Filename
+
+在当前脚本内引入其他脚本文件：
+	.  /path/filename		注：常用于载入已定义好的Shell函数功能模块
+	source  /path/filename
+	
+
+function name() {
+	...........		当发现$(cmd)结构便将cmd执行得到其标准输出，再将此输出放到原命令
+	local var=value		local关键字定义函数内的局部变量
+	return 0;		其返回值不能通过$?引用，但可以使用$()形式获得！
+}
+result=`functionname` ; echo ${result}
+	
+
+mktemp		创建临时文件
+mktemp -d	创建临时目录
+	
+[[ $Var =~ [[:space:]]* ]]	当使用正则匹配时需要用"=~"符号( 字符串的比较最好使用双中括号!）	
+	
+timeout运行指定命令，若在指定时间后仍在运行则杀死该进程：
+	timeout 10 top    10秒后结束top命令（在shell脚本中比较有用）
+
+uname：
+	-a		所有信息
+	-m		硬件平台		x86_64
+	-n		DNS中的主机名	localhost.localdomain
+	-r		内核版本		2.6.32-431.el6.x86_64
+
+
+trap是Shell内建命令，用于在脚本中指定信号如何处理：
+	trap -p 		将当前的trap设置打印出来。
+	trap -l			打印所有信号
+	trap "cmd" signals	当接收到指定信号时执行指定命令
+	trap signals		若没有明亮部分则默认将信号处理复原，如：trap INT 即恢复Ctrl+C退出
+	trap "" signals		忽略信号signals，可多个，如：trap "" INT 表明忽略SIGINT信号，按Ctrl+C也不能使脚本退出
+	trap "cmd" EXIT		脚本退出时执行cmd
+	trap "cmd" ERR		当命令出错，退出码非0，执行cmd
+	trap "cmd" RETURN	当从shell函数返回、或用source执行另一脚本文件时，执行commands
+	信号：
+	trap -l
+	1) SIGHUP       	2) SIGINT       	3) SIGQUIT      	4) SIGILL       	5) SIGTRAP
+	6) SIGABRT      	7) SIGBUS       	8) SIGFPE       	9) SIGKILL     		10) SIGUSR1
+	11) SIGSEGV     	12) SIGUSR2     	13) SIGPIPE     	14) SIGALRM     	15) SIGTERM
+	16) SIGSTKFLT   	17) SIGCHLD     	18) SIGCONT     	19) SIGSTOP     	20) SIGTSTP
+	21) SIGTTIN     	22) SIGTTOU     	23) SIGURG      	24) SIGXCPU     	25) SIGXFSZ
+	26) SIGVTALRM   	27) SIGPROF     	28) SIGWINCH    	29) SIGIO       	30) SIGPWR
+	31) SIGSYS      	34) SIGRTMIN    	35) SIGRTMIN+1  	36) SIGRTMIN+2  	37) SIGRTMIN+3
+	38) SIGRTMIN+4  	39) SIGRTMIN+5  	40) SIGRTMIN+6  	41) SIGRTMIN+7  	42) SIGRTMIN+8
+	43) SIGRTMIN+9  	44) SIGRTMIN+10 	45) SIGRTMIN+11 	46) SIGRTMIN+12 	47) SIGRTMIN+13
+	48) SIGRTMIN+14 	49) SIGRTMIN+15 	50) SIGRTMAX-14 	51) SIGRTMAX-13 	52) SIGRTMAX-12
+	53) SIGRTMAX-11 	54) SIGRTMAX-10 	55) SIGRTMAX-9  	56) SIGRTMAX-8  	57) SIGRTMAX-7
+	58) SIGRTMAX-6  	59) SIGRTMAX-5  	60) SIGRTMAX-4  	61) SIGRTMAX-3  	62) SIGRTMAX-2
+	63) SIGRTMAX-1  	64) SIGRTMAX
+
+参考自：
+http://izualzhy.cn/bash/2015/04/18/advanced-bash-scripting-guide-booknote
+http://www.jb51.net/article/52392.htm
 
 
