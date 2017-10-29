@@ -74,4 +74,30 @@ cat json_raw.txt | jq 'keys'  #使用内建函数"keys"来解析并列出所有
 ]
 [root@localhost ~]# cat txt | jq 'has("name")'    #查询是否存在指定的key，注意格式不要写错！....
 true
+
+#使用Python自带模块"json.tool"进行解析
+[root@localhost ~]# python -m json.tool txt
+{
+    "employees": [
+        {
+            "division": "Engineering",
+            "name": "Michael"
+        },
+        {
+            "division": "HR",
+            "name": "Laura"
+        },
+        {
+            "division": "Marketing",
+            "name": "Elise"
+        }
+    ],
+    "location": {
+        "city": "Mountain View",
+        "country": "US",
+        "state": "California",
+        "street": "1600 Amphitheatre Parkway"
+    },
+    "name": "Google"
+}
 ```
