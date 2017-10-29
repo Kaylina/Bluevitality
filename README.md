@@ -1,12 +1,13 @@
 # 工作，学习，记录
 
 - BASH 与 Python 的不断完善 （ 完善VIM的IDE环境 ）
+- sed/awk的大纲笔记
 - LVM
 - Quota的配置流程记录（加注释）
 - mdadm的README
 - mutt+mstp的脚本
 - memcahed的README & 安装脚本
-- mysql、nginx的安装脚本、mysql的主从复制，几种备份方式：Mysqldump / xtrabackup / lvm快照
+- mysql、nginx的安装脚本、mysql的主从复制，GTID，几种备份方式：Mysqldump / xtrabackup / lvm快照
 - galera cluster & mycat
 - mysql命令收集，归纳，整理 ---> .md
 - 系统内核的优化脚本，要按用途分类进行设置，并提供手动设置和提示的功能！
@@ -19,7 +20,7 @@
 - ansible的完整流程相关文件结构&README文档
 - Rsyslog
 - nodejs和mqtt的安装及相关设置，包括https
-- DNS安装&配置脚本
+- DNS安装&配置脚本 / view
 - ISCSI
 - tcpcopy & ipref 的README
 - expect
@@ -35,6 +36,7 @@
 - VNC & NTP
 - RabbitMQ
 - Kafka
+- Zxarps
 
 
 
