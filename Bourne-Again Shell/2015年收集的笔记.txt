@@ -1,0 +1,5672 @@
+计算机硬件 ---> 操作系统 ---> 系统程序 ---> 应用程序 ---> 用户
+计算机系统的四个基础部分：
+1 处理器
+2 存储器
+3 输入输出（IO）
+4 模块和系统总线
+
+处理器：
+控制计算机的操作，执行数据的处理，通常指CPU。
+处理器内涵寄存器（相对内存来说容量小速度快）用来暂存指令和数据。它多种分类。如：地址寄存器&指令寄存器等。地址寄存器存放下一步需从存储器读取的地址，指令寄存器存取正执行的指令
+存储器：分内/外存。主要用于存储数据和程序，通常都是易失的（关机后数据丢失），因此是数据临时性存放场所
+
+输入输出模块：
+用于计算机与外部环境间移动数据，外部环境包括各种设备（如硬盘、终端等）
+输入模块把人所熟悉的信息形式转为其内部能接收和识别的二进制形式。
+输出设备把计算机处理结果转为人或其他设备能接收和识别的形式。
+IO模块也可直接与处理器交换数据。也可直接与内存交换数据，此时IO模块对存储器发出读、写命令，从而免去处理器负责数据交换的任务。其称为直接内存存储（DMA）。
+
+系统总线：计算机系统各部件间进行数据传送的公共通路
+
+指令的执行：
+不考虑中断的情况下处理器对指令的执行包括两个阶段：从存储器中取指令阶段和执行指令阶段。取阶段和执行阶段构成一个指令周期。
+寄存器中的程序计算器保存下次要取的指令地址，每次取到的指令放在指令寄存器，处理器解释指令并执行对应操作。
+
+存储器的层次结构依据局部性原理：
+处理器访问存储器时无论是存取指令还是存取数据所访问的存储单元都趋于聚集在一个较小的连续单元。也就是说位于被访问字附近的数据在近期被访问到的概率增大
+局部性又包括三种不同的类型：
+1 时间局部性：若一个信息项被访问，那么在近期很可能还会被访问。
+2 空间局部性：在最近和将来用到的信息很可能与现在使用的信息在空间商地址上是临近的。
+3 顺序局部性：在典型程序中，除转移类指令外，大部分指令是顺序执行的。
+操作系统定义：
+是计算机系统中的系统软件，管理控制计算机系统中的硬、软件资源，合理组织计算机的工作流程，有效利用资源为用户提供功能强大使用方便的环境，从而在计算机与用户间起到接口的作用
+
+高速缓存：cache
+介于处理器&内存的高速小容量存储器。高速缓存和内存间的信息调度和传送由硬件自动进行。
+高速缓存分为一级高速缓存、二级高速缓存...
+每级的cache都比上级速度慢但容量大。是为了解决处理器处理速度远快于内存而设计（基本原理是局部性原理）
+其包含部分内存数据的副本：
+此后处理器读取数据时首先从高速缓存中判断是否存在
+若有则直接从高速缓存中传过去
+若没有则从内存中以一定长度的块数据先读入cache然后再从cache传到cpu
+
+操作系统是计算机系统的资源管理者，工作流程的组织者（监视资源，分配/回收资源、保护资源）
+
+资源管理的角度看待计算机：
+1.处理机管理
+-进程控制：创建和撤销进程以及控制进程的状态转换
+-进程同步：协调、互斥访问临界资源，协调执行进度
+-进程通信：进程间的信息交换
+-进程调度：按一定的算法从进程就绪队列中选出一个进程，把处理机分配给它，使之运行
+2.处理中断事件
+3.处理器调度
+4.存储管理
+-为多道程序的并发执行提供良好的环境
+-便于用户使用存储器
+-提高存储器的利用率
+-为尽量多的用户提供足够大的存储空间
+-内存分配：静态分配/动态分配、连续分配、费连续分配
+-内存保护：系统内存空间、用户内存空间
+-地址映射：逻辑地址->物理地址
+-内存扩充：虚拟存储技术
+5.设备管理
+-为用户分配I/O设备
+-完成用户程序请求的I/O操作
+-提高处理机和I/O设备的利用率
+-改善人机界面
+-缓冲管理
+-设备分配
+-设备处理：启动设备，中断处理
+-虚拟设备功能
+-RAID技术，磁盘调度
+6.文件管理
+-管理用户文件和系统文件
+-管理文件的存储空间
+-保证文件数据的安全
+-方便用户使用文件
+-文件目录管理
+-文件的逻辑组织与访问方式
+-存储空间的管理：文件的物理组织，空闲磁盘空间的管理
+-文件共享与安全
+7.网络与通信管理
+8.用户接口
+-人机交互界面（命令接口：Unix、DOS，图形化用户接口：Windows）
+-程序接口：系统调用的形式共用户编程使用。
+
+任务共行性：
+1.宏观：系统中有多个任务同时运行
+2.微观：处理机系统的任务并发，即多个任务在单个处理机上交替运行；或多处理机系统中的任务并行，即多个任务在多个处理机上同时运行
+
+UNIX采用抢占式内核，Linux采用非抢占式内核：
+1.可抢占式内核：当进程位于内核空间时，有一个更高优先级的任务出现时，若当前内核允许抢占，则将当前任务挂起，执行优先级更高的进程
+2.非抢占式内核：高优先级的进程不能中止正在内核中运行的低优先级的进程而抢占CPU运行。进程一旦处于核心态（如：用户进程执行系统调用）则除非其自愿放弃CPU或处理完成
+---------------------------------------------------------------------
+Linux组成：
+Applications/Libraries #应用程序，库文件
+kernel/Drivers/Firmware #内核，驱动，防火墙
+Hardware #硬件
+
+kernel组成：
+1.network（网络）
+2.IO（输入输出子系统）
+3.process（进程）
+4.memory（内存）
+5.File System（文件系统）
+
+root@paybay:~# uname -i ----> x86_64
+root@paybay:~# uname -r ----> 3.16.0-30-generic
+root@paybay:~# uname -n ----> paybay
+root@paybay:~# uname -a ----> Linux paybay 3.16.0-30-generic 40~14.04.1-Ubuntu SMP Thu Jan 15 17:43:14 UTC 2015 x86_64 x86_64 x86_64 GNU/Linux
+---------------------------------------------------------------------
+/:
+/root: 超级主目录
+/srv: 服务启动后提取的数据
+/home: 普通主目录，每个用户在该目录下都有与其名字相同的目录
+/boot: 系统启动所需的文件存放目录（如kernel和grup）
+/bin: 命令存放处，任何用户都可执行其中命令（多是二进制可执行文件）
+/sbin: 系统管理命令，普通用户不能执行
+/mnt: 在此目录内创建挂载点
+/media: 自动识别的设备如U盘/光驱/移动硬盘等（移动存储设备默认挂载点）
+/misc 存放用途/含义不明确的文件/目录
+/opt: 第三方工具安装目录
+/proc: 内存状态的映射，系统运行时的进程及内核信息如cpu、硬盘分区、内存等信息在此（并非真正的文件系统）
+/proc/sys/net/ipv4/ip_forward 路由功能
+/proc/sys/net/ipv4/ip_dynaddr DHCP获取
+/proc/cpuinfo 处理器信息，如厂家、型号和性能等（cat /proc/cpuinfo）
+/proc/devices 当前运行的内核所有设备清单*
+/proc/filesystems 当前运行的内核所的文件系统
+/proc/dma 当前正在使用的DMA通道
+/proc/interrupts 正使用的中断和曾经有多少个中断
+/proc/ioports 当前正在使用的I/O端口
+/proc/mdstat RAID信息（如查看RAID1故障时进行的同步情况）
+/proc/sys 系统核心使用的一些变量，可通过/etc/sysctl.conf修改
+/etc: 系统配置目录
+/etc/aliases 用于设置邮件别名*
+/etc/php.ini PHP相关设置*
+/etc/fstab 自动挂载的配置文件
+/etc/issue 本机登录时提示信息*
+/etc/issue.net 网络登录时提示信息*
+/etc/at.allow/deny
+/etc/hosts.allow/deny
+/etc/shadow&passwd 帐号密码文件
+/etc/profile 系统环境变量（还有/etc/profile.d/目录也用于存放环境变量，用户家目录也有此类隐藏文件）
+/etc/init.d 此目录存放系统或服务器以System V模式启动的脚本，常见如RedHat/Fedora
+/etc/inittab 启动级别：1～6（redhat7.0版本以后有变动）
+/etc/xinetd.d 若服务器是通过xinetd模式运行的则其脚本要放在此目录下
+/etc/sudoers 对sudo命令的权限设置（使用visudo编辑）
+/etc/rc.d BSD方式启动脚本的存放地，如自定义网卡/服务器开启脚本等（常用：/etc/rc.d/rc.local）
+/etc/rc.local 自启脚本存放处（如unbuntu中将需开机自启的可执行文件的绝对路径写入）
+/etc/sysconfig/iptables 防火墙规则存放处（保存规则：service iptables save）
+/etc/selinux/config Selinux（设置SELINUX=enforcing|disabled，查看：getenforce，关闭：setenforce 0）
+/etc/dumpdates dump信息（查看：dump -W）
+/etc/yum.repos.d/*.repo yum源配置
+/etc/services 协议/端口号关联（如：ssh 22/tcp Server-alias）
+/etc/resolv.conf 本地解析文件（在此指定DNS服务器IP，如：nameserver 8.8.8.8）
+/etc/sysconfig/network 主机名设置（还需hostname和/etc/hosts）
+/etc/sysconfig/network-script 网络接口目录
+/etc/samba/smb.conf samba配置
+/etc/exports nfs配置（/pub IP(async)）
+/etc/ypserv.conf nis配置
+/etc/lib/mysql/* Mysql数据库默认位置
+/etc/......
+/sys: sysfs文件系统集成了3种文件系统信息：针对进程信息的proc文件系统、设备的devfs文件系统及伪终端的devpts文件系统
+/usr: 系统应用程序和相关文件（编译安装的软件默认存放在此：/usr/local/*）
+/usr/bin 可执行程序目录，普通用户有权执行，当安装程序时用户的可执行文件大多在此
+/usr/sbin 可执行程序目录，大多涉及系统管理，仅root执行，相似目录/sbin或/usr/local/sbin
+/usr/src 内核源码默认放置目录
+/usr/lib 与/lib目录相似，是库文件的存储目录，存放常用的共享库
+/usr/share 用于存放系统共用的东西，如/usr/share/fonts是字体目录
+/usr/share/doc 共享文档
+/dev: 系统中的所有设备文件（如：/dev/sdb{1,2,3,4} /dev/md0 /dev/md1）
+/etc/console 系统控制台（直接和系统连接的监视器）
+/etc/hd IDE设备文件
+/etc/sd sata、usb、scsi等设备文件
+/etc/tty 虚拟控制台设备文件
+/etc/pty 提供远程虚拟控制台设备文件
+/etc/null “黑洞”，所有写入该设备的信息将消失
+/dev/zero 无限零资源
+/dev/random 随机数设备（/dev/urandom）
+/tmp 存放产生的临时文件（有些linux系统会定期自动对这个目录进行清理）
+/lib: 存放库文件如：核心模块、驱动（常用于被其他对象进行调用）
+/lost+found: 存储fsck用的孤儿文件，默认为空，当非正常关机后这里就会存放一些文件
+/selinux 是RedHat/CentOS特有目录，其存放Selinux相关文件
+/var: 存放系统中常变化的文件
+/var/log/服务名 系统各类服务的日志存放处，用于排错
+/var/log/btmp 记录失败的用户登录
+/var/log/utmp 记录当前登录的每个用户
+/var/lib 一些库文件（/var/lib/* 即各服务产生的数据库，如：/var/lib/mysql/*）
+/var/tmp 与/tmp目录类似
+/var/spool 打印机、邮件、代理服务器等假脱机目录在此
+/var/spool/squid 代理服务器缓存（squid日志：/var/log/squid/access.log）
+/var/mail/ 用户邮件保存地址
+/var/log/maillog 记录邮件访问或往来的用户信息
+/var/log/cron 记录crontab例行服务的内容
+/var/lib/php/session会话（PHP）
+/var/log/boot.log 开启或重启日志
+/var/run/* 存放PID文件*
+---------------------------------------------------------------------
+进程定义：
+进程是计算机资源分配单位，包括对系统资源的调度如cpu时间，内存空间等...是程序执行的副本，还包括一系列资源如文件的打开，释放信号，内核内的数据，进程状态，内存地址的映射，执行的多个线程，和数据段的全局变量。
+
+进程周期：
+子进程是父进程的副本，除了PID和PPID不同其他均相同，子进程在执行程序时需在单独地址空间内进行，当执行完后子进程占用的资源由父进程回收，这就是进程的生命周期
+
+进程状态：
+running #运行
+interruptible #可中断睡眠
+unitertible #不可中断睡眠
+stopped #停止状态
+zombie #僵死态
+---------------------------------------------------------------------------------------------------------------------- time输出命令执行时间
+root@paybay:~# time ls
+Apache-tomcat-7.0.55.tar.gz dump.sql jungezaixiamenchuchaila.sql s.key
+real 0m0.002s
+user 0m0.000s
+sys 0m0.001s
+---------------------------------------------------------------------
+程序=指令+数据。64位CPU一次从内存读取64bit数据（2^64bit）2是一个位的2种变化，2^32=4G 2^6=4亿G
+
+时钟周期： 由CPU时钟"晶体振荡器"定义的定长时间间隔，是CPU工作的最小时间单位，CPU时钟周期比内存块：内存在CPU周期到来时将数据交给CPU
+主频： 即CPU工作的时钟频率，表示在CPU内数字脉冲信号震荡的速度，与CPU实际运算能力并没有直接关系（CPU某一时刻仅执行一条指令）
+南北桥： 即桥接芯片，用于将数据汇总
+带宽： 数据交互的通路数量（吞吐量）
+切割内存： 将除内核外的空间分配给内存，内核将内存虚拟让每个进程都以为自己独占内存；当进程读写数据时从实际物理内存空闲空间读写（内存的虚拟：多个进程使用而彼此不影响）
+端口号： 是指进程在内存中的地址
+IO端口： 共65535个。任何硬件接入后都需向CPU注册一批连续端口以让CPU区分硬件"BIOS自检后开始注册"CPU用这批连续端口与设备交互，IO端口仅用于数据交互而非信号交互
+NUMA： 非一致存储访问结构（linux中用numactl绑定进程到指定处理器）
+总线： 用来连接微机各功能部件而构成一个完整微机系统，称之为系统总线
+PCI： 外部设备关联，PCI-E比PCI快的多（高速IO总线一般连接PCI）
+DMA： 直接内存访问，CPU授权其进行管理内存数据的读取
+PAE： 物理地址扩展，在64bit的寻址总线上增加4bit 即2^4=64 "physical address extend"，PAE使CPU最大能够寻址64bit
+堆栈： 栈负责保存我们的代码执行（或调用）路径,而堆则负责保存对象（或者说数据，接下来将谈到很多关于堆的问题）的路径。
+进程： 独立运行单位，由CPU的moniter决定运行哪些process，程序所需的数据和相关状态信息。进程是拥有资源的最小实体，在传统OS中进程也是系统调度的最小单位
+线程： 进程中的实体，是被系统独立调度和分派的基本单位，其不拥有系统资源只拥有在运行中必不可少的资源，但可与同属进程的其它线程共享进程全部资源，在现代OS中线程是系统调度的最小单位
+文件描述符：kernel利用文件描述符访问文件（正整数）打开或新建文件时内核会返回一个文件描述符。读写文件也要使用它指定待读写文件
+MTU： 最大传输单元（MTU）指通信协议的某一层上所能通过的最大数据包大小（字节为单位）
+资源： CPU时间（将CPU时间切片来分配给不同process（进程切换要保持现场和恢复现场："状态数据"）
+系统调用： 操作系统提供的最基本的服务，供用户程序调用；只能在程序中作为程序语句使用而不能单独使用
+阻塞调用： 指调用结果返回前当前线程被挂起。调用线程只有在得到结果后才返回（阻塞与非阻塞关注的是程序在等待调用结果时的状态，同步和异步关注的是消息通信机制）
+非阻塞调用：指不能立刻得到结果时该调用不阻塞当前线程（阻塞与非阻塞与是否同步异步无关）
+接口： 描述系统硬件间的连接关系及软件和程序模块间的调用关系，如：总线接口，打印机接口...
+虚拟存储： 有限内存空间中运行更大更多的进程（程序），可将部分磁盘空间虚拟为逻辑内存，使用户感到比物理内存空间大得多的逻辑内存，即物理内存与虚拟的逻辑内存空间的综合统称为虚拟内存空间
+文件： 若干数据的集合，Linux将程序/数据及外部设备通通称为文件；概括地说文件就是命名了的字节流，是现代操作系统对计算机系统中种类繁多的外部设备进行高度抽象的结果
+轮询poll： CPU每隔段时间查看各硬件有没有数据需处理
+同步： 发出调用后没得到结果前该调用不返回，一旦调用返回就得到返回值了。由调用者"主动等待此调用"的结果....同步I/O操作：导致请求进程阻塞，直到I/O操作完成
+异步： 调用发出后此调用直接返回但无返回结果。或者说当调用发出后"调用者不立刻得到结果"而是调用发出后被调用者通过状态、通知来通知调用者，或通过回调函数处理这个调用
+异步I/O操作不导致请求进程阻塞。异步只要I/O操作完成的通知而并不主动读写数据，由操作系统内核完成数据的读写
+通知机制： 硬件有数据需处理时通过中断通路用信号通知CPU处理，CPU利用自己的中断控制器接受中断信号，处理发生的事件然后再用IO端口进行数据的交互
+中断控制器告知CPU有数据需处理时CPU根据忙闲状态进行决策
+PPP协议： 3P是提供在点到点链路封装,传输网络层数据的链路层协议,处于OSI第二层，用来在支持全双工的同异步链路上进行点到点间的传输，能够提供验证,易扩充,支持同异步『LCP/NCP/验证』
+MIME： 多功能互联网邮件扩展，使得http传输非文本信息，如：mp3经转换为文本形式后传输到目的地后再转为原始格式
+JVM： JAVA官方提供了基于各系统不同版本的虚拟机从而实现java跨平台（在虚拟机中运行从而不用关心API,ABI等规范）
+MVC： 软件设计框架，由下而上分：数据层，应用层，表示层
+CGI： 通用网关接口，是一种协议：使前端web服务进程根据对应程序的不同来调用后端对应环境执行后再将结果返回前端
+JRE： JAVA运行环境（编译后运行）
+JDK： JAVA开发组件（开发时即可运行，拥有JRE所有功能，tomcat服务需安装） #yum insyall openjdk*
+PHP： 即是开发语言也是运行环境，动态语言或脚本语言
+API： 系统提供应用编程接口实现让语言直接调用其功能（不同OS提供的API不同）
+ABI： 应用二进制接口：.dll是共享库（windows）.so是共享对象（linux）
+POSIX： 可移植操作系统 ---> 是跨OS平台的API规范 #语言若跨平台就必需有API与ABI接口规范
+WebDAV： 基于http/1.1的协议。它扩展了http/1.1，添加了一些新的方法，使应用可直接对Web Server读写，还支持文件的版本控制
+http 超文本传输协议：HyperText Transfer Protocol（基于链接并实现跳转）
+HTML： 超文本标记语言（超文本语言）
+URI： 统一资源标识符（定义全局范围内可唯一的引用某资源的命名方式，其统指路径格式统一）
+URL： 统一资源定位符（是uri的子集）格式：protocol://hostname:port/path/to/filename
+
+当内核在CPU中运行时是内核模式："特权指令模式"
+当进程在CPU中运行时是用户模式，虚拟化中程序以为在真实的系统内，其运行的特权指令不是真正的内核模式而是仿真软件虚拟的（仿真软件向真实系统内核申请）
+
+线程补充：
+1.一个线程可创建和撤消另一个线程，同一进程中多个线程间可并发执行。由于线程间的相互制约致使线程在运行中呈现出间断性。线程也有就绪、阻塞和运行三种基本状态
+2.在多线程OS中通常是一个进程中包括多个线程，每个线程都是作为利用CPU的基本单位，是花费最小开销的实体
+
+TCP在第4层 #Transport层，TCP的包是没有IP地址的，那是IP层上的事。但有源/目标端口
+IP 在第3层 #Network层
+ARP在第2层 #Data Link层
+程序的数据首先打到TCP的Segment中然后TCP的Segment打到IP的Packet中再打到以太网Ethernet的Frame中；传到对端后各层解析自己的协议后把数据交给上层处理
+
+一个TCP连接需四个元组表示是同一连接："src_ip, src_port, dst_ip, dst_port"，准确说是五元组（还有一个是协议）
+
+Sequence Number： #包序号，解决网络包乱序问题
+Acknowledgement Number： #是ACK，用于确认收到，解决不丢包问题
+Window又叫Advertised-Window： #滑动窗口，解决流控
+TCP Flag： #包类型，主要用于操控TCP的状态机
+
+网络的传输是没有连接的，包括TCP也一样。而TCP所谓的“连接”只不过是在通讯的双方维护一个“状态”，让它看上去好像有连接。所以TCP的状态变换是非常重要的。
+------------------------------------------------------- linux做NAT
+vim /etc/sysconfig/network-scripts/ifcfg-eth0 #外网IP
+vim /etc/sysconfig/network-scripts/ifcfg-eth1 #内网IP
+
+route add default gw [ISP提供的网关]
+route add -net 192.168.10.0/24 gw [内网IP]
+echo 1 > /proc/sys/net/ipv4/ip_forward
+iptables -F
+iptables -t nat -F
+iptables -t nat -A POSTROUTING -o eth0 -s 172.16.10.0/24 –j SNAT --to [外网IP]
+-------------------------------------------------------
+传输控制协议：TCP，协议号"6" UDP，协议号"17"
+
+源端口：Source Port |16bit
+目的端口：Destination port |16bit
+序列号：Sequence Number |32bit 接收端依据序号将分段报文合为完整数据
+应答号：Acknowledgment Number |32bit 接收端使用（表示其准备接收的包序列号）
+偏移量：HLEN |4bit 指定包中数据起始位置
+保留：Reserved |6bit 为定义新用途而保留，默认"0"
+标志：Code Bits |6bit 紧急URG|应答ACK|推PSH|重置RST|同步SYN|断开FIN
+窗口：Window |16bit 告知对端其最大能收的报大小（缓存不足时）
+校验：Checksum |16bit 保证完整性
+优先指针：Urgent Pointer |16bit 指向报文中优先处理的数据（设置URG标志时生效）
+选项：Option |0
+
+标志Code Bites：
+PSH：置位时接收端不将数据排序而尽可能交给应用（如telnet或rlogin等交互模式）
+RST：复位相应TCP连接
+SYN：仅在3次握手建立TCP连接时有效，是TCP连接初始端的初始编号
+FIN：结束TCP回话，但对应端口仍处于开放状态准备接收后续的ACK应答
+-----------------------------------
+三次握手：
+[1].客户端发送SYN包到服务器（syn=x）进入SYN_SENT状态等待服务器确认（syn即同步序列编号）
+[2].服务器收到SYN包后发送ACK包到客户机（ack=x+1）同时自己也发送syn包（syn=y）即“SYN+ACK”此时服务器进入SYN_RECV状态
+[3].客户端收到SYN+ACK包后向服务发送ACK包（ack=y+1）此包发送后C/S均进入ESTABLISH状态，完成握手
+
+SYN_SENT状态： SYN------->
+SYN_RECV状态： <---SYN+ACK
+ESTABLISH： ACK------->
+
+四次断开：
+[1].当数据发送完毕时TCP向对端设备C发送带有FIN标记的报文，FIN即"finish"
+[2].设备C收到带有FIN标记的报文后先向对方发送ACK确认并告知自己的应用程序对方要求关闭连接
+[3].设备C发送ACK确认之后也向对端发送带有FIN标记的报文
+[4].请求断开的设备收到设备C的ACK和FIN后向设备C发送ACK确认后断开
+FIN------->
+<-------ACK
+<-------FIN
+ACK------->
+-----------------------------------
+套接字：Socket
+即源/目的IP及源/目的端口的组合。用于标识请求的服务器和服务，是支持tcp/ip通信的基本操作单元，多个TCP连接或多个进程可能需通过同一TCP协议端口传输数据。为区别不同的应用程序进程和连接许多计算机操作系统为应用程序与TCP/IP协议交互提供了称为套接字(Socket)的接口。
+-----------------------------------
+在TCP中有Keep-alive机制检测死连接：在空闲一定时间后发送数据给对方
+1.若可达，对方响应ACK就认为是存活。
+2.若可达，但应用程序退出对方就发RST，发送TCP撤消连接。
+3.若可达，但应用程序崩溃对方就发FIN。
+4.若对方不响应ack, rst，继续发送直到超时断开，默认2小时。
+-----------------------------------
+半连接存活时间：
+即设备收到SYN并SYN+ACK后进入SYN_RECV状态的等待时间（也称：Timeout时间/SYN_RECV存活时间）
+
+基于三次握手的SYN洪水攻击：
+攻击者发向服务器发送大量伪造源IP的SYN包而不用ACK报文对其回应（服务器消耗资源等待其回应）。通过IP欺骗易实现半开放连接，攻击者发送SYN包看起来合法但事实上所谓的源IP根本不对其回应，最终连接超时而受害者也会自动修复但在受害者修复前攻击者可持续发送虚假SYN包。大多情况下受害者几乎不能接受其他请求
+但这种攻击不会影响已存在进/出站连接
+-----------------------------------------------------------------------------------------
+Tcp三次握手时当一方收到对方ACK则连接转为establish状态：
+注：server端若一定时间内没收到发起方的ack则重发SYN-ACK（Linux下默认重试5次，重试间隔从1s开始每次翻倍，5次重试间隔为 1s, 2s, 4s, 8s, 16s，共31s
+第5次发出后要等32s才知道第5次也超时了，所以共需1s+2s+4s+8s+16s+32s=2^6-1=63s，TCP才认为失效断开此连接
+恶意的人为此制造SYN Flood攻击：给服务器发了SYN后就下线了，于是服务器默认等63s才断开连接这样攻击者可以把服务器的syn连接队列耗尽让正常连接请求不能处理
+
+Linux下给了tcp_syncookies参数应对：
+当SYN队列满了后TCP会通过源地址端口、目标地址端口和时间戳打造出一个特别的Sequence Number发回去（又叫cookie），如果是攻击者则不会有响应
+如果是正常连接则会把这个SYN Cookie发回来然后服务端可以通过cookie建连接（即使你不在SYN队列中）。因synccookies是妥协版的TCP协议并不严谨
+
+对TCP请求需调整的参数：
+1.tcp_synack_retries #减少重试次数；
+2.tcp_max_syn_backlog #增大SYN连接数；
+3.tcp_abort_on_overflow #处理不来则拒绝连接
+
+TCP超时等待，TIME_WAIT： #在大并发，短链接下TIME_WAIT会很多，会消耗很多资源
+1.tcp_tw_reuse #默认关闭，若使用tcp_tw_reuse需先设置tcp_timestamps=1否则无效
+2.tcp_tw_recycle #默认关闭
+关于tcp_tw_reuse：官方文档说tcp_tw_reuse加tcp_timestamps可保证协议角度上的安全，但需tcp_timestamps在两边都被打开
+
+TCP数据传输时：
+使用ack=(seq+1)回应本端要收的下一个段，同时也用于三次握手时进行回应，收到ack的一方将TCP状态转为establish
+
+TCP断开连接时：
+断开链接时将FIN置1，双方使用ack={fin+1}回应"timewait状态在此状态中"对于建立连接的3次握手，主要是要初始化Sequence Number的初始值。通信双方互相通知对方自己的初始化的Sequence Number，它也叫SYN，全称Synchronize Sequence Numbers。作为将来数据通信的序号以保证应用层接收到的数据不会因网络的传输的问题而乱序（TCP使用此序号拼接数据）
+
+对于4次断开：
+发送/接收方都需要Fin和Ack。只不过有一方是被动的所以看上去就成了所谓的4次挥手，若两边同时断连接，那就会就进入到CLOSING状态，然后到达TIME_WAIT状态。
+
+TCP要保证所有的数据包都可到达，必需要有重传机制：
+接收端给发送端的Ack确认只会确认最后一个连续的包，比如发送端发了1,2,3,4,5共五份数据，接收端收到了1，2于是回ack=3，然后又收到了4（此时3没收到）
+此时的TCP会怎么办？因为正如前面所说的，SeqNum和Ack是以字节数为单位，所以ack的时候不能跳着确认只能确认最大的连续收到的包，不然，发送端就以为之前的都收到了。
+
+超时重传机制：
+一种是不回ack而死等3，当发送方发现收不到3的ack超时后会重传3。一旦接收方收到3后，会ack=4，意味着3和4都收到了。
+但是这种方式会有比较严重的问题，那就是因为要死等3，所以会导致4和5即便已经收到了，而发送方也完全不知道发生了什么事，因为没有收到Ack所以发送方可能会悲观地认为也丢了
+所以有可能也会导致4和5的重传。
+对此有两种选择：
+1.仅重传timeout的包。也就是第3份数据。
+2.重传timeout后所有的数据，也就是第3，4，5这三份数据。
+
+TCP必需要知道网络实际的数据处理带宽或数据处理速度，其使用的即滑动窗口：
+滑动窗口使得不会引起网络拥塞而导致丢包。
+TCP头里有字段Window，又叫Advertised-Window此字段是接收端告诉发送端自己还有多少缓冲区可接收数据。于是发送端就可根据这个接收端的处理能力来发送数据而不会导致接收端处理不过来
+
+TCP_CORK是禁止小包发送，而Nagle算法没有禁止小包发送：
+Nagle只是禁止了大量的小包发送"汇总小包后发出"。最好不要两个选项都设置。"Nagle算法默认打开"对于需要小包场景的程序如telnet或ssh这样的交互性较强的程序需要关闭这个算法
+
+慢热启动算法：low Start
+慢启动的意思是刚刚加入网络的连接一点点地提速而不是一上来就像那些特权车一样霸道地把路占满，慢启动算法如下(cwnd全称Congestion Window)：
+1.连接建立后先初始化cwnd = 1，表明可以传一个MSS大小的数据。
+2.每收到一个ACK，cwnd++; 呈线性上升
+3.每过了一个RTT，cwnd = cwnd*2; 呈指数让升
+4.还有一个ssthresh（slow start threshold），是一个上限，当cwnd >= ssthresh时，就会进入“拥塞避免算法”（后面会说这个算法）
+-------------------------------------------------------------------------------------
+TCP状态迁移：C端 CLOSED --> SYN_SENT --> ESTABLISHED --> FIN_WAIT_1 --> FIN_WAIT_2 --> TIME_WAIT --> CLOSED
+TCP状态迁移：S端 CLOSED --> LISTEN --> SYN收到 --> ESTABLISHED --> CLOSE_WAIT --> LAST_ACK --> CLOSED
+-------------------------------------------------------------------------------------
+数字签名技术：
+将数据摘要用发送者私钥加密后与原文一起发往接收者。接收者只能有发送者的公钥才能解密被加密的摘要信息，
+接收者用发送方公钥解密后用HASH函数对收到的原文计算摘要信息，与解密的摘要信息对比
+如果相同，则说明收到的信息是完整的，在传输过程中没有被修改，否则说明信息被修改过【因此数字签名能够验证信息的完整/有效性】
+数字签名是加密的过程，数字签名验证是个解密的过程
+
+数字证书例子：
+我们"ABC Company"申请到这个证书后把证书投入使用：
+在通信过程开始时把证书发给对方，对方如何检查这个证书的确是合法的并且是我们"ABC Company"公司的证书呢？
+首先应用程序"对方通信用的程序，如IE、OUTLook等"读取证书中的Issuer(发布机构)为"SecureTrust CA" ，然后在操作系统的受信任的发布机构的证书中找："SecureTrust CA"的证书
+若找不到则说明证书的发布机构是个水货发布机构，证书可能有问题，程序会给出错误信息。
+若在系统中找到了"SecureTrust CA"的证书则应用程会从证书中取出"SecureTrust CA"的公钥后对我们"ABC Company"公司的证书里的指纹和指纹算法用这个公钥进行解密
+然后使用这个指纹算法计算"ABC Company"证书的指纹，将这个计算的指纹与放在证书中的指纹对比：
+若一致说明"ABC Company"的证书肯定没有被修改过并且证书是"SecureTrust CA"发布的，证书中的公钥肯定是"ABC Company"的。最后就可放心的使用这个公钥和"ABC Company"进行通信
+-----------------------------------------------------------------------
+OpenSSL：
+libcrypto： #通用加密库，提供了各种加密函数
+libssl： #TLS/SSL协议的实现,基于会话的、实现了身份认证、数据机密性和会话完整性的TLS/SSL库
+openssl： #多用途的命令行工具；能够实现私有证书颁发机构；即在公司内部实现身份的验证；
+SSL： #(Secure Socket Layer)安全套接字层，通过一种机制在互联网上提供密钥传输。其主要目标是保证两个应用间通信的保密和可靠。目前主流版本SSLV2、SSLV3
+
+openssl中的后缀：
+.key： #私钥
+.csr： #证书签名请求，（证书请求文件）含有公钥信息，certificate signing request的缩写
+.crt： #证书，certificate的缩写
+.pem： #用于导出/导入证书时的证书格式
+.crl： #证书吊销列表，Certificate Remove List的缩写
+-----------------------------------------------------------------------
+首先创建CA根证书：
+生成私钥给CA： openssl genrsa -des3 -out rootca.key 1024 #.key：私钥
+产生X509/PEM格式的自签名证书（也可由CA机构签名）： openssl req -new -x509 -days 365 -key rootca.key -out rootca.crt #.crt：证书
+验证证书有效性： openssl verify -CAfile rootca.crt rootca.crt #第一个为根证书，第二个为需验证的子证书，由于是自签名相当于自己给自己颁发的证书。
+
+用根证书颁发子证书：
+生成私钥： openssl genrsa -des3 1024 -out user.key
+产生证书签名请求文件(PEM格式)： openssl req -new -key user.key -out user.csr
+
+使用CA根证书签名：
+生成配置文件如下ca.config :
+[ ca ]
+default_ca=CA_own
+[ CA_own ]
+dir=C:/openssl/bin
+certs=C:/openssl/bin
+new_certs_dir=C:/openssl/bin #生成子证书的目录
+database=C:/openssl/bin/index.txt #生成子证书后会更新内容到此文件
+serial=C:/openssl/bin/serial.txt #子证书的序列号从此文件读取
+certificate=C:/openssl/bin/rootca.crt #根证书
+private_key=C:/openssl/bin/rootca.key #根证书的私钥
+default_days=365
+default_crl_days=30
+default_md=md5
+preserve=no
+policy=policy_anything
+[ policy_anything ]
+countryName=optional
+stateOrProvinceName=optional
+localityName=optional
+organizationName=optional
+organizationalUnitName=optional
+commonName=supplied
+emailAddress=optional
+
+执行命令来签名： openssl ca -config ca.config -out user.crt -infiles user.csr
+------------------------------------------------------------------------------------------------- 本地CA：
+********************CA端：
+openssl 配置文件 /etc/pki/tls/openssl.cnf
+初始化服务器工作环境：
+[root@localhost ~]# touch /etc/pki/CA/{index.txit,serial,crlnumber} #创建证书发送数据库、证书序列号、吊销证书数字文件
+[root@localhost ~]# echo 100001 > /etc/pki/CA/serial #设置发放证书初始序列号
+[root@localhost ~]# echo 000001 > /etc/pki/CA/crlnumber #设置吊销证书初始序列号
+
+创建秘钥对及自认证证书：
+[root@localhost ~]# (umask 077; openssl genrsa -out /etc/pki/CA/private/cakey.pem 2048) #创建私钥
+[root@localhost ~]# openssl req -new -x509 -key /etc/pki/CA/private/cakey.pem -out /etc/pki/CA/cacert.pem -days 365
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:cn #所属国家，两个字母简写
+State or Province Name (full name) []:shandong #所属省份（州）
+Locality Name (eg, city) [Default City]:dezhou #所属城市
+Organization Name (eg, company) [Default Company Ltd]:eway #所属组织、公司
+Organizational Unit Name (eg, section) []:support #所属部门
+Common Name (eg, your name or your servers hostname) []:ca.eway.com #使用此证书的主机名称
+Email Address []:zhuzw_1203@126.com #管理员邮箱
+
+********************服务器端：
+[root@localhost ~]# (umask 077; openssl genrsa -out /root/cekay.pam 2048) #生成私钥
+[root@localhost ~]# openssl req -new -key /root/cekay.pam -out /root/cakey.csr #生成证书签名请求
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:cn #需跟CA服务器一致
+State or Province Name (full name) []:shandong #需跟CA服务器一致
+Locality Name (eg, city) [Default City]:dezhou #需跟CA服务器一致
+Organization Name (eg, company) [Default Company Ltd]:eway #需跟CA服务器一致
+Organizational Unit Name (eg, section) []:www
+Common Name (eg, your name or your servers hostname) []:
+Email Address []:zhuzw_1203@126.com
+Please enter the following 'extra' attributes
+to be sent with your certificate request
+A challenge password []: #证书秘钥（可以不加密码）
+An optional company name []: #可选的公司名称
+
+[root@localhost ~]# scp /root/cakey.csr mylinux@192.168.13.134:/home/mylinux #将证书签名请求发送给CA服务器
+
+********************CA端：
+[root@localhost ~]# openssl ca -in /home/mylinux/cakey.csr -out /home/mylinux/cakey.crt -days 365 #CA服务器对此证书请求进行签名并返回给此服务器
+Using configuration from /etc/pki/tls/openssl.cnf
+Check that the request matches the signature
+Signature ok
+Certificate Details:
+Serial Number: 1048577 (0x100001)
+Validity
+Not Before: Oct 5 21:21:14 2015 GMT
+Not After : Oct 4 21:21:14 2016 GMT
+Subject:
+countryName = cn
+stateOrProvinceName = shandong
+organizationName = eway
+organizationalUnitName = www
+commonName = www.eway.com
+emailAddress = zhuzw_1203@126.com
+X509v3 extensions:
+X509v3 Basic Constraints:
+CA:FALSE
+Netscape Comment:
+OpenSSL Generated Certificate
+X509v3 Subject Key Identifier:
+73:0E:C3:34:70:BE:AF:E4:4F:B6:86:5E:94:33:29:E8:84:8F:A6:2D
+X509v3 Authority Key Identifier:
+keyid:B1:46:C8:1F:7F:05:63:B5:B5:6E:36:A9:CF:D4:5C:A2:B7:DF:D7:91
+Certificate is to be certified until Oct 4 21:21:14 2016 GMT (365 days)
+Sign the certificate? [y/n]:y
+[root@localhost ~]# scp /home/mylinux/cakey.crt root@192.168.13.3:/root/ #将证书远程复制给客户机
+
+********************CA端： #若私钥泄露则证书就不能使用了，需要去CA服务器申请吊销此证书
+获取证书序列号和相关信息：
+[root@localhost ~]# openssl x509 -in /root/cakey.crt -noout -serial -subject
+serial=100001
+subject= /C=cn/ST=shandong/O=eway/OU=www/CN=
+#将以上信息及相关的身份证明信息发送给CA服务管理员，管理员在核对信息无误后对证书进项吊销操作。随后你需要重新申请证书。
+
+CA服务器吊销证书：
+[root@localhost ~]# openssl ca -revoke /etc/pki/CA/newcerts/100001.pem #证书吊销是以序列名称来实现的
+Using configuration from /etc/pki/tls/openssl.cnf
+Revoking Certificate 100001.
+Data Base Updated
+[root@localhost ~]# openssl ca -gencrl -out /etc/pki/CA/crl/ca.crl #更新证书吊销列表
+Using configuration from /etc/pki/tls/openssl.cnf
+----------------------------------------------------------------------------------------------------------------------- openssl others
+测试算法速度：openssl speed [算法]
+
+生成RSA密钥： openssl genrsa -out 1.key 1024 #将其作私钥使用
+取出RSA公钥： openssl rsa -in 1.key -pubout -out 1.pubkey
+
+加密文件： openssl enc -e -rc4 -in 1.key -out 1.key.enc
+解密文件： openssl enc -d -rc4 -in 1.key.enc -out 1.key.dec
+
+计算摘要： openssl md5 < 1.key <---> echo -n *** | md5sum #默认情况下echo附加换行符，需-n取消换行后进行摘要计算
+计算摘要： openssl sha1 < 1.key <---> echo -n *** | sh1sum
+-----------------------------------------------------------------------------------------------------------------------
+系统优化：
+1.安装系统时精简安装包
+2.配置国内yum源
+3.禁用开机不需要的服务
+4.优化系统内核参数：/etc/sysctl.conf
+5.增加系统文件描述符，堆栈等配置
+6.禁止root远程登录，修改ssh为特殊端口，禁止DNS
+7.有外网IP的及其开启防火墙，配置或关闭selinux
+8.锁定敏感文件如：/etc/passwd
+9.设置时间同步
+10.设置sudo对普通用户的精细配置
+.....
+--------------------------------
+at 04:00
+at 04:00 2009-03-17
+at 5pm + 3 days
+
+at -l 计划清单
+at -d 删除计划
+at -v 显示计划执行的时间
+
+克隆硬盘：
+nc -l -p 1234 | dd of=/dev/sda
+dd if=/dev/sda | nc192.168.10.11 1234
+
+nohup即不挂起命令，其PPID是init，用户退出不影响运行
+
+列出目前系统上面所有的程序树的相关性：pstree -A
+--------------------------------
+Shutdown –h 20:25 今天20:25关机
+Shutdown –h +10 十分钟后关机
+hostname 显示主机名称
+
+查命令由哪个包安装：
+rpm -qf `which cmmand` #which来查找命令所在文件位置
+
+ssh反向链接：
+#可通过ssh反向连接到内网主机（有防火墙的主机）条件：两侧都有sshd服务
+建立反向通道： -R
+命令后台运行： -Nf
+
+在内网端1.1.1.1运行：ssh 主控账号@2.2.2.2 -NfR 10000:1.1.1.1:22 #在主控端10000端口上与本内网的22端口建立反向的后台运行的通道
+在主控端2.2.2.2运行：ssh 被控账号@2.2.2.2 -p 10000 #使用对方账号与本地的端口进行连接，必要时：-i参数指定ssh自身密钥所在
+
+免验证直接登录：
+在C端：
+ssh-keygen -t dsa -b 1024 #询问passphrase时直接回车
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@serverip #将公钥放入Server信任列表：authorized_keys
+-----------------------------------------------------------------------
+ssh端口转发：
+ssh -L 8000:192.168.2.1:80 root@localhost #将本地8000端口上的流量转发到192.168.2.1的80端口中（退出shell则停止，若后台运行，需加入参数：-fN,如：ssh -fNL）
+-----------------------------------------------------------------------
+[root@localhost /]# PATH=${PATH}:/root #echo $var <==> echo ${var}
+[root@localhost /]# PATH=/usr/local/mysql/bin:$PATH ; export PATH
+[root@localhost /]# echo $SHELL ----> /bin/bash
+[root@localhost /]# echo $0 ----> -bash
+[root@localhost /]# echo $UID ----> 0
+[root@localhost /]# root@paybay:~# id ----> uid=0(root) gid=0(root) groups=0(root)
+[root@localhost /]# id -u ----> 0
+-----------------------------------------------------------------------
+设置颜色：\e[背景色;前景色;高亮m #\033是颜色输出时固定的数字格式，高亮是1否则为0
+恢复默认：\e[0m
+
+背景色：
+0 透明, 5 闪烁, 40 黑, 41 红, 42 绿, 43 黄, 44 蓝 45 紫, 46 青绿, 47白灰
+
+前景色：
+30 黑 31 红, 32 绿, 33 黄, 34 蓝, 35 紫, 36 青绿, 37 白灰
+
+黄色ABC： echo -e '\033[0;33;mabc\033[0m'
+黄色wangyu: echo -e '\033[0;33m wangyu \033[0m'
+
+echo -e "\033[30m 黑色字 \033[0m"
+echo -e "\033[31m 红色字 \033[0m"
+echo -e "\033[32m 绿色字 \033[0m"
+echo -e "\033[33m 黄色字 \033[0m"
+echo -e "\033[34m 蓝色字 \033[0m"
+----------------------------------------------------------------------- dig
+dig www.URL.com
+
+;; global options: printcmd
+;; Got answer:
+;; ->>HEADER opcode: QUERY, status: NOERROR, id: 43071
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 3, ADDITIONAL: 3
+;; QUESTION SECTION: #问：
+;www.isc.org. IN A #默认查询A记录
+;; ANSWER SECTION: #答：
+www.isc.org. 600 IN A 204.152.184.88 #www.isc.org的地址是204.152.184.8
+;; AUTHORITY SECTION: #
+isc.org. 2351 IN NS ns-int.isc.org. #isc.org有3个Name Server
+isc.org. 2351 IN NS ns1.gnac.com. #isc.org有3个Name Server
+isc.org. 2351 IN NS ns-ext.isc.org. #isc.org有3个Name Server
+;; ADDITIONAL SECTION: #
+ns1.gnac.com. 171551 IN A 209.182.216.75 #权威DNS的IP地址
+ns-int.isc.org. 2351 IN A 204.152.184.65 #权威DNS的IP地址
+ns-int.isc.org. 2351 IN AAAA 2001:4f8:0:2::15 #权威DNS的IP地址
+;; Query time: 2046 msec #查询时间
+;; SERVER: 127.0.0.1#53(127.0.0.1)
+;; WHEN: Fri Aug 27 08:22:26 2004
+;; MSG SIZE rcvd: 173
+
+查询163.com域下所有记录： dig -t ANY 163.com "即163.com下的所有主机"
+查询163.com主机的MX记录： dig -t MX 163.com "参数+short快速返回，信息量少"
+根据查询的MX记录查询A记录： dig -t A 163mx00.mxmail.netease.com.
+仅查询163.com主机的A记录： dig 163.com A +noall +answer
+快速返回域名的NS服务器： dig -t NS www.baidu.com +short
+反向解析： dig -x 210.52.83.228
+查找域的授权dns服务器： dig 163.com. +nssearch
+从根开始追踪域名解析过程： dig 163.com +trace
+----------------------------------------------------------------------- 用户空间/内核空间
+Linux虚拟内存为2^32（在32位的x86机器上），内核将这4G字节的空间分为两部分：
+最高的1G字节：从虚地址0xC0000000～0xFFFFFFFF供内核使用，称为“内核空间”
+较低的3G字节：从虚地址0x00000000～0xBFFFFFFF供进程使用，称为“用户空间”
+因进程可通过系统调用进入内核，因此Linux内核空间由系统内的所有进程共享。于是从具体进程的角度来看每个进程可拥有4G字节的虚拟地址空间"也叫虚拟内存"
+
+每个进程有各自的私有用户空间（0～3G），这个空间对系统中的其他进程是不可见的。最高的1GB内核空间则为所有进程及内核所共享。另外进程的"用户空间"也叫"地址空间"。
+
+用户空间不是进程共享而是进程隔离的：
+每个进程最大都可以有3GB的用户空间。一个进程对其中一个地址的访问与其它进程对于同一地址的访问绝不冲突。
+----------------------------------------------------------------------- mpstat与dstat
+%usr 用户空间占用率
+%sys 内核空间占用率
+%iowait IO等待占用率 #重要参数
+%irq 中断情况 #重要参数
+%soft 软中断
+%steal 虚拟机偷走的
+%guest 虚拟机使用的
+%idle 空闲的 #重要参数
+
+root@paybay:~# mpstat
+Linux 3.16.0-30-generic (paybay) 01/16/2016 _x86_64_ (4 CPU)
+07:05:19 PM CPU %usr %nice %sys %iowait %irq %soft %steal %guest %gnice %idle
+07:05:19 PM all 0.27 0.00 0.08 0.65 0.00 0.01 0.00 0.00 0.00 98.99
+
+dstat参数：
+--top-cpu --top-mem --top-io
+-l #负载统计量
+-m #内存使用率"包括used，buffer，cache，free"
+-r #I/O统计
+-s #交换分区使用情况
+-t #将当前时间显示在第一行
+–fs #文件系统统计数据（包括文件总数量和inodes值）
+–socket #网络统计数据
+–tcp #常用的TCP统计
+–udp #监听的UDP接口及其当前用量的一些动态数据
+
+root@paybay:~# dstat -c -y -l -g -m -s --socket --proc-count --top-cpu --top-io --top-mem
+----total-cpu-usage---- ---system-- ---load-avg--- ---paging-- ------memory-usage----- ----swap--- ------sockets------ proc -most-expensive- ----most-expensive---- --most-expensive-
+usr sys idl wai hiq siq| int csw | 1m 5m 15m | in out | used buff cach free| used free|tot tcp udp raw frg|tota| cpu process | i/o process | memory process
+0 0 100 0 0 0| 122 306 | 0 0.03 0.05| 4B 220B| 854M 123M 2753M 181M| 333M 3727M|505 16 0 0 0| 236|java 0.2|cron 7428B 746B|java 361M
+1 0 100 0 0 0| 100 243 | 0 0.03 0.05| 0 0 | 854M 123M 2753M 180M| 333M 3727M|505 16 0 0 0| 236| |sshd: root@1696B 1748B|java 361M
+1 0 99 0 0 0| 128 404 | 0 0.03 0.05| 0 0 | 855M 123M 2753M 180M| 333M 3727M|512 16 0 0 0| 236|java 0.5|java 0 18k|java 361M
+1 0 99 0 0 0| 128 274 | 0 0.03 0.05| 0 0 | 855M 123M 2753M 179M| 333M 3727M|515 16 0 0 0| 236| |sshd: root@ 566B 612B|java 361M
+1 0 99 0 0 0| 109 302 | 0 0.03 0.05| 0 0 | 855M 123M 2753M 179M| 333M 3727M|505 16 0 0 0| 236|java 0.2|sshd: root@ 566B 612B|java 361M
+1 0 99 0 0 0| 159 374 | 0 0.03 0.05| 0 0 | 855M 123M 2753M 179M| 333M 3727M|511 16 0 0 0| 236|kworker/2:2 0.2|sshd: root@ 573B 612B|java 361M
+1 0 99 1 0 0| 122 281 | 0 0.03 0.05| 0 0 | 855M 123M 2753M 179M| 333M 3727M|514 16 0 0 0| 236| |sshd: root@ 573B 612B|java 361M
+
+"查看系统状态，生成的csv可用excel打开后生成图表："
+[root@localhost ~]# dstat -tsp --socket --fs --output /tmp/dstat.csv
+-----------------------------------------------------------------------
+[root@localhost ~]# iptables -t filter -I INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+[root@localhost ~]# iptables -t filter -I INPUT -p icmp --icmp-type echo-request -j DROP #将对自己的PING请求关闭
+iptables -A INPUT -s 172.20.20.1/32 -m state --state NEW,ESTABLISHED -p tcp -m multiport --dport 123,110 -j ACCEPT #对新建和已建立的TCP指定端口放行
+
+iptables -t filter -L -n --line-number
+-L #规则清单
+-n #数字方式显示
+--line-number #显示每个规则的编号
+
+if [ $UID != 0 ]; then echo Non root user #if格式易忘
+-------------------------------------------------------------------- linux支持中文：
+查看当前语言：
+root@paybay:~# echo $LANG
+en_US.UTF-8 #支持中文（UTF-8）
+
+查看支持语言：
+root@paybay:~# locale
+LANG=en_US.UTF-8 <--------
+LANGUAGE=en_US:en
+LC_CTYPE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+.........
+
+不支持则下载中文：yum groupinstall chinese-support ----> LANG="en_US.UTF-8" #临时
+修改系统默认语言：vim /etc/sysconfig/i18n ----> LANG="en_US.UTF-8" #永久
+-----------------------------------------------------------------------
+Mysql是可定制的，采用了GPL协议，可修改源码来开发自己的Mysql系统
+Mysql是最流行的关系型数据库管理系统，在WEB应用方面MySQL是最好的RDBMS(关系数据库管理系统)之一 #Mysql对PHP有很好的支持，PHP是目前最流行的Web开发语言。
+RDBMS关系数据库管理系统特点： #MySQL支持大型数据库，支持5000万条记录，32位系统表文件最大可支持4GB，64位系统支持最大的表文件为8TB
+1.数据以表格形式出现
+4.许多的行和列组成表单 #数据表: 表是数据的矩阵。在一个数据库中的表看起来像一个简单的电子表格
+5.若干表单组成database #数据库: 数据库是一些关联表的集合
+2.每行为各种记录名称 #行（元组或记录）是一组相关的数据，例如一条用户订阅的数据
+3.每列为记录名称所对应的数据域 #列（数据元素）包含了相同的数据, 例如邮政编码的数据
+
+create table 表名(
+id int(4) not null primary key"主键" auto_increment"自动增加",
+name char(20) not null,
+sex int(4) not null default '0',
+degre double(16,2),
+num int(11),
+name varchar(255),
+birthday date default null,
+)engine=innodb;
+
+冗余： 存储两倍数据，其可使系统速度更快
+主键： 是唯一的。一个表中只能包含一个主键，可使用主键查询数据。
+外键： 用于关联两个表
+复合键： 将多个列作为一个索引键，一般用于复合索引
+索引： 可快速访问数据库表中特定信息。是对数据库表中一列或多列的值进行排序的一种结构。类似于书籍目录
+参照完整性: 要求关系中不允许引用不存在的实体。与实体完整性是关系模型必须满足的完整性约束条件，目的是保证数据的一致性。
+
+在添加用户时应使用MySQL提供的PASSWORD()函数对密码加密
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP
+ON TUTORIALS.*
+TO 'zara'@'localhost'
+IDENTIFIED BY 'zara123';
+事件驱动即一个进程响应多个请求
+
+root@paybay:~# A=1
+root@paybay:~# B=2
+root@paybay:~# let C=A+B #let进行变量数值运算时不使用$符
+root@paybay:~# echo $C ---> 3
+
+let num1++ ; echo $num1 ---> 2
+
+root@paybay:~# sum=$[ $NUM1 + $NUM2 ] #[ ]中也可以不写$
+root@paybay:~# echo $sum ---> 5
+
+7.0以上版本修改运行级别：ln -svf /lib/systemd/system/runlevel级别.target /etc/systemd/system/default.target
+---------------------------------------------------------------------------- Mysql数据类型：
+字符串类型 字节大小 描述及存储需求
+CHAR 0-255字节 定长字符串
+VARCHAR 0-255字节 变长字符串
+TINYBLOB 0-255字节 不超过 255 个字符的二进制字符串
+TINYTEXT 0-255字节 短文本字符串
+BLOB 0-65535字节 二进制形式的长文本数据
+TEXT 0-65535字节 长文本数据
+MEDIUMBLOB 0-16777215字节 二进制形式的中等长度文本数据
+MEDIUMTEXT 0-16777215字节 中等长度文本数据
+LOGNGBLOB 0-4294967295字节 二进制形式的极大文本数据
+LONGTEXT 0-4294967295字节 极大文本数据
+VARBINARY(M) 允许长度0-M个字节的定长字节符串，值的长度+1个字节
+BINARY(M) M 允许长度0-M个字节的定长字节符串
+
+类型 大小(字节) 范围 格式 用途
+DATE 4 1000-01-01/9999-12-31 YYYY-MM-DD 日期值
+TIME 3 '-838:59:59'/'838:59:59' HH:MM:SS 时间值或持续时间
+YEAR 1 1901/2155 YYYY 年份值
+DATETIME 8 1000-01-01 00:00:00/9999-12-31 23:59:59 YYYY-MM-DD HH:MM:SS 混合日期和时间值
+TIMESTAMP 4 1970-01-01 00:00:00/2037 年某时 YYYYMMDD HHMMSS 混合日期和时间值，时间戳
+
+‘’中可直接转义
+""中转义需使用：\ #echo "hello \!"
+
+echo -n 1234 ; echo 5678 #echo -n #忽略echo默认加入的换行符
+
+树状显示文件系统： tree -h #容量易读：-h
+查看系统环境变量： env
+使变量成为环境变量：export
+使函数作用域增大： export -f #在bash命令行中执行后可扩展到子进程中
+
+获得变量长度：
+root@paybay:~# A=123456 ；echo ${#A} ---> 6
+
+$(( 变量名1 运算符 变量名2 )) #(())直接以变量名进行运算而不加入$符号，此外还有let
+1> 标准输出
+2> 错误输出
+&> 或 2>&1 所有输出
+输出内容 | tee a.txt b.txt #或：tee a.txt | grep NAME
+根据进程名查找PID： pgrep #查看网络程序进程：netstat -atupnl中的p参数
+
+行数：wc -l #默认输出：行数，单词数，字符数
+赋值：name=value
+相等：name = value
+计算：
+root@paybay:~# echo "scale=3;obase=10;3/8" | bc
+
+chown mysql.mysql -R $mysqldatadir #递归修改属主属组
+
+cmake编译：
+cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql-5.6.28/ \ #转义符“\”也可作命令换行符
+-DMYSQL_UNIX_ADDR=$mysqldatadir/mysql.sock \
+-DMYSQL_DATADIR=$mysqldatadir \
+-DSYSCONFDIR=/etc \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_MYISAM_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DENABLED_LOCAL_INFILE=1 \
+-DMYSQL_TCP_PORT=3306 \
+-DEXTRA_CHARSETS=all \
+-DWITH_DEBUG=0
+make
+make install
+
+[root@localhost ~]# cat /etc/profile #查看/etc/目录下的profile文件内容；
+[root@localhost ~]# cat -b /etc/fstab #查看/etc/目录下的profile内容，并且对非空白行进行编号，行号从1开始；
+[root@localhost ~]# cat -n /etc/profile #对/etc目录中的profile的所有的行(包括空白行）进行编号输出显示；
+
+root@paybay:~# echo wy{1..9} #常用于shell脚本的for循环中进行遍历
+wy1 wy2 wy3 wy4 wy5 wy6 wy7 wy8 wy9
+
+向文件追加内容：
+[root@localhost ~]$ cat >> filename << EOF
+........
+EOF
+
+ubuntu中源下载软件存放位置：/var/cache/apt/archives
+
+awk可对列/行操作：
+格式：awk 'BEGIN{print "start"} patten { commands } END{ print "end" } 'filename #awk脚本被包含在单引号或双引号之间
+流程：
+1.先执行BEGIN{} #可选
+2.读取每行并执行patten{} #样式本身可以是正则/条件语句/行匹配范围等...（若匹配住则执行{}中的语句）
+3.最后执行END{} #可选
+
+例子：
+echo -e "line1 \n line2" | awk 'BEGIN{ print "start" } { print } END{ print "END" }'
+start
+line1
+line2
+END
+
+awk -F 列标记 'commands' input-files #commands是真正awk命令，域分隔符是可选的，input-files是待处理文件。
+#在awk的文件的每一行中，由域分隔符分开的每一项称为一个域。通常在不指明-F域分隔符的情况下默认的域分隔符是空格。
+变量： #总结：awk中的动作写在{}内，参数写在其外，包括正则！正则写在其外的//中！
+NR 当前行号
+NF 当前的列
+$0 当前行的文本
+$1 第1个域的文本内容
+$2 第2个域的文本内容
+$.. .....
+
+root@paybay:/# netstat -atupnl | awk '{print $4," <---> ",$5} END{print "----------",NR,NF}'
+192.168.10.225:59996 <---> 121.40.54.146:3306
+192.168.10.225:60042 <---> 121.40.54.146:3306
+192.168.10.225:60039 <---> 121.40.54.146:3306
+192.168.10.225:60041 <---> 121.40.54.146:3306
+---------- 4 7
+
+打印指定列： awk '{ print $2,$3 }' file
+统计行数： awk 'END{ print NR }' file
+
+打印2到3行范围内的文本：
+root@paybay:/# netstat -atupnl | awk 'NR==2,NR==3'
+Proto Recv-Q Send-Q Local Address Foreign Address State PID/Program name
+tcp 0 0 0.0.0.0:80 0.0.0.0:* LISTEN 1172/apache2
+
+显示/etc/passwd的账户并以tab键分割：
+root@paybay:/# cat /etc/passwd | awk -F ":" '{print $1 "\t" $6 }'
+root /root
+daemon /usr/sbin
+bin /bin
+sys /dev
+sync /bin
+
+输出name和shell： cat /etc/passwd |awk -F ':' 'BEGIN{print "name,shell"} {print $1","$7} END{print "blue,/bin/nosh"}'
+搜索root的行并显示shell： awk -F: '/root/{print $7}' /etc/passwd
+
+例子：
+awk '/101/,/105/' #匹配101和105的行
+awk '$1 == 5' #匹配第一列=5的行
+awk '$1 == "CT"' #注意必须带双引号
+awk '$1 * $2 >100 ' #在列之间进行计算
+
+awk的动作在括号内：
+awk '{print NR,NF,$1,$NF,}' #显示文件file的当前记录号、域数和每一行的第一个和最后一个域
+awk '/101/{print $1 $2}' #显示文件file的匹配行的第一、二个域但显示时域中间没有分隔符
+awk '/^(no|so)/' #打印所有以模式no或so开头的行。
+awk '/^[ns]/{print $1}' #如果记录以n或s开头，就打印这个记录。
+awk '$1 ~/[0-9][0-9]$/(print $1}' #如果第一个域以两个数字结束就打印这个记录。
+awk '$1 == 100 || $2 < 50' #如果第一个域等于100或者第二个域小于50，则打印该行。
+awk '$1 != 10' #如果第一个域不等于10就打印该行。
+awk '/test/{print $1 + 10}' #如果记录包含正则表达式test，则第一个域加10并打印出来。
+awk '{print ($1 > 5 ? "ok "$1: "error"$1)}' #如果第一个域大于5则打印问号后面的表达式值，否则打印冒号后面的表达式值。
+awk '/^root/,/^mysql/' #打印以正则表达式root开头的记录到以正则表达式mysql开头的记录范围内的所有记录
+
+awk的适用场合与格式：
+send_n=`ifconfig $eth_name | grep bytes | awk '{print $6}' | awk -F : '{print $2}'`
+recv_n=`ifconfig $eth_name | grep bytes | awk '{print $2}' | awk -F : '{print $2}'`
+
+数组：
+输出：echo ${A[1]},${A[2]},${A[3]}
+所有：echo ${A[*]} 或echo ${A[@]}
+
+[root@localhost ~]$shuzu[0]=a #赋值的另一种方式，从第0个索引开始赋值：shuzu=(a b c d e f)
+[root@localhost ~]$shuzu[1]=b #赋值的另一种方式，指定索引进行赋值： shuzu=([3]=1 [4]=2)
+[root@localhost ~]$shuzu[2]=c
+[root@localhost ~]$echo ${shuzu[*]} 或：$echo ${shuzu[@]}
+a b c
+
+index=3
+echo ${shuzu[$index]}
+
+打印数组长度：echo ${#shuzu[*]} #数组名前的#表示取其长度
+
+别名设置：alias ls="ls -ahl"
+取消别名：unalias ls
+暂时睡眠：sleep numbers
+
+root@paybay:/# date -s "15:37 2016-1-5" #设置时间，输出：echo `date -s '%Y-%m-%d %H:%M:%S'
+root@paybay:/# hwclock -w #写入硬件时钟
+root@paybay:/# hwclock -r #读取硬件时钟
+
+until --> 直到条件为真时才停止执行！（格式与for类似）
+until [ $X -eq 9 ]
+do
+let X++ ; echo $X
+done
+
+vim test.sh
+#!/bin/bash
+function myname() #其中function关键字可省略
+{
+echo "myname is linux";
+return 0;
+}
+
+myname #直接通过函数名调用，“相当于一条命令”（使其成为全局函数：export -f 函数名）
+
+echo $? #上次命令执行状态值
+
+---------------------------------------------- 多处理器环境或多核环境绑定进程到指定CPU
+多核CPU的NUMA技术（Non-Uniform Memory Access）：
+传统的多核运算是使用SMP(Symmetric Multi-Processor )模式，多个处理器共享一个集中的存储器和I/O总线于是就会出现一致存储器访问的问题，一致性通常意味着性能问题。
+NUMA模式下处理器被划分成多个node，每个node有自己的本地存储器空间。
+在Linux下对NUMA调优的命令是：numactl #apt-get install numactl
+
+root@paybay:~# grep -i numa /var/log/dmesg
+[ 0.000000] No NUMA configuration found #查询多核机器(Linux)是否为NUMA结构如果输出结果为：No NUMA configuration found则说明numa为disable
+[ 0.133840] pci_bus 0000:00: on NUMA node 0
+
+将进程与CPU绑定：
+root@paybay:~# cat /proc/cpuinfo #查看CPU核心数
+root@paybay:~# numactl --hardware #查看CPU核心数，各节点的核心数等信息
+available: 1 nodes (0)
+node 0 cpus: 0 1 2 3
+node 0 size: 3910 MB
+node 0 free: 2111 MB
+node distances:
+node 0
+0: 10
+root@paybay:~# numastat #查看numa状态
+node0
+numa_hit 27192029
+numa_miss 0 #若miss量很高时则说明CPU从非自己管辖的内存中对数据进行了读写（此时需绑定进程到CPU）
+numa_foreign 0
+interleave_hit 2251
+local_node 27192029
+other_node 0
+
+参数：
+–interleave=all #使用交叉分配模式启动程序，也就是说程序可随意跨节点用其他节点的内存，传说中这是效率最高的关闭NUMA特性的方法。
+–cpunodebind=node #把程序绑定在指定node节点，即使另一个物理节点是idle也不去使用。
+–localalloc #禁止分配其他节点下的内存到当前节点运行的程序。（严格控制只在节点内分配内存）
+
+指定命令运行在node0且内存分配在node0和1：
+numactl --cpubind=0 --membind=0,1 COMMAND #这个命令因内存跨越了两个node这非常不好。最好的方式是只让程序访问和自己运行一样的node：
+umactl --cpunodebind 1 --membind 1 --localalloc COMMAND
+umactl --cpunodebind 1 --localalloc java Hello #启动java锁定到节点0，在本地节点上分配所有内存：
+绑定程序到指定CPU：
+numactl –cpunodebind=0 -–localalloc /usr/local/mysql/bin/mysqld
+----------------------------------------------
+除了numa命令外，还有taskset命令，可将指定进程绑定到指定CPU中，（绑定至指定cpu理论上至少提升10%的性能，最高有可能提高50%以上）
+yum -y install util-linux #默认已安装
+
+root@paybay:~#taskset [options] -p [mask] pid #绑定PID到指定CPU
+root@paybay:~# taskset -p -c 1 2294 #将PID为2294的进程绑定到1号CPU（使用-c参数可直接使用CPU的核心数指定，而不使用进制转换）
+root@paybay:~# taskset -p -c 0,2 2294 #绑定到第0和第2号CPU中
+root@paybay:~# taskset -c -p 2294 #查看指定PID?
+pid 2294 s current affinity list: 0-3 #0-3表示使用所有4核进行处理
+pid 2294 s new affinity list: 1 #调整后改为仅适用0标记单核处理
+----------------------------------------------
+为设备增加noatime参数可优化文件系统性能：vim /etc/fstab
+
+root@paybay:~# export -p
+declare -x HOME="/root"
+........
+
+read -p “提示信息” -t 3 -n 3 -s 变量名 #提示且等待三秒钟并从输入取3个字符,以无回显方式存入变量
+
+if [ "$1" = "restart" ];
+for [ i = 0 , i < 10 , i++ ] #永久循环：[ i = 0 , 1 , i++ ]
+for 变量 in {a..z}
+do
+.........;
+done
+
+while [为真时执行]
+until [为真时停止]
+do
+.........;
+done
+
+声明数组：declare -A MYNAME
+声明整型：declare -i MYNAME
+改为整型：typeset -i MYNAME
+删除变量：unset MYNAME
+
+echo $RANDOM #随机数
+
+可将需开机自启的命令写入：
+~/.bashrc #用户级别
+etc/rc.local #系统级别
+
+后台运行：command & #放到后台暂停：ctrl+z
+后台查看：jobs -l
+调到前台：fg 1 #shell脚本中执行到指定地方时推出脚本，如if语句中：exit;
+
+-gt #大于
+-lt #小于
+-ge #大于等于
+-le #小于等于
+-eq #等于
+-ne #不等于: !=
+
+-d/f #是否存在且是目录/文件
+-e #文件是否存在
+-r/w/x #文件是否可读/可写/可执行
+-s #是否存在且非空!!
+-n #字符串长度非0（-z 字符串长度为0）
+-h #文件是否为链接
+
+[:digit:] #数字
+[:xdigit:] #16进制字符
+[:space:] #空白
+
+计算目录的摘要： md5deep -rl ~ > md5.file # 递归：-r 输出时使用相对路径：-l
+对生成的摘要进行对比： md5sum -c md5.file
+
+cat命令本身表示拼接的含义
+-n 显行号
+-s 将两行以上的空白行替换为一行空白行
+-E 在每行结尾显示“$”
+
+cat 1.txt 2.txt #交替显示多个文档（可用于比较）
+111111
+222222
+111111
+222222
+
+base64是一种编码方案，常用于将可读的ASCII字符串描述二进制数据（sha512sum比md5sum和sha1sum更安全）
+编为：base64 filename > file.base64
+解码：base64 -d file.base64
+拆分：split -d -b 10m -a 3 abc.tar.gz #数字方式命名，每份10兆（按行分隔使用：-l），排序后缀占3位
+合并：cat abc* >> abc #合并
+
+find . -type f -size {+|-}2k
+find . -type f -name "*.swp" -delete #找到并删除
+find . -type f -perm 644 -print #找到并打印
+find / -type f -name "*.mp3" -exec mv {} /root \; #将所有mp3文件移到root目录
+find / -type f -iname (iname--> 不区分大小写)
+find / -type \( -name A -o -name B \) ...... #附：find中使用!进行排除
+
+-type:
+-l 符号连接
+-d 目录
+-f 文件
+
+-atime 访问时间
+-mtime 内容被修改时间
+-ctime 状态改变的时间，如：权限，属主...
+-perm 权限参数
+-user 属主
+-group 属组
+-nouser 无属主
+---------------------------------------------------------
+tr -d omg #删除指定字符
+tr 'a-z' 'A-Z' #替换指定文本（tr '[:lower:]' '[:upper:]' ）
+tr '\t' ' ' #把制表符转换为空格，删除所有数字：tr -d '0-9'
+xargs -d c -n 2 #以c作为界定符，每行2个参数：
+aaxc aaxc
+aaxc aaxc
+
+xargs可将输出转换为其他命令的输入，用于其他命令不支持管道作为输出的场合：
+echo 123456 | xargs -n 2
+12
+34
+56
+
+echo "aaxcaaxcaaxcaaxc" | xargs -d c #以c作为界定符
+aaxc
+aaxc
+aaxc
+aaxc
+---------------------------------------------------------
+加密：gpg -c filename #交互式，提供口令后输出加密文件filename.gpg
+解密：gpg filename.gpg
+
+$! #保存着最近一个后台进程的PID
+ln -sv #创建软连接
+/dev/zero #返回任意大小的字符的设备
+
+type cmmand #查看是否shell内置命令
+file filename #查看文件类型
+sort -M file #按月份排序
+sort -nrk 1 #以数字方式逆序按第一列排序
+sort file1 file2 | uniq #找出以排序文件中不重复的行
+sort -t ':' -k 3 #以:为分隔符，按第3列排序
+cut -d ':' -f 5 #以:为分隔符，显示第5列
+cut -c 1-10 #提取第1~第10个字符
+watch -n 0.1 -d "command" #默认在全屏模式下2s刷新1次指定命令（指定1/秒刷新：-n 1，变化内容高亮显示：-d）
+
+uniq -u #只显示重复的行
+uniq -d #找出文件中重复的行
+uniq -c #统计重复的次数
+rename *.JPG *.png #改为.png
+rename a b *.jpg #将*.jpg中的a改为b
+root@paybay:~# mktemp #mktemp将生成一个临时文件并返回其文件名（若创建的是目录则返回目录名，-d参数用于创建临时目录） 常用于对临时数据的读写使用等...
+/tmp/tmp.27ExkKPGiA
+
+root@paybay:~# mktemp -d #创建临时目录：filename=`mktemp -d`，创建临时文件：filename=`mktemp`
+/tmp/tmp.dqueERjcn2
+
+权限设置：
+chmod *777 filename #*:4->s 2->s 1->t
+
+从光盘创建iso文件：
+dd if=/dev/cdrom of=/root/image.iso
+
+dd if=设备或文件 of=设备或文件 bs=1M/G count=数量
+
+ctrl+a|e 行首/行尾
+ctrl+u|k 删到行首/行尾
+ctrl+c|d 终止/输入结束
+ctrl+m 回车
+ctrl+z 后台暂停，使用jobs -l查看
+Pg/Up 翻屏
+Alt+c 改为大写
+Alt+u 全部大写
+Alt+l 全部小写
+Shift+alt+F1-F6 切换窗口
+
+设置工作环境&环境变量：Profile文件
+etc/profile： #对所有用户有效
+~/.profile： #用户的私人配置
+
+bash特性：
+1.命令历史 2.自动补全 3.变量/编程 4.别名 5.管道/重定向 6.命令通配 7.....
+
+类型：
+- 普通文件
+d 目录
+l 链接
+s 套接字
+b 块设备/二进制
+c 字符设备
+p 命名管道
+-------------------------------------------------------------------
+^ #锚定行首，匹配的任意内容必须在行首如：^root
+$ #锚定行尾，匹配的任意内容必须在行尾如：root$ #^$表示空白行
+^abc #以abc开头
+abc$ #以abc结尾
+abc. #匹配abc后的任一个字符
+[] #范围内的，[345]或[3-5]
+[^] #范围外的
+a? #匹配a一次或零次（有或没有）
+a+ #匹配a一次或多次
+a* #匹配a零次或多次
+.* #匹配任意长度的任意字符
+(string)#匹配的字串，如：ma(abc)?x #匹配max或maabcx
+{n} #匹配之前的项N次,如：[0-9]{3} #匹配任三位数：[0-9][0-9][0-9]
+{n,} #匹配之前的项至少N次
+{n,m} #匹配n到m次，如：wy\{x,y\}
+\(**\) #将**作为整体而不是两个字符，如匹配ab可出现1次或N次： '\(ab\)*'
+| #或匹配，如：abc(R|T) #匹配abcR或abcT
+\ #转义（可将正则表达式转义，表示其本身） #如：a\.txt
+\> #锚定词首，如：‘\<词尾部分’
+\< #锚定词尾，如：‘\>词尾部分’（精确匹配单词：'\<root\>'）
+-A #不仅显示关键字所在行，还显示从此行开始的后N行
+-B #不仅显示关键字所在行，还显示从此行开始的前N行
+-C #显示关键字所在行的上下各N行，如：'root' -C 3
+补充： #扩展正则中的^ $ \< \> 等....与基本正则基本相同
+
+[:space:] 空白字符
+[:alnum:] 数字和大小写字母
+[:punct:] 所有标点符号
+[:lower:] 所有小写字母
+[:upper:] 所有大写字母
+[:digit:] 数字（非字母开头并且数字结尾：[^[:alpha:]]*[[:digit:]]）
+[:alpha:] 所有大小写字母
+-------------------------------------------------------------------
+grep word filename --color=auto #高亮显示匹配字符
+grep "word" -r -n /root/ #在当前目录进行对字符的递归搜索
+
+grep -E #使用扩展正则
+-v #排除
+-f #指定模式所在文件，如：grep -f 模式所在文件 filename
+-c #统计
+-i #忽略大小写
+-e #查找多个模式时使用 ----> grep -e 模式1 -e 模式2 filename
+
+脚本：
+无权限直接运行： bash script.sh 或：. script.sh
+在当前shell运行： source script.sh
+赋予权限运行： chmod a+x script.sh ; ./script.sh
+与服务器时间同步： ntpdate [IPaddress]
+服务启动位置： service <=> /etc/init.d/
+打印文件奇数行： sed -n '1~2p' #从第1行开始每2行输出一次"~"：跨越
+
+运算：$((算术表达式))
+加法：$((2+3)) #或：expr 1 + 2
+减法：$((5-y)) #或：expr 4 - 1
+乘法：$((8*2)) #或：expr 1 \* 2
+除法：$((8/2)) #或：expr 1 / 2
+取余：$((8%2)) #或：expr 1 % 2
+自加：$((x++))
+自减：$((y--))
+
+sed：
+a/d/s/p 追加/删除/替换/打印（保存：w）
+-i #修改源文件
+-n #屏蔽未匹配
+-e #多条件时使用，如：sed -e '正则1' -e '正则2' passwd （grep与其相同: grep -e abc$ -e sdfdsf filename）
+-f #读取脚本
+-r #使用扩展正则
+
+使用sed脚本：
+vim st
+/^$/d -----> 执行：sed -f st passwd
+
+cut -f 2,5 #打印第二和第五列 （-f <--- field ，-d <--- done）
+cut -f 2 -d ":" #打印第二列，将冒号为列分隔符
+cut -c 1-5 #打印第1至第5个字符 （打印前两个字符：cut -c -2）
+
+sed替换时的g选项作用：
+因默认仅替换每行中第一次出现的模式，加入g选项后将每行中所有的模式都替换，而不仅仅是第一次匹配的内容，sed中使用变量时需用双引号：（常用单引号）：text=h ; sed "s/$text/world/g" filename
+
+sed -n '1,10p' #仅输出第1到第10行
+sed -n '1p;10p' #输出第1和第10行
+sed -n 'p;n' #输出奇数行
+sed -n 'n;p' #输出偶数行
+sed '/^$/d' #删除空白行
+
+操作：
+p 输出
+n 取下行
+c ？？
+d 删除
+a 追加
+
+sed中多个操作则分号分隔：
+方式1 sed '指令1;指令2'
+方式2 sed -e '指令1' -e '指令2'
+
+查找以X开头行： sed -n '/^root/p'
+查看指定行： sed -n '2p'
+查看第1行往后3行： sed -n '1+3p'
+查看最后一行： sed -n '$p'
+删除前两行： sed '1,2d'
+删除含"oot"的行： sed '/oot/d'
+从第1行删除3行： sed '1,+2d'
+显示以/开头的行： sed '/^\//p'
+指定行前追加字段： sed '2i "abc"'
+指定行后追加字段： sed '2a "abc"'
+在指定行后追加2行新字段：sed '2a "第一行" \n "第二行"'
+替换1-5行的x为y： sed '1,5s/x/y/g'
+替换并忽略大小写： sed 's/old/new/gi' #后缀g表示全文替换，默认仅本行替换
+将行首斜线换为#号： sed 's/^\//#/g'
+被模式1匹配的行到被模式2匹配的行中间所有行：/regexp1/,/regexp2/
+将其含有root的行另存到我的文件： sed '/root/w /etc/我的文件' /etc/passwd
+将我的文件中的内容添加到passwd： sed '1,2r /etc/我的文件' /etc/passwd
+
+vim中：
+vim -o file1 file2 文件上下分布
+vim -O file1 file2 文件左右分布
+
+s/旧/新/g 本行替换 （进入矩形视图选择模式：V） #正则写在//内
+%s/旧/新/g 全部替换 （当前屏幕上下移动：H M L） #正则写在//内
+1，5s/旧/新/g 替换1-5行
+1，5d 删除1-5行 （1,$d 删除所有）
+12,24y 拷贝12-24行内容 （复制当前行：yy， 3yy：复制3行）
+
+/work和?work 向下/向上查找
+set nu 显示行号（直接输入数字：到达指定行）
+set ic 搜索时忽略大小写。
+set ai 设置自动缩进（自动对齐）
+syntax on 语法高亮
+set ai 自动缩进
+r file 读取并在本行后插入
+nr file 读取并在第n行后插入
+split 创建分屏 (:vsplit创建垂直分屏)
+
+p 粘贴
+dd 删当前行
+cc 删当前行且进入编辑模式
+^/$ 至行首/尾
+d^ 从光标到行首删除
+d$ 从光标到行尾删除
+NG 到第N行
+gg/G 至档头/档尾
+n<Enter>向下移动n行，或：ngg
+
+wget
+--http-user=***** --http-password=***** URL wget -cbQ 1M t 0 p ~ -i ~/downloadlistr
+-user NAME -password PASS URL
+-c #断点续传connection
+-b #后台backend
+-Q #限速Q
+-p #下载路径，如：-P /home path
+-t #重试次数，不停重试：-t 0 time time time
+-i #从指定文件下载多个 in ....
+
+下载整个页面：wget -r -N -l 3 -k URL
+-l #指定页面层级（-l与-r一同使用）
+-r #递归（-l与-r一同使用）
+-N #使用文件的时间戳
+-k #将页面链接转换为本地地址
+
+tar -rvf filename.tar file #向tar包中增加文件
+tar -tf filename.tar #查看tar包文件
+参数：c x v f z j r(增加) t（查看） C（解压位置） P 使用绝对路径（保留根目录，"/开头"） p 保留原权限和属性（不依使用者而变）
+
+压缩：gzip filename lzma filename
+解压：gzip -d filename.gz unlzma filename
+查看：gzip -l filename.gz
+
+Nginx中的缓存：
+proxy_cache： 缓存后端服务器的内容，包括静态的和动态。减少与后端通信的次数
+fastcgi_cache： 缓存fastcgi生成的内容，很多情况是php生成的动态的内容。减少nginx与php的通信的次数，更减轻了php和数据库(mysql)的压力，这比用memcached之类的缓存要轻松得多
+
+root@paybay:~# df -haT #易读方式显示所有并显示文件系统格式，查看文件容量：du -sh filename，查看上次执行状态：echo $?
+Filesystem Type Size Used Avail Use% Mounted on
+/dev/sda1 ext4 28G 6.5G 20G 26% /
+proc proc 0 0 0 - /proc
+----------------------------------------------------------------------------------------- dump
+针对目录仅能完整备份，针对文件系统可差异备份，使用restore对dump文件还原
+-S 测试备份需多少空间
+-u 将操作记录到/etc/dumpdates
+-v 过程
+-j 加入bzip2支持
+-level 等级：0~9
+-f 指定档名
+-W 列出/etc/fstab具有dump配置的partition是否备份过
+
+测试： dump -S /dev/hdc1
+完整备份： dump -uvj -level 0 -f /root/boot.dump /boot
+差异备份： dump -uvj -level 1 -f /root/boot.dump.1 /boot
+
+查看内容： restore -t -f /root/boot.dump -h #inode与文件系统label等信息：-h
+内容比较： restore -C -f /root/boot.dump [-D 挂载点]
+互动模式： restore -i -f /root/boot.dump #
+常规操作： restore -r -f /root/boot.dump #在需被还原的文件系统内执行此命令
+-----------------------------------------------------------------------------------------
+对rsync服务器配置结束后，下一步就需要在客户端发出rsync命令来实现将服务器端的文件备份到客户端来
+
+ubuntu固定地址：vim /etc/network/interfaces
+auto eth0
+face eth0 inet static
+address 192.168.11.88
+netmask 255.255.255.0
+gateway 192.168.11.1
+dns-nameserver *.*.*.*
+
+配置jdk环境变量
+[root@tomcat2 java]# vim /etc/profile.d/java.sh #验证：java -version
+export JAVA_HOME=/usr/java/jdk1.7.0_40
+export PATH=$PATH:$JAVA_HOME/bin
+-----------------------------------------------------------------------------------------
+suid：运行时相应进程属主是其自身属主以其身份运行
+sgid：运行时相应进程属组是其自身属组以此属组运行（在此目录内创建的文件不再是用户基本组而是目录基本组）
+sbit：仅属主与root可删此文件，可防止同组成员删除
+
+特殊权限：
+chmod #777 filename
+chmod u+s,g+s,o+t filename #属主 u| 属组 g| 其他 o| 所有 a| 赋值"="， 取消"-"， 增加"+"
+s=4 s=2 t=1
+r=4 w=2 x=1
+
+chattr：{+|-} #查看：lsattr
+d 不能对其dump
+c 自动压缩
+S 与硬盘同步（Sync）
+s 删除不可恢复
+u 删除可被恢复
+i 不修改数据
+a 仅增加数据
+-----------------------------------------------------------------------------------------
+chattr +Ssa file.log
+chgrp -R root ./dir #递归修改属组
+chown -R root:root #递归修改属主:属组
+su - root #切换身份（包括家目录和环境变量）
+umask -S #查看默认权限（文件：-rw-rw-rw 目录：-rwxrwxrwx） ----> u=rwx,g=rx,o=rx
+
+账户：
+useradd -u 543 -g 786 -s /bin/bash -d /home/N -G group1,group2 Newuser ; echo 123 | passwd --stdin user
+groupadd -g 786 Workgroup
+usermod -e 20151230 Newuser #失效日期（精确到天）
+passwd -l/d Newuser #锁定账户（解锁：-u），删除用户密码：passwd -d username
+userdel -r Username #彻底删除帐户信息
+id Newuser #查看Id信息，仅看UID：id -u
+
+usermod：
+-s 指定shell
+-d 修改家目录！
+-u 指定UID
+-g 指定组
+-G 追加一个组
+-e 失效日期（精确到天）
+-L 锁定
+-U 解锁
+
+chmod a-x filename
+chmod u=rwx,g=rw,o=x filename
+chmod 777 filename <==> chmod a=rwx filename
+----------------------------------------------------------------------------------------- Mysql安装后对其进行初始化：mysql_secure_installation
+卸载：umount /mnt
+查看：head， more， less， tail -f （实时显示后10行）
+
+周期执行：crontab -e #进行编辑： 分时日月周 命令
+查看任务：crontab -l
+删除任务：crontab -r
+
+#!/bin/bash
+#批量添加系统用户(产生随机数：echo $RANDOM)
+for name in tom joy john mark james
+do
+useradd $name ；echo "redhat" | passwd --stdin $name
+done
+
+for ip in 192.168.0.{1..255};
+do
+ping $ip -c 2 &> /dev/null;
+if [ $? -eq 0 ];then echo $ip is up;
+done
+
+获得IP： dhclient eth0
+DNS设置： echo nameserver 192.168.1.1 >> /etc/resolv.conf 【DNS编辑/etc/resolv.conf或在网卡中设置】
+
+路由查看：
+route -n
+netstat -r
+ip route show
+
+root@paybay:~# curl -I www.baidu.com #查看http头信息 ----> curl -I 网址
+HTTP/1.1 200 OK
+Date: Tue, 05 Jan 2016 02:11:36 GMT
+Content-Type: text/html; charset=utf-8
+Connection: Keep-Alive
+Vary: Accept-Encoding
+Set-Cookie: BAIDUID=22B1E3957AF8239C5840C42748A7B1AF:FG=1; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: BIDUPSID=22B1E3957AF8239C5840C42748A7B1AF; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: PSTM=1451959896; expires=Thu, 31-Dec-37 23:55:55 GMT; max-age=2147483647; path=/; domain=.baidu.com
+Set-Cookie: BDSVRTM=0; path=/
+Set-Cookie: BD_HOME=0; path=/
+Set-Cookie: H_PS_PSSID=17518_18285_1430_18724_18534_12825_18789_18730_18778_18545_18780_18560_17000_17072_15545_11793_17996; path=/; domain=.baidu.com
+P3P: CP=" OTI DSP COR IVA OUR IND COM "
+Cache-Control: private
+Cxy_all: baidu+bad9b32961ad350bbd9490b2e47665e1
+Expires: Tue, 05 Jan 2016 02:10:55 GMT
+X-Powered-By: HPHP
+Server: BWS/1.1
+X-UA-Compatible: IE=Edge,chrome=1
+BDPAGETYPE: 1
+BDQID: 0xf88bcf29000ceee9
+BDUSERID: 0
+-----------------------------------------------------------------------------------------
+rsync中：
+将源目录复制到目的端： rsync -av 源 root@192.168.1.1:/home/ #归档：-a，显示细节：-v，传输时压缩：-z （周期执行则写入crontab并使用私钥进行免密连接）
+
+ftp 192.168.1.100 21 -p 22
+参数：
+ls 文件列表
+rm 删除
+cd 路径改变
+lcd 本地路径改变
+get/put 下载上传（mget/mput 通配多文件）
+ascii 传输方式（默认）
+binary 传输方式
+bye 退出!
+！*** 在本地主机执行命令
+mk/rmdir创/删文件夹
+chmod 设权限
+rename 改名
+---------------------------------------------------------------------------------------------------------------------- nc
+启动任意TCP/UDP端口进行通信：yum install -y nc
+
+nc:
+-l 监听特定端口 #大写-L可以不停地监听某一个端口，直到ctrl+c为止
+-u 使用UDP（默认TCP）
+-vv 详细信息
+
+监听指定IP&端口：nc -l 192.168.159.128 12151
+发往对端： nc 192.168.159.128 12151
+<---- 输入（回车发送）
+
+B向A发送文件：
+A上运行： nc -l 192.168.159.128 1234 > text.txt #注：监听要先打开
+B上运行： nc 192.168.10.111 1234 < text.txt
+----------------------------------------------------------------------------------------------------------------------
+
+作蜜罐用，例子： #监听指定端口：nc -L -p "端口号" >> logfile.txt
+格式：nc -L -p 80 > c:\log.txt #使用'-L'可以不停地监听某一个端口，直到ctrl+c为止，同时把结果输出到'c:\log.txt'中，如果把>改为>>即可以追加日志
+作蜜罐用，例子：
+格式：nc -L -p 80 < c:\honeypot.txt
+
+想要连接到某处: nc [-options] [hostname] [ports] ...
+绑定端口等待连接: nc [-options] [hostname] [port] -l -p port
+参数:
+-e prog 程序重定向，一旦连接，就执行
+-i secs 延时的间隔
+-l 监听模式，用于入站连接
+-n 指定数字的IP地址，不能用hostname
+-o file 记录16进制的传输
+-p port 本地端口号
+-r 任意指定本地及远程端口
+-s addr 本地源地址
+-u UDP模式
+-v 详细输出——用两个-v可得到更详细的内容
+-w secs timeout的时间
+-z 将输入输出关掉——用于扫描时
+----------------------------------------------------------------------------------------------------------------------
+信号是一种进程间通信机制
+killall tomcat #删除所有程序的进程 查找PID： pidof 程序名 / pgrep 程序名
+killall -u doubi #删除所有用户的进程
+kill -l
+
+root@paybay:~# wall #对所有终端用户发送信息
+this is a test~!
+
+cat /proc/meminfo #打印内存详细信息
+cat /proc/cpuinfo #打印CPU详细信息
+
+grep "关键字" 文件1 文件2 #在指定的多个文件中查找关键字
+grep "关键字" * -R #在当前目录下递归查找
+grep "正则表达式" * #在当前目录按正则查找
+grep -l "关键字" * #只显示查找到的文件，不显示关键字
+grep -n "关键字" * #显示出关键字在文件的行号
+grep -c "关键字" * #只打印匹配的行数，不显示匹配内容。
+grep -v "关键字" #排除关键字
+grep -i "关键字" #忽略大小写
+
+sed -e '10d' filename #删除档内第 10 行资料 , 则指令为 10d。 ------> -e参数允许多重编辑【sed -e '...' -e '...' -e '...'】
+sed -e '/man/d filename ' #删除含有 "man" 字符串的资料行时 , 则指令为 /man/d。
+sed -e '1,/man/d' #删除档内第 1 行到含 "man" 字符串的资料行
+sed -e '/man1/,/man2/d' #删除档内第含"man1"行到含man2的资料行
+
+sed -e '/machine/s/phi/beta/g' filename #在filename中搜索包含machine的行，然后用beta替换phi。
+sed -e '/man/w filename2' filename1 #搜索man所在行，写到 filename2中
+sed -e '/man/r filename2' filename1 #将filename2中的内容读到man所在行
+
+tail -n 50 -f logfile #实时显示后50行
+------------------------------------------------------------------
+^[:space:]*$ 只含有空白的行
+^$ 空行
+^.*$ 整行
+{#string} $string的长度
+${string:position} 在$string中, 从位置$position开始提取子串
+${string:position:length} 在$string中, 从位置$position开始提取长度为$length的子串
+----------------------------------------------------------------------------------------------------------------------
+ip命令用于取代ifconfig/route（软件包：iproute2） -----> ifconfig em1:1 192.168.1.1 netmask 255.255.255.0 up/down ip -s addr show ip link show ip route show
+参数：
+-s 详细信息（多次则输出更详细内容） eg: ip -ss ..........
+-r 域名解析（获得主机名）
+-o 单行输出：用wc/grep等处理时很方便（1行/记录）
+
+格式：
+ip [option] [action] [command]
+
+路由：
+ip {link|address|route|neighbour} show #查看链路属性，路由信息，arp表（-s显示详细信息）
+ip route get 10.42.0.47 #查看此IP路由包来源（get|add|del）
+ip route {add|del} default via 192.168.1.1 #默认路由
+ip route {add|del} 10.0.0/24 via 193.233.1.1 #网段路由
+
+三层：
+ip address {add|del} 192.168.0.1/24 dev wlan0 #设置IP
+ip address {add|del} 192.168.1.2/24 dev wlan0 label eth0:0 #从地址
+ip address {show|flush} wlan0 #查看设备IP
+ip addr add 192.168.4.2/24 brd + dev eth1 label eth1:1 #设置设备IP和广播地址并添加到设备eth1，别名是eth1:1
+
+二层：
+ip link show dev eth0 #查看指定链路eth0信息（-s显示详细统计）
+ip link set dev 设备名 {up|down} #链路启用/关闭（ifconfig eth0 up/down）
+ip link set dev 设备名 arp {up|down} #开/关arp
+ip link set dev 设备名 mtu 1500 #最大传输单元
+ip link set dev 设备名 promisc {on|off} #混杂模式
+ip link set dev 设备名 multicast {on|off} #组播
+ip link set dev 设备名 address 0:0:0:0:0:0 #MAC地址
+ip link set dev 设备名 txqueuelen 100 #传输队列的长度
+ip link set dev 设备名 mtu 1500 #MTU值
+ip link set dev 设备名 address 00:01:4f:00:15:f1 #修改MAC地址
+
+查二层：ip [-s] link show {dev interface} ---> MAC，MUT，RX，TX....
+查三层：ip [-s] route show
+
+设置别名并添加路由：
+ifconfig eth0:1 192.168.4.2 netmask 255.255.255.0 up
+route add –host 192.168.4.2 dev eth0:1
+
+root@paybay:~# arp #MAC地址表（windows中：arp -a）
+
+删除指定ARP条目：
+ip neigh del 10.0.0.3 dev eth0 #清除指定
+ip neighbour flush #清除所有
+----------------------------------------------------------------------------------------------------------------------
+从Linux-2.2开始内核把路由归纳到许多路由表中，这些表都进行了编号，编号数字范围是1~255。另外为了方便还可在/etc/iproute2/rt_tables中为路由表命名。默认所有的路由都会被插入到表main(编号254)
+在进行路由查询时内核只使用路由表main。
+
+设置路由： ip route add 10.0.0/24 via 193.233.7.65
+修改路由： ip route chg 10.0.0/24 dev null
+设置NAT路由： ip route add nat 192.203.80.142 via 193.233.7.83 #将192.203.80.142该为193.233.7.83再进行转发
+包级别负载平衡：ip route replace default equalize nexthop via 211.139.218.145 dev eth0 weight 1 nexthop via 211.139.218.145 dev eth1 weight 1
+清除所有路由： ip route flush cache
+搜索路由路径： ip route get 193.233.7.82
+列出现有的隧道： ip -s tunl ls Cisco
+建立点对点隧道，最大TTL是32：
+ip tunnel add Cisco mode sit remote 192.31.7.104 local 192.203.80.1 ttl 32
+
+查看Apache静态编译的模块：
+[root@localhost apache]# httpd -l
+Compiled in modules:
+core.c
+prefork.c
+http_core.c
+mod_so.c
+----------------------------------------------------------------------------------------- 默认直接启动tcpdump而不带参数将监视第一个网络界面上所有流经数据
+-A 内容以ASCII显示
+-X 内容以16进制（hex）与ASCII格式显示
+-nn 以IP及端口号显示而非主机或服务名（IP&Port不解析）
+-t 不显示时间戳
+-q 列出较简短的包信息
+-i/o 网卡的in/out方向
+-c 指定要监听的包量
+-w/r 保存/读取文件（-w *.cap ---> wireshark）
+udp/tcp 协议...（常见如：fddi,ip,arp,rarp,tcp,udp）
+src/dst 源/目的（需指定端口或是主机），如：src host 192.168.1.1 and src net 192.168.2.0/24
+-s 0 默认抓取长度为68字节，此参数可抓到完整数据包
+
+类型: host，net，port, 例：host 210.27.48.2，net 202.0.0.0 ，port 23，缺省类型是host
+方向： src , dst（缺省是src or dst）
+协议： fddi, ip, arp, rarp, tcp, udp等（默认监听所有协议）
+逻辑： not ! and && or ||
+
+实例：
+tcpdump host 210.27.48.1 and \ (210.27.48.2 or 210.27.48.3 \)
+tcpdump ip host 210.27.48.1 and ! 210.27.48.2
+tcpdump tcp port 23 host 210.27.48.1
+tcpdump -i eth0 host hostname and dst port 80
+tcpdump -i eth0 host ! 211.161.223.70 and ! 211.161.223.71 and dst port 80
+tcpdump -i eth0 ' \( tcp port ! 22 \) and src host 192.168.1.1 and dst net 192.168.2.0/24 '
+tcpdump udp port 123 -nn -X
+tcpdump tcp -i eth1 -t -s 0 -c 100 and dst port ! 22 and src net 192.168.1.0/24 -w ./target.cap "cap格式由wireshark处理"
+tcpdump -i eth0 src host 192.168.10.1 and udp port !80
+tcpdump 'icmp[icmptype] != icmp-echo and icmp[icmptype] != icmp-echoreply'
+tcpdump 'tcp[tcpflags] & (tcp-syn|tcp-fin) != 0 and not src and dst net localnet'
+
+抓取HTTP包：
+tcpdump -XvvennSs 0 -i eth0 tcp[20:2]=0x4745 or tcp[20:2]=0x4854 #说明：0x4745 为"GET"前两个字母"GE",0x4854 为"HTTP"前两个字母"HT"
+
+数字签名：
+1.保证传输完整性（摘要）
+2.发送者身份认证（私钥对摘要加密）
+3.防止交易抵赖（通过公钥解密确认是其本人）
+-----------------------------------------------------------------------------------------
+Quota流程：
+1.fstab中：defaults,usrquota,grpquota #开启Fstab中的quota支持
+2.quotacheck -avug #扫描所有支持用户和组限制的文件系统并生成quota数据库（参数固定）
+3.quotaon -avug #开启quota支持（固定参数，或单独指定：quotaon -vug /dev/sda）
+4.edquota -uv User #编辑，或对硬盘设备进行编辑
+5.repquota -avus #报表（详细信息：-s）
+6.quotaoff -a #关闭支持，参数（所有：a，用户：u，组：g）
+----------------------------------------------------------------------------------------- 日志轮询
+vim /etc/logrotate.conf 或：/etc/logrotate.d
+#全局：
+weekly #每周一次
+retate 10 #保留几个轮替的日志
+create #因日志文件被重命名，因此新建文件进行存储
+compress #启用压缩
+
+/var/log/wtmp { #针对指定目录
+monthly #每月一次
+minsize 1M #超过1M容量则进行轮替（略过时间参数）
+create 0664 root root #指定新建文件的权限与所属账号、用户组
+rotate 1 #仅保留一个，即：仅有wtmp.1
+}
+----------------------------------------------------------------------------------------- log服务器
+客户端：
+chattr +a /var/log/messages
+vim /etc/syslog.conf ---> *.* @LogServerIP
+
+服务端：
+vim /etc/sysconfig/syslog
+SYSLOGD_OPTIONS="-m 0" ---> SYSLOGD_OPTIONS="-m 0 -r"
+service syslog restart ---> 514端口
+-----------------------------------------------------------------------------------------
+tcpwrappers服务"tcpd"限制的是服务而非端口，其自动判断服务所使用端口，顺序：---> allow ---> deny
+
+实例：
+vim /etc/hosts.allow
+ALL: 127.0.0.1
+httpd: 172.16.0.0/24 172.16.1.0/24
+telnet: 192.168.1.
+samba: .s.com
+
+crontab：
+默认有cron.deny而cron.allow需创建（将不能使用的账号写入cron.deny中，1个/行）
+
+格式：分|时|日|月|周|命令绝对路径
+30 21 * * * /usr/local/apache/bin/apachectl restart #每晚21:30重启apache
+* */1 * * * /usr/local/apache/bin/apachectl restart #每1小时重启apache
+* 23-7/1 * * * /usr/local/apache/bin/apachectl restart #晚11点到早7点每1小时重启apache
+
+crontab：
+-e 编辑
+-u 特定用户
+-l 清单
+-r 清空
+
+visudo设置sudo使用权： #编辑使用：visudo
+Host_Alias 主机： Host_Alias HOST =192.168.1.1，192.168.2.1
+Cmnd_Alias 命令： Cmnd_Alias COMMAND =/sbin/service, /bin/rm
+User_Alias 用户： User_Alias USER =U1，U2
+Runas_Alias 身份： Runas_Alias RUNAS =root,samba,oracle
+
+root ALL=(ALL) ALL #允许root用户从任何地点以任何身份执行所有
+%wheel ALL=(ALL) NOPASSWD:ALL #允许指定组从任何地点执行所有权限且不需密码
+-----------------------------------------------------------------------------------------
+sync #内存/硬盘同步
+head -n 1 /etc/issue #查看操作系统版本
+host -a www.a.cn #查询该域名相关参数
+crl -I www.a.cn #查询网页http头信息
+nisdomainname #查机器所属域
+nohup command & #放到后台执行 ---> 其PPID是init，退出终端不中断，at命令相同，nohup不支持shell内置命令
+ls+ pci|usb|cpu|mod #查看PCI/usb/cpu/模块的信息，其中：lsmod ---> 列出加载的内核模块
+mpstat #查看CPU状态：--top-cpu --top-io --top-mem --top-...
+vmstat -d #显示磁盘读写情况（不带参数默认显示内存信息）
+vmstat -s 3 #内存统计信息：3秒/次
+iostat -m #以MB为单位显示硬盘读取
+
+输出年/月/日/时:分:秒： date "+%y/%m/%d/ %H:%M:%S"
+设置时间为上午9点16分： date -s '09:16:00'
+设置年月日时分秒： date -s '09:16:00 2015-08-01'
+账户登陆情况/查看开机时间： last/uptime
+查询在线用户： who/w
+获取服务器的一些信息： dmesg
+
+write 用户名 #给用户发信息，给所有用户发信息：well
+ntsysv #与server功能相同，红帽独有，设置系统各种服务
+ulimit -a #显示所有限制信息（根据其种类限制提示可设置而不需记参数）由于控制shell可使用的资源
+ulimit -f 102400 #仅能建立100M的文件：用于限制每个用户的内核资源（注销后再登录失效）
+^AAA^BBB #将上一条命令中的foo替换为bar并执行
+view filename #只读模式打开文件
+~/.bashrc #用户登录后自动执行的shell脚本文件
+ulimit -n 65535 #文件描述符限制修改
+
+bc中：
+obase=2 #进制
+scale=3 #精度，离开：quit
+
+列出自启：chkconfig --list
+添加自启：chkconfig --add mysqld on --level 235
+-----------------------------------------------------------------------------------------
+因RPM常安装/移除/升级等，建议更新其数据库：rpm --rebuilddb。RPM对软件信息查询的内容在/etc/lib/rpm中
+
+rpm：
+-q 包名.rpm #查询某包是否安装
+-ql 包名.rpm #列出该软件所有文件/目录完整信息（追踪软件的数据）
+-qf 文件 #查询文件归属哪个软件
+-qc 包名.rpm #查询软件的配置档位置
+-qi 包名.rpm #查询软件的相关信息如版本，网址等...
+-ivh 包名.rpm / URL #安装多个包（ivh:安装并查看和显示进度），支持URL （ --test参数仅测试不安装）
+-Uvh 包名.rpm #更新（不存在则安装）
+-Fvh 包名.rpm #更新（不存在不安装）【先检查】
+-qa #查询已安装软件
+-e #卸载
+--prefix= #指定安装路径
+-----------------------------------
+[root@wy ~]#rpm -V samba #查询指纹信息 大V查看！
+..5....T c /etc/dhcpd.conf
+c:配置文件类型
+
+S:容量大小改变 M:类型或权限改变 【basename/dirname 取地址的文件、路径名】
+5:MD5（内容已不同） D:装置主/次代码已改变
+U:所属人已改变 L:Link（路径改变）
+G:所属组已改变 T:创建时间改变
+-----------------------------------
+system-config-securitylevel 安全策略图形界面（selinux和iptables系统自带规则的设置）
+
+yum repolist all #列出目前yum server容器列表
+yum list #查看源上的包
+yum clean all #删除所有本地的容器缓存
+yum makecache #将源的包信息存至本地cache以提高搜索/安装速度
+yum list {recent|all} #列出最近安装的/所有的包
+yum install/remove 包名 #安装/删除包，安装可用包：yum -y install available
+yum localinstall 包名 #安装本地包
+yum info 包名 #显示指定安装包信息
+yum groupinstall 包组 #安装程序组
+yum deplist 包名 #查看包依赖关系
+yum check-update 包名 #查看可升级的包
+yum update 包名 #升级包
+
+保存Yum下载的安装包：
+vim /etc/yum.conf ---> keepcache=1
+--------------------------------------------------------------------------------------
+使用createrepo工具能够简洁快速的将我们所指定的存放大量RPM包的目录里所有RPM包信息都读出来，分析他的依赖关系并生成元数据。
+所以createrepo可以理解为是制作yum元数据的工具。
+本地yum源：
+mount /dev/cdrom /media/cdrom
+cd /etc/yum.repos.d ; rm –f ./*
+
+[root@helomeyum.repos.d]# vim local.repo
+[local_server]
+name=描述
+baseurl=file:///media/dvd
+enabled=0
+gpgcheck=0
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6 #gpgcheck=0时无需配置
+--------------------------------------------------------------------------------------
+Mysql InnoDB特性：
+1.事务支持：支持4个事务隔离级别，支持多版本读
+2.行级锁定：通过索引实现，全表扫描仍然会是表锁，注意间隙锁的影响
+3.读写阻塞与事务隔离级别相关。
+4.具有非常高效的缓存特性：能缓存索引也能缓存数据
+5.整个表和主键以Cluster方式存储，组成一颗平衡树。所有Secondary Index都会保存主键信息
+6.行级锁定对高并发有很好的适应能力，但需要确保查询是通过索引完成
+
+InnoDB适用场景：
+1.需要事务支持（具有较好的事务特性）
+2.数据更新较为频繁的场景。数据一致性要求较高
+3.硬件设备内存较大时可利用InnoDB较好的缓存能力提高内存利用率来尽可能减少磁盘IO（修改/etc/my.cnf）
+4.如果应用中需要执行大量的INSERT或UPDATE操作则应该使用InnoDB，可以提高多用户并发操作的性能。
+--------------------------------------------------------------------------------------
+Mysql基于PHP页面管理： yum install phpMyAdmin #解压至WEB服务器网页根目录后直接访问
+查看某存储引擎使用状态： show engine InnoDB status\G;
+查看mysql版本： show variables like 'version';
+查看mysql日志 mysqlbinlog mysql-bin.000008
+查看表结构： show create table 表名;
+表中新增列： alter table 表名 add column 列名 varchar (20);
+删除库用户： delete from mysql.user where Password=****;
+从库中导出表： mysqldump -c -u username -ppassword Databasename Tablename > databasename.tablename.sql
+显示当前打开的表： show open tables; #可查看哪些表被使用
+显示当前执行的命令： show processlist
+显示Mysql状态&配置信息： show status;
+显示Mysql的配置信息： show variables
+显示引擎状态： show engine innodb status;\G;
+备份所有数据： mysqldump -uroot -p -A > all.sql
+备份数据库的脚本： mysqldump -u$UserName -p$PassWord --defualt-character-set=utf8 $Backup_DBName > /home/backup/db-$Backup_DB_Name1-$(date +"%Y%m%d").sql
+查看数据库连接数： netstat -atupnl | grep 3306| grep mysql | wc -l
+
+shell脚本中调用sql命令：
+#!/bin/bash
+mysql -uroot -p123456 <<EOF
+sql命令在此....
+exit;
+EOF
+
+以root登录后切换到mysql数据库创建用户并刷新权限：
+mysql -u root -p
+mysql> use mysql;
+mysql> INSERT INTO user (Host,User,Password) VALUES('%','username',PASSWORD('password'));
+mysql> flush privileges;
+
+./configure与cmake：
+即执行当前目录下名叫configure的脚本，由它生成Makefile，有了Makefile后一般来说就可通过make进行编译后再使用make install安装
+cmake就是一个与make同级别的编译工具，只不过它依靠的不是Makefile作为编译规则，而是根据CMakeLists.txt来编译的
+
+基于LAMP的论坛程序：discuz："腾讯"，phpwind"阿里巴巴"，phpbb："国外"
+基于LAMP的建站程序：drupal，joomla
+基于LAMP的个人博客：wordpress
+基于LAMP的数据管理：phpmyadmin
+---------------------------------------------------------------------------------------------
+Mysql的二进制日志：
+在启动服务后开始记录，并在文件达到max_binlog_size或接收到flush logs命令后重新创建新的日志文件进行记录。
+基于二进制日志以上特性我们使用二进制日志进行增量备份是非常方便和有效的：
+只需定时执行flush logs方法重新创建新的日志，生成二进制文件序列并及时把这些日志保存到安全的地方就完成了一个时间段的增量备份！
+创建新的二进制日志可通过"mysqladmin flush logs"或"flush logs"实现（最方便有效的方法是将它做成批处理文件后让操作系统定期执行）
+
+mysql> show processlist;
++------+--------+----------------------+----------+---------+------+-------+------------------+
+| Id | User | Host | db | Command | Time | State | Info |
++------+--------+----------------------+----------+---------+------+-------+------------------+
+| 6131 | remote | 192.168.10.225:47654 | biserver | Sleep | 2 | | NULL |
+| 6134 | remote | 192.168.10.225:48114 | biserver | Sleep | 27 | | NULL |
+| 6135 | remote | 192.168.10.225:48117 | biserver | Sleep | 2 | | NULL |
+| 6140 | remote | 192.168.10.225:48567 | biserver | Sleep | 2 | | NULL |
+| 6141 | remote | 192.168.10.225:48570 | biserver | Sleep | 27 | | NULL |
+| 6142 | remote | 192.168.10.225:48571 | biserver | Sleep | 2 | | NULL |
+| 6147 | remote | 192.168.10.225:48576 | biserver | Sleep | 27 | | NULL |
+| 6148 | root | localhost | mysql | Query | 0 | NULL | show processlist |
+| 6149 | remote | 192.168.10.225:49031 | biserver | Sleep | 2 | | NULL |
+| 6150 | remote | 192.168.10.225:49032 | biserver | Sleep | 2 | | NULL |
+| 6151 | remote | 192.168.10.225:49033 | biserver | Sleep | 27 | | NULL |
+| 6152 | remote | 192.168.10.225:49034 | biserver | Sleep | 27 | | NULL |
+| 6153 | remote | 192.168.10.225:49035 | biserver | Sleep | 2 | | NULL |
++------+--------+----------------------+----------+---------+------+-------+------------------+
+
+root@paybay:~# mysql -uroot -ppaybay123 -e "show global status like 'Thread%';"
++-------------------+-------+
+| Variable_name | Value |
++-------------------+-------+
+| Threads_cached | 0 |
+| Threads_connected | 86 | #数据库连接数
+| Threads_created | 31261 |
+| Threads_running | 1 |
++-------------------+-------+
+--------------------------------------------------------------------------------------------- 编译mysql5.6
+php动态扩展：若希望一个扩展库自动加载：---> extension=msql.so #这只应是模块的名字，不需要目录信息放在里面。
+PHP配置：
+vim /etc/php.ini
+max_execution_time = 300
+max_input_time = 300 #输入超时
+date.timezone = Asia/Shanghai #时区设置
+post_max_size = 32M #上传限制
+memory_limit = 128M #内存限制
+mbstring.func_overload = 2
+upload_max_filesize = 64 #上传文件容量限制
+Mpost_max_size = 64M
+------------------------------------------------------------------- 查看套接字状态： #对网络优化有参考
+root@paybay:~# netstat -atupnl | grep TIME_WAIT | wc -l #查看超时等待状态
+67
+
+root@paybay:~# cat /proc/net/sockstat #在/proc文件系统中的net中查看套接字状态
+sockets: used 307 #使用量
+TCP: inuse 40 orphan 0 tw 67 alloc 119 mem 1
+UDP: inuse 0 mem 0
+UDPLITE: inuse 0
+RAW: inuse 0
+FRAG: inuse 0 memory 0
+------------------------------------------------------------------- 二进制日志还原
+mysqlbinlog：
+用于处理二进制日志文件的工具，是从二进制日志读取语句的工具，可用来帮助从崩溃中恢复。
+
+启用binlog
+vi my.cnf
+log-bin=/var/lib/mysql/mysql-bin.log
+
+首先备份二进制日志：
+cp -rf /var/lib/mysql/mysql-bin* /data/mysql_newbak/ #第一次需mysqldump完整备份，以后每次备份前都需先：flush logs在对指定的二进制日志文件进行备份
+
+根据时间还原：mysqlbinlog --start-date="2010-09-29 18:00:00" --stop-date="2010-09-29 23:00:00" /var/lib/mysql/mysql-bin.000002 | mysql -u root -p
+根据位置还原：mysqlbinlog --start-position=370 --stop-position=440 /var/lib/mysql/mysql-bin.000002 | mysql -u root -p
+------------------------------------------------------------------- log
+vim my.cnf
+[mysqld]
+log #设置查询日志，默认存放在数据目录，名字：mysqld.log或localhost.log，或在启动时用--log指定位置，查询日志仅在性能排查时使用，其增加IO负担
+log-slow-queries #慢查询日志，默认存放在数据目录，名字：mysqld-slow.log
+long_query_time=10 #慢查询时间
+default-storage-engine=Innodb #默认存储引擎
+
+查看二进制日志："其仅记录引起改变的操作并附加序号和时间，可提供主从同步和还原功能"
+-rw-rw---- 1 mysql mysql 126 Feb 26 15:57 mysqld-bin.000001 #默认存储在数据目录
+-rw-rw---- 1 mysql mysql 107 Feb 26 15:57 mysqld-bin.000002
+-rw-rw---- 1 mysql mysql 40 Feb 26 15:57 mysqld-bin.index #保存binlog的索引信息
+
+查看引起改变的命令和时间点等信息：mysqlbinlog mysqld-bin.000002
+------------------------------------------------------------------- mysqldump
+--all-databases , -A #导出全部数据库。mysqldump -uroot -p --all-databases
+--all-tablespaces , -Y #导出全部表空间。mysqldump -uroot -p --all-databases --all-tablespaces
+--no-tablespaces , -y #不导出任何表空间信息。mysqldump -uroot -p --all-databases --no-tablespaces
+--compress, -C #在C/S间启用压缩传递。 mysqldump -uroot -p --all-databases --compress
+--databases, -B #导出几个数据库。 mysqldump -uroot -p --databases test mysql
+--port, -P #连接数据库端口
+--password, -p #连接数据库密码
+--no-data, -d #只导出表结构。 mysqldump -uroot -p --host=localhost --all-databases --no-data
+-------------------------------------------------------------------
+e2fsck -f /dev/mapper/VolGroup-lv_home #分区检测
+resize2fs -p /dev/mapper/VolGroup-lv_home 100G #将分区设为100G
+resize2fs -p /dev/mapper/VolGroup-lv_root #重设分区大小
+lvreduce -L 100G /dev/mapper/VolGroup-lv_home #释放
+lvextend -L +311.47G /dev/mapper/VolGroup-lv_root #扩展
+-----------------------------------------------------------------------------------------
+网络安全四要素：
+1.机密性： 对称/非对称加密（非对称可防止"中间人"）
+2.完整性： 摘要算法，如哈希函数的MD5（防止数据篡改）
+3.身份验证： 数字签名/数字证书：与谁沟通以及是否有权沟通，身份验证是安全四要素前提条件！
+4.不可抵赖： 数字签名：是否本人发出和收到信息
+
+基于密匙的验证：
+客户把其把公匙放在服务器，当C-->S请求时S在家目录寻找公钥并用其加密质询信息给C，C收到加密质询后用私钥解密再发给S #自己的公钥在服务器
+
+对称加密： 主要算法：DES/3DES/AES....
+非对称加密： 主要算法：D-H/RSA/DSA/ECC...
+用2个密钥分别加/解密（公钥加密/私钥解密），若用公钥加密则仅对应私钥才可解密反之亦然，公钥在网络传输而私钥保存本地
+
+非对称加密过程：
+1.A生成1对密钥（公/私钥）公钥公开 ---> 双方使用对方公钥加密，自己的私钥解密
+2.得到公钥的B用其对信息加密后发出
+3.A用本地私钥解密（非对称加密加/解密时间长、速度慢，适合少量数据加密，非对称加密的前提是每个用户至少有1个公私钥对）
+
+非对称加密特殊使用环境：
+用于数字签名和认证时使用自己的私钥加密后发出，接收方使用其公钥解密后得到密文
+-----------------------------------
+典型非对称加密算法：
+1.DH： 密钥交换（非网络交换）
+2.RSA： 加密，签名，密钥交换
+3.DSA： 数字签名
+-----------------------------------
+加密：openssl enc 算法 -e -in 需加密文件 -out 密文存放处 #-e/d：加/解密，默认是加密，算法如"-des3"（需输入密码）
+解密：openssl enc 算法 -d -in 被加密文件 -out 明文存放处
+
+目录自身也是文件。其读写执行权限与普通文件不同：
+r：可读取其内文件
+w：单独使用无作用（与x权限连用可在目录添加与删除文件）
+x：可进入目录，调用目录内资料
+
+HASH函数的摘要算法：
+是将任意长度数据计算后得出一段定长数值的算法，不需密钥且计算出的数值无法被反推为原始数据，若两段原始数据相同则计算得出的数值相同，常用于消息完整性检查（检查内容有没有改变）。接收方根据得到的原始数据和摘要数值进行相同的操作来进行比对分析，摘要算法的特点是不可逆运算
+-----------------------------------------------------------------------------------------
+rootUID=0 #超级管理员
+系统UID=1-500 #默认不可登陆
+用户UID=500+
+
+端口：
+1-1023： #系统保留仅root使用
+1024+： #C端程序使用
+5000+： #S端程序使用
+
+vim etc/fstab：
+设备或卷标 | 挂载点 | 文件系统 | 挂载参数 | 是否dump | 是否fsck
+/dev/sda3 /mnt ext4 default,acl 1 2
+
+常用日志： #日志常规记录内容：时间，主机名，服务名称&函数名称，数据内容
+/var/log/cron #crontab文件
+/var/log/boot.log #开启或重启日志
+/var/log/dmesg #开机硬件监测信息
+/var/log/maillog或/mail/* #记录SMTP与POP3协议相关
+/var/log/messages #最重要的系统日志文件
+/var/log/secure #与登录相关的日志
+/var/log/....
+-----------------------------------------------------------------------------------------
+vim /etc/syslog.conf #规定哪些服务的哪些等级信息保存在哪（默认日志文件保存在/var/log）
+
+【etc/logrotate.conf 和 etc/syslog.conf】
+
+例子：mail.info /var/log/maillog_info #mail服务产生的大于等于info的信息记录到/var/log/maillog_info
+
+格式：服务名称[.=!]信息等级 日志位置
+. 从指定等级为开始
+= 指定等级
+! 排除等级
+
+等级：
+info #基本信息
+notice #除info外需注意信息
+warning(warn) #警告信息，可能有问题但还不至于影响到服务
+err(error) #错误信息
+crit #严重错误
+alert #严重警告
+emerg(panic) #崩溃状态
+
+星号(*)表示所有：
+*.debug #表示所有类型的调试信息，
+kern.* #表示由内核产生的所有消息。可使用逗号(,)分隔多个日志类型，使用分号(;)分隔多个选择器
+---------------------------------------------------------------------------------
+mkfs -t ext4 /dev/sdb2 #格式化（mke2fs比mkfs功能更多）
+dumpe2fs -h /dev/sdb2 #查看设备信息如卷标名，UUID等（其查询的是文件系统超级块）
+blkid /dev/sdb1 #查看设备所对应的UUID信息与文件系统类型
+e2lable /dev/sdb2 卷标名 #编辑卷标名
+-----------------------------------
+parted可划分单个分区大于2T的gpt格式分区，也可划分普通的MBR分区，fdisk -l无法看到parted划分的gpt格式分区
+
+MBR：主引导记录，最大卷达2T且对分区有限制，最多四个主分区或3个主分区附加1个扩展分区
+GPT：GUID分区表，EFI标准磁盘分区表结构，每盘最多128个分区，支持大于2T分区，最大卷达18EB
+
+parted -l <==> fdisk -l
+格式：parted mkpart [primary|logical|extended] [ext3|vfat] start end
+
+bogon ~]#parted /dev/sde #选择设备
+ed)mklabel gpt #对此硬盘使用GPT取代MBR
+ed)mkpart primary <ext4> 1GB 2GB "不建议在此处格式化"
+ed)mkpart logical <ext4> 1G 6G "...."
+ed)print/p #硬盘信息
+ed)resize 5 10.0GB 20.0GB #调整已存在的5号分区的大小
+ed)mkpart primary 0 -1 #划分所有空间到分区
+ed)rm 2 #删除第2号分区
+mkfs -t ext4 /dev/sde1 #格式化（Parted不能对ext3文件系统直接格式化）
+partprobe #重读分区表
+
+在当前shell环境中运行：source script.sh
+------------------------------------------------------------------- 暴力破解密码：
+hydra：
+-l 指定用户名
+-L 指定用户名字典(文件)
+-p 指定密码破解
+-P 指定密码字典(文件)
+-t 线程数量，默认16个线程
+-R 根据上一次进度继续破解
+-S 使用SSL协议连接
+-s PORT 可通过这个参数指定非默认端口。
+-e ns 扩展选项， #n：空密码试探，s：使用指定用户和密码试探。
+-o 输出文件
+-M FILE 指定目标列表文件一行一条。
+-vV 显示详细过程，不加此选项则仅等正确结果输出
+-w TIME 设置最大超时的时间，单位秒，默认是30s。
+
+破解ssh： hydra -l root -P pass.txt -vV -o store.log -e ns 192.168.10.89 ssh #经测可用
+破解数据库： hydra -l root -P pass.txt -vV -o store.log -e ns 192.168.10.89 mysql #经测可用
+
+Hydra (http://www.thc.org/thc-hydra) starting at 2016-01-21 16:51:17
+[DATA] 13 tasks, 1 server, 13 login tries (l:1/p:13), ~1 try per task
+[DATA] attacking service ssh on port 22
+[VERBOSE] Resolving addresses ... done
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "root" - 1 of 13 [child 0]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "" - 2 of 13 [child 1]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "paybay123" - 8 of 13 [child 7]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "dsfjkdsf" - 9 of 13 [child 8]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "fsdklfk" - 10 of 13 [child 9]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "fsdkjhk" - 11 of 13 [child 10]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "paybay" - 12 of 13 [child 11]
+[ATTEMPT] target 192.168.10.89 - login "root" - pass "paybay321" - 13 of 13 [child 12]
+[ERROR] could not connect to target port 22
+[ERROR] ssh protocol error
+[VERBOSE] Retrying connection for child 11
+[STATUS] attack finished for 192.168.10.89 (waiting for children to complete tests)
+[22][ssh] host: 192.168.10.89 login: root password: paybay123
+[[A1 of 1 target successfully completed, 1 valid password found
+
+破解https： hydra -m /index.php -l username -P pass.txt [IP] https
+破解teamspeak： hydra -s 端口号 -vV -l username -P pass.txt [IP] teamspeak
+破解smb： hydra -l administrator -P pass.txt [IP] smb
+破解pop3： hydra -l muts -P pass.txt my.pop3.mail pop3
+破解http-proxy：hydra -l admin -P pass.txt http-proxy://10.36.16.18
+破解telnet： hydra [IP] telnet -l 用户 -P 密码字典 -t 32 -s 23 -e ns -f -V
+破解ftp： hydra -l username -P pass.txt -t 32 -e ns -vV [IP] ftp
+
+get方式提交，破解web登录：
+hydra -l username -P pass.txt -t 64 -vV -e ns [IP] http-get /admin/
+hydra -l username -P pass.txt -t 64 -vV -e ns -f [IP] http-get /admin/index.php
+
+破解cisco：
+hydra -P pass.txt IP cisco
+hydra -m cloud -P pass.txt 10.36.16.18 cisco-enable
+
+post方式提交破解web登录：
+hydra -t 3 -l admin -P pass.txt -o out.txt -f 10.36.16.18 http-post-form "login.php:id=^USER^&passwd=^PASS^:<title>wrong username or password</title>"
+#http-post-form表示破解是采用http的post方式提交的表单密码破解,<title>中的内容是表示错误猜解的返回信息提示。）
+-------------------------------------------------------------------
+FTP使用shell脚本：
+lftp $FTP_HostName -u $FTP_UserName,$FTP_PassWord << EOF
+cd $FTP_BackupDir
+mrm $OldWWWBackup
+mrm $OldDBBackup
+mput $TodayWWWBackup
+mput $TodayDBBackup
+bye
+EOF
+---------------------------------
+MySQL 事务主要用于处理操作量大，复杂度高的数据。比如在人员管理系统中删除一个人员即需要删除人员的基本资料，也要删除和该人员相关的信息，如信箱，文章等等，这样，这些数据库操作语句就构成一个事务！
+#在MySQL中只有使用了Innodb数据库引擎的数据库或表才支持事务
+#事务处理可以用来维护数据库的完整性，保证成批的SQL语句要么全部执行，要么全部不执行
+事务用来管理insert,update,delete语句，一般来说，事务是必须满足4个条件（ACID）：
+1、原子性： 一组事务，要么成功；要么撤回。
+2、稳定性 ： 有非法数据（外键约束之类），事务撤回。
+3、隔离性： 事务独立运行。一个事务处理后的结果，影响了其他事务，那么其他事务会撤回。事务的100%隔离，需要牺牲速度。
+4、可靠性： 软、硬件崩溃后，InnoDB数据表驱动会利用日志文件重构修改。可靠性和高速度不可兼得， innodb_flush_log_at_trx_commit选项 决定什么时候吧事务保存到日志里。
+
+在Mysql控制台使用事务来操作
+1.开始事务 start transaction
+2.做保存点 save point 名称
+3.操作（可以回滚，可以提交，没有问题，就提交，有问题就回滚）
+---------------------------------
+删除列：mysql> ALTER TABLE 表名字 DROP i; #如果数据表中只剩余一个字段则无法使用DROP来删除字段。
+增加列：mysql> ALTER TABLE 表名字 ADD i INT;
+---------------------------------
+MySQL 索引：
+MySQL索引的建立对于MySQL的高效运行是很重要的，索引可以大大提高MySQL的检索速度。
+打个比方，如果合理的设计且使用索引的MySQL是一辆兰博基尼的话，那么没有设计和使用索引的MySQL就是一个人力三轮车。
+索引分单列索引和组合索引。单列索引，即一个索引只包含单个列，一个表可以有多个单列索引，但这不是组合索引。组合索引，即一个索包含多个列。
+创建索引时，你需要确保该索引是应用在SQL 查询语句的条件(一般作为 WHERE 子句的条件)。
+实际上，索引也是一张表，该表保存了主键与索引字段，并指向实体表的记录。
+上面都在说使用索引的好处，但过多的使用索引将会造成滥用。因此索引也会有它的缺点：虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT、UPDATE和DELETE。因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件。
+建立索引会占用磁盘空间的索引文件。
+
+创建索引，这是最基本的索引，它没有任何限制：
+CREATE INDEX indexName ON mytable(username(length));
+
+显示索引信息：
+mysql> SHOW INDEX FROM table_name\G
+---------------------------------
+只复制表结构到新表： CREATE TABLE 新表 LIKE 旧表
+复制旧表数据到新表(两表结构一样)：INSERT INTO 新表 SELECT * FROM 旧表
+复制旧表数据到新表(两表结构不同)：INSERT INTO 新表(字段1,字段2,.......) SELECT 字段1,字段2,...... FROM 旧表
+
+show create table 表名字;
+这样会将旧表的创建命令列出。只需要将该命令拷贝出来更改table的名字就可建立一个完全一样的表
+--------------------------------- TCP/IP-IP包：
+源/目的IP
+版本号（Version）：长度4比特 #标识目前采用的IP协议的版本号。一般的值为0100（IPv4），0110（IPv6）
+服务类型（TOS） 在转发过程中用来提供特别的服务。
+000 普通 (Routine)
+001 优先的 (Priority)
+010 立即发送 (Immediate)
+011 闪电式的 (Flash)
+100 比闪电还闪电式的 (Flash Override)
+101 CRI/TIC/ECP
+110 网间控制 (Internetwork Control)
+111 网络控制 (Network Control)
+标识符（Identifier）：
+16bit。其与Flags和Fragment Offest联合使用，对较大的上层数据包分段（fragment）操作。
+路由器将一个包拆分后，所有拆分开的小包被标记相同的此值以便目的端设备能够区分哪个包属于被拆分开的包的一部分。
+
+标记（Flags）：
+长度3比特。该字段第一位不使用。第二位是DF（Dont Fragment）位，DF位设为1时表明路由器不能对该上层数据包分段。如果一个上层数据包无法在不分段的情况下进行转发，则路由器会丢弃该上层数据包并返回一个错误信息。第三位是MF（More Fragments）位，当路由器对一个上层数据包分段，则路由器会在除了最后一个分段的IP包的包头中将MF位设为1。
+这个3位字段用于控制和识别分片，它们是：
+位0：保留，必须为0
+位1：禁止分片（DF）
+位2：更多分片（MF）
+
+片偏移（Fragment Offset）：
+长度13比特。表示该IP包在该组分片包中位置，接收端靠此来组装还原IP包。（偏移量）
+
+生存时间（TTL）：
+长度8比特。当IP包进行传送时先对该字段赋予某个特定的值。当IP包经过每一个沿途的路由器时每个沿途路由器将TTL减1。如果TTL减少为0则该IP包被丢弃
+
+协议（Protocol）：
+长度8比特。标识了上层所使用的协议。
+1 【ICMP】
+2 【IGMP】
+6 【TCP】
+17 【UDP】
+88 【IGRP】
+89 【OSPF】
+头部校验（Header Checksum）：
+长度16位。用来做IP头部的正确性检测
+
+TCP包：
+Header length：标识该TCP头部有多少个32bit字（4字节）。因为4位最大能表示15，所以TCP头部最长是60字节。【tcpdump默认抓取60+字节的数据】
+Flags： #也就是包的类型，主要是用于操控TCP的状态机
+1.URG，为1表明有应急指针
+2.ACK，除了SYN包外都为1，确认应答字段有效
+3.PSH，为1表明将接受的数据立即传给上层协议，0则先进行缓存，当数据实时性要求较高时将其置1
+4.RST，1=强制断开连接
+5.SYN，1=建立连接
+6.FIN，1=断开连接
+Window size:
+指的是接收通告窗口（Receiver Window，RWND）。它告诉对方本端TCP接收缓冲区还能容纳多少字节数据，这样对方就可以控制发送数据的速度
+
+Checksum：
+由发送端填充，接收端对TCP报文段执行CRC算法以检验TCP报文段在传输过程中是否损坏。这个校验不仅包括TCP头部也包括数据部分
+
+Urgent：
+紧急指针，从数据首位到此指针位置；多用于中断通信，如telent输入ctrl+c
+-------------------------------------------------------
+SYN Flood：
+是互联网上最经典的DDoS攻击方式之一，最早出现于1999年左右，雅虎是当时最著名的受害者。SYN Flood攻击利用了TCP三次握手的缺陷能够以较小代价使目标服务器无法响应且难以追查。
+
+经在三次握手的过程中设置了一些异常处理机制：
+第三步中如果服务器没有收到客户端的最终ACK确认报文，会一直处于SYN_RECV状态，将客户端IP加入等待列表，并重发第二步的SYN+ACK报文。
+重发一般进行3-5次，大约间隔30秒左右轮询一次等待列表重试所有客户端。
+另一方面服务器在自己发出了SYN+ACK报文后，会预分配资源为即将建立的TCP连接储存信息做准备，这个资源在等待重试期间一直保留。更为重要的是服务器资源有限，可维护的SYN_RECV状态超过极限后就不再接受新的SYN报文，也就是拒绝新的TCP连接建立。
+SYN Flood正是利用了上文中TCP协议的设定达到攻击的目的。
+攻击者伪装大量的IP地址给服务器发送SYN报文，由于伪造的IP地址几乎不可能存在，也就几乎没有设备会给服务器返回任何应答了。因此服务器将会维持一个庞大的等待列表，不停地重试发送SYN+ACK报文，同时占用着大量的资源无法释放。更为关键的是被攻击服务器的SYN_RECV队列被恶意的数据包占满，不再接受新的SYN请求，合法用户无法完成三次握手建立TCP连接。也就是说这个服务器被SYN Flood拒绝服务了。
+-------------------------------------------------------
+UDP攻击：
+是最容易发起海量流量的攻击手段，而且源IP随机伪造难以追查。但过滤比较容易，因为大多数IP并不提供UDP服务，直接丢弃UDP流量即可。所以现在纯粹的UDP流量攻击比较少见了
+取而代之的是UDP协议承载的DNS Query Flood攻击。简单地说，越上层协议上发动的DDoS攻击越难以防御，因为协议越上层，与业务关联越大，防御系统面临的情况越复杂。
+DNS Query Flood：
+就是攻击者操纵大量傀儡机器，对目标发起海量的域名查询请求。为防止基于ACL的过滤，必须提高数据包的随机性。
+常用的做法是UDP层随机伪造源IP地址、随机伪造源端口等参数。
+在DNS协议层，随机伪造查询ID以及待解析域名。随机伪造待解析域名除了防止过滤外，还可以降低命中DNS缓存的可能性，尽可能多地消耗DNS服务器的CPU资源。
+-------------------------------------------------------
+HTTP Flood
+上文描述的SYN Flood、DNS Query Flood在现阶段已经能做到有效防御了，真正令各大厂商以及互联网企业头疼的是HTTP Flood攻击。HTTP Flood是针对Web服务在第七层协议发起的攻击。它的巨大危害性主要表现在三个方面：发起方便、过滤困难、影响深远。
+SYN Flood和DNS Query Flood都需要攻击者以root权限控制大批量的傀儡机。收集大量root权限的傀儡机很花费时间和精力
+而且在攻击过程中傀儡机会由于流量异常被管理员发现，攻击者的资源快速损耗而补充缓慢，导致攻击强度明显降低而且不可长期持续。HTTP Flood攻击则不同，攻击者并不需要控制大批的傀儡机，取而代之的是通过端口扫描程序在互联网上寻找匿名的HTTP代理或者SOCKS代理，攻击者通过匿名代理对攻击目标发起HTTP请求。匿名代理是一种比较丰富的资源，花几天时间获取代理并不是难事，因此攻击容易发起而且可以长期高强度的持续。另一方面，HTTP Flood攻击在HTTP层发起，极力模仿正常用户的网页请求行为，与网站业务紧密相关，安全厂商很难提供一套通用的且不影响用户体验的方案。在一个地方工作得很好的规则，换一个场景可能带来大量的误杀。最后，HTTP Flood攻击会引起严重的连锁反应，不仅仅是直接导致被攻击的Web前端响应缓慢，还间接攻击到后端的Java等业务层逻辑以及更后端的数据库服务，增大它们的压力，甚至对日志存储服务器都带来影响。
+有意思的是，HTTP Flood还有个颇有历史渊源的昵称叫做CC攻击。CC是Challenge Collapsar的缩写，而Collapsar是国内一家著名安全公司的DDoS防御设备。从目前的情况来看，不仅仅是Collapsar，所有的硬件防御设备都还在被挑战着，风险并未解除。
+-------------------------------------------------------
+慢速连接攻击
+提起攻击，第一反应就是海量的流量、海量的报文。但有一种攻击却反其道而行之，以慢著称，以至于有些攻击目标被打死了都不知道是怎么死的，这就是慢速连接攻击
+最具代表性的是rsnake发明的Slowloris。
+HTTP协议规定HTTP Request以\r\n\r\n结尾表示客户端发送结束，服务端开始处理。那么如果永远不发送\r\n\r\n会如何？
+Slowloris就是利用这一点来做DDoS攻击的。攻击者在HTTP请求头中将Connection设置为Keep-Alive，要求Web Server保持TCP连接不要断开，随后缓慢地每隔几分钟发送一个key-value格式的数据到服务端，如a:b\r\n，导致服务端认为HTTP头部没有接收完成而一直等待。如果攻击者使用多线程或者傀儡机来做同样的操作，服务器的Web容器很快就被攻击者占满了TCP连接而不再接受新的请求。
+很快的，Slowloris开始出现各种变种。比如POST方法向Web Server提交数据、填充一大大Content-Length但缓慢的一个字节一个字节的POST真正数据内容等等。
+-------------------------------------------------------
+open files：
+由于每个连接其实都是打开一个文件因此需要关注下进程的open files的限制，可通过cat /proc/[pid]/limits来查看其中的Max open files
+建议稍微配大一些否则很容易出现too many open files的错误
+
+net.ipv4.tcp_wmem #写缓冲区
+net.ipv4.tcp_rmem #读缓冲区
+-------------------------------------------------------------------------
+修改密码： mysqladmin -u root password "new_password";
+查看版本： select version();
+
+insert语法：
+mysql> use TUTORIALS;
+Database changed
+mysql >INSERT INTO tutorials_tbl
+->(tutorial_title, tutorial_author, submission_date)
+->VALUES
+->("Learn PHP", "John Poul", NOW());
+Query OK, 1 row affected (0.01 sec)
+
+排序： SELECT * from tutorials_tbl ORDER BY tutorial_author [ASC|DESC]
+插入空值： INSERT INTO tcount_tbl (tutorial_author, tutorial_count) values ('mahnaz', NULL);
+列别名： SELECT column_name AS alias_name FROM table_name;
+表别名： SELECT column_name(s) FROM table_name AS alias_name;
+删库： DROP DATABASE 库对象
+删表： DROP TABLE 表对象
+
+USE 数据库名 #选择要操作的Mysql数据库，使用该命令后所有Mysql命令都只针对该数据库。
+SHOW DATABASES #列出 MySQL 数据库管理系统的数据库列表。
+SHOW TABLES #显示指定数据库的所有表，使用该命令前需要使用 use 命令来选择要操作的数据库。
+SHOW COLUMNS FROM 数据表 #显示数据表的属性，属性类型，主键信息 ，是否为 NULL，默认值等其他信息。
+SHOW INDEX FROM 数据表 #显示数据表的详细索引信息，包括PRIMARY KEY（主键）。
+SHOW TABLE STATUS LIKE 数据表\G #该命令将输出Mysql数据库管理系统的性能及统计信息。
+
+ALTER TABLE 表名 DROP i;
+ALTER TABLE 表名 ADD i INT FIRST; #使用FIRST将列设为表中第一列
+ALTER TABLE 表名 ALTER i SET DEFAULT 1000; #修改字段默认值
+ALTER TABLE 表名 ALTER i DROP DEFAULT; #删除字段的默认值
+ALTER TABLE 旧名 RENAME TO 新名; #修改表名
+City varchar(255) DEFAULT 'Sandnes'
+ALTER TABLE Persons ALTER City SET DEFAULT 'SANDNES'
+ALTER TABLE Persons ALTER City DROP DEFAULTmysql
+ALTER TABLE testalter_tbl TYPE = MYISAM;
+
+mysql> SHOW TABLE STATUS LIKE 'testalter_tbl'\G #查看
+---------------------------------------------------------------------
+SELECT * FROM Products WHERE (Price BETWEEN 10 AND 20) AND NOT CategoryID IN (1,2,3,'Paris','London');
+SELECT LastName,FirstName,Address FROM Persons WHERE Address IS NOT NULL
+SELECT Orders.OrderID, Orders.OrderDate, Customers.CustomerName FROM Customers, Orders WHERE Customers.CustomerName='Alfreds Futterkiste';
+SELECT AVG(Price) AS PriceAverage FROM Products;
+SELECT DISTINCT ProductName, Price FROM Products WHERE Price > (SELECT AVG(Price) FROM Products);
+SELECT COUNT(CustomerID) AS OrdersFromCustomerID7 FROM Orders WHERE CustomerID=7;
+SELECT LEN(column_name) FROM table_name; #返回文本字段长度
+
+表连接：
+SELECT Orders.OrderID, Customers.CustomerName, Orders.OrderDate
+FROM Orders INNER JOIN Customers
+ON Orders.CustomerID=Customers.CustomerID ORDER BY Customers.CustomerName; #依据每行记录中相同的值
+
+INNER JOIN： #如果表中有至少一个匹配，则返回行
+LEFT JOIN： #即使右表中没有匹配，也从左表返回所有的行
+RIGHT JOIN： #即使左表中没有匹配，也从右表返回所有的行
+FULL JOIN： #只要其中一个表中存在匹配，则返回行
+
+约束：
+NOT NULL - #指示某列不能存储 NULL 值。
+UNIQUE - #保证某列每行必须唯一的值。
+PRIMARY KEY - #NOT NULL和UNIQUE的结合。确保某列（或两个列多个列的结合）有唯一标识，有助于更容易更快速地找到表中的一个特定的记录。
+FOREIGN KEY - #保证一个表中的数据匹配另一个表中的值的参照完整性。
+CHECK - #保证列中的值符合指定的条件。
+DEFAULT - #规定没有给列赋值时的默认值
+---------------------------------------------------------------------
+主键只能作用于一个列上，添加主键索引时需确保默认不为空。实例：
+mysql> ALTER TABLE Tbname MODIFY i INT NOT NULL;
+mysql> ALTER TABLE Tbname ADD PRIMARY KEY (i);
+mysql> ALTER TABLE Tbname DROP PRIMARY KEY;
+
+获取数据表的完整结构。
+mysql> SHOW CREATE TABLE tutorials_tbl \G; #若拷贝表数据可使用INSERT INTO... SELECT实现。
+*************************** 1. row ***************************
+Table: tutorials_tbl
+Create Table: CREATE TABLE `tutorials_tbl` (
+`tutorial_id` int(11) NOT NULL auto_increment,
+`tutorial_title` varchar(100) NOT NULL default '',
+`tutorial_author` varchar(40) NOT NULL default '',
+`submission_date` date default NULL,
+PRIMARY KEY (`tutorial_id`),
+UNIQUE KEY `AUTHOR_INDEX` (`tutorial_author`)
+) TYPE=MyISAM <-------- 创建表时指定其数据引擎
+1 row in set (0.00 sec)
+-----------------------------------------------------------------------------------------------------
+正则表达式是由普通字符（如a到z）及特殊字符（称为"元字符"）组成的文字模式
+\t 匹配制表符
+\v 垂直制表符
+\r 匹配回车符
+\n 匹配换行符
+\cx 匹配由x指明的控制字符。如：\cM
+
+HTTP协议：
+1.是Hyper Text Transfer Protocol（超文本传输协议）的缩写，是用于从万维网"www"服务器传输超文本到本地浏览器的传送协议
+2.基于TCP/IP来传递数据
+3.是媒体独立的：这意味着只要客户端和服务器知道如何处理数据，任何类型的数据都可通过HTTP发送。"C/S间指定使用适合的MIME-type内容类型"
+4.是无连接：无连接的含义是限制每次连接只处理一个请求。服务器处理完客户的请求，并收到客户的应答后即断开连接。采用这种方式可以节省传输时间。
+5.使用统一资源标识符（URI）传输数据和建立连接
+
+Allow 支持哪些方法"如GET、POST等"
+Content-Encoding 文档编码方法"Encode"只有在解码后才可得到Content-Type头指定的内容类型。利用gzip压缩能显著减少HTML文档下载时间
+Content-Length 内容长度。当浏览器使用持久HTTP连接时才需要
+Content-Type 表示后面的文档属于什么MIME类型。默认text/plain，但通常需显式地指定为text/html
+Date 当前时间。可用setDateHeader设置这个头以避免转换时间格式的麻烦。
+Expires 过期时间
+Last-Modified 最后改动时间。客户可通过If-Modified-Since请求头提供一个日期，只有改动时间迟于指定时间的文档才会返回，否则返回304
+Location 表示客户应当到哪里去提取文档。Location通常不是直接设置而是通过HttpServletResponse的sendRedirect方法，该方法同时设置状态代码为302。
+Refresh 表示浏览器应在多少时间后刷新文档，以秒计，其意义是"N秒之后刷新本页面或访问指定页面"，而不是"每隔N秒刷新本页面或访问指定页面"
+Server 服务器名字
+Set-Cookie 设置页面关联Cookie
+WWW-Authenticate 客户应该在Authorization头中提供什么类型的授权信息？在包含401状态行的应答中这个头是必需的。如response.setHeader("WWW-Authenticate", "BASIC realm=＼"executives＼"")
+#注意Servlet一般不进行这方面的处理，而是让Web服务器的专门机制来控制受密码保护页面的访问（例如.htaccess）。
+
+200 OK 请求成功。一般用于GET与POST
+201 Created 成功请求并创建了新的资源
+
+301 Moved Permanently 永久移动。请求的资源已被永久移动到新URI，返回信息会包括新URI，浏览器会自动定向到新URI。今后任何新请求都使用新的URI
+302 Found 临时移动。与301类似但资源只是临时被移动。客户端继续用原有URI
+304 Not Modified 所请求资源未修改，服务器返回此状态码时不返回任何资源。客户端通常会缓存访问过的资源，通过提供一个头信息指出客户端希望只返回在指定日期之后修改的资源
+
+400 Bad Request 请求的语法错误
+401 Unauthorized 请求www身份认证
+403 Forbidden 服务器理解请求客户端请求但拒绝执行
+404 Not Found 服务器无法根据客户端的请求找到资源（网页）。通过此代码网站设计人员可设置"您所请求的资源无法找到"的个性页面
+
+500 Internal Server Error 服务器内部错误，无法完成请求
+501 Not Implemented 服务器不支持请求的功能，无法完成请求
+503 Service Unavailable 因超载或维护服务器暂无法处理客户请求。延时包含在服务器的Retry-After中
+-----------------------------------------------------------------------------------------------------
+memcached是一种不互相通信的分布式，其协议简单，基于libevent的事件处理，内置内存存储方式，
+
+/usr/local/memcached/bin/memcached -h
+选项：
+-d 守护进程；
+-m 分配给Memcache使用的内存，单位MB；
+-n 指定使用的最小内存空间
+-u 运行身份；
+-l 监听地址，可以有多个地址；
+-p 监听端口，最好是1024以上的端口；
+-c 最大并发，默认是1024；
+-P 保存的pid文件。
+
+启动： /usr/bin/memcached -d -m 128 -n 20 -f 1.2 -l 192.168.10.225 -p 11211 -c 2048 -vv -u nobody -P /tmp/memcached.pid
+连接： telnet [IP] [Port]
+
+例子：
+set runoob 0 900 9 #设置key为runoob|flag=0（flag用于存储关于键值对的额外信息）|此键值对的有效期为900秒|(数据存储的字节数为9
+memcached #value = memcached
+STORED
+get runoob #查找runoob键的值"多个key使用空格隔开"，delete用于删除键值如：delete runoob
+VALUE runoob 0 9
+memcached
+END
+
+如果add的key已存在则不更新数据之前的值将仍然保持相同并且获得响应NOT_STORED。
+add new_key 0 900 10 #key为runoob|flag=0（flag用于存储关于键值对的额外信息）|此键值对的有效期为900秒（0表示永远）|(数据存储的字节数为10
+data_value
+STORED
+
+get new_key #
+VALUE new_key 0 10
+data_value
+END
+
+replace可替换已存在的key的value。若key不存在则替换失败并获得响应NOT_STORED。
+replace mykey 0 900 16
+some_other_value
+
+append向已存在key的value后追加数据。prepend向已存在key的value前面追加数据。
+append runoob 0 900 5
+redis <------- #后追加内容
+
+prepend runoob 0 900 5
+redis <------- #前插入内容
+
+incr与decr用于对已存在的key的数字值进行自增或自减。操作的数据必须是十进制的32位无符号整数。如果key不存在返回NOT_FOUND，如果键的值不为数字，则返回CLIENT_ERROR，其他错误返回 ERROR。
+例子：
+set visitors 0 900 2
+10
+STORED
+incr 键名 5 #5是其增长因子 【incr是自增操作，decr是自减操作】
+get visitors
+VALUE visitors 0 2
+15 #15
+END
+
+Memcached的stats命令返回统计信息：
+pid： 服务进程ID
+uptime： 已运行秒数
+time： 当前Unix时间戳
+version： 版本
+pointer_size： 操作系统指针大小
+rusage_user： 进程累计用户时间
+rusage_system： 进程累计系统时间
+curr_connections： 当前连接数量
+total_connections： 运行以来连接总数
+connection_structures：Memcached分配的连接结构数量
+cmd_get： get请求次数
+cmd_set： set请求次数
+cmd_flush： flush请求次数
+get_hits： get命中次数
+get_misses： get未命中次数
+delete_misses： delete未命中次数
+delete_hits： delete命中次数
+incr_misses： incr未命中次数
+incr_hits： incr命中次数
+decr_misses： decr未命中次数
+decr_hits： decr命中次数
+cas_misses： cas未命中次数
+cas_hits： cas命中次数
+cas_badval： 使用擦拭次数
+auth_cmds： 认证命令处理次数
+auth_errors： 认证失败数目
+bytes_read： 读取总字节数
+bytes_written： 发送总字节数
+limit_maxbytes：分配的内存总大小（字节）
+accepting_conns：服务器是否达到过最大连接（0/1）
+listen_disabled_num：失效的监听数
+threads： 当前线程数
+conn_yields： 连接操作主动放弃数目
+bytes： 当前存储占用的字节数
+curr_items： 当前存储的数据总数！！
+total_items： 启动以来存储的数据总数
+evictions： LRU释放的对象数目
+reclaimed： 已过期的数据条目来存储新数据的数目
+
+Memcached stats items用于显示各个slab中item的数目和存储时长（最后一次访问距现在的秒数）。
+flush_all命令用于用于清理缓存中的所有key<=>value，键值对
+-----------------------------------------------------------------------------------------------------
+SELECT VERSION( ) 服务器版本信息
+SELECT DATABASE( ) 当前数据库名 (或者返回空)
+SELECT USER( ) 当前用户名
+SHOW STATUS 服务器状态
+SHOW VARIABLES 服务器配置变量
+
+导出到远程服务器：mysqldump -u root -p DBname | mysql -h 1.1.1.1 DBname
+
+若要设置表中字段first_name&last_name的数据不能重复，可设置双主键模式来设置数据唯一性，若设置了双主键那么那个键的默认值不能为NULL：
+CREATE TABLE person_tbl
+( first_name CHAR(20) NOT NULL, #非空
+last_name CHAR(20) NOT NULL, #非空
+sex CHAR(10),
+PRIMARY KEY (last_name, first_name) #双主键
+);
+
+AVG() 平均值
+COUNT() 行数
+FIRST() 第一个记录的值
+LAST() 最后一个记录的值
+MAX() 最大值
+MIN() 最小值
+SUM() 总和
+UCASE() 转为大写
+LCASE() 转为小写
+MID() 从某个文本字段提取字符
+LEN() 返回某个文本字段的长度
+ROUND() 进行指定小数位的四舍五入
+NOW() 返回当前的系统日期和时间
+FORMAT() 格式化某个字段的显示方式
+
+SELECT column_name FROM table_name ORDER BY column_name ASC LIMIT 1; #第一行
+SELECT column_name FROM table_name ORDER BY column_name DESC LIMIT 1; #最后一行
+
+示例：
+SELECT Customers.CustomerName, Orders.OrderID
+FROM Customers
+INNER JOIN Orders
+ON Customers.CustomerID=Orders.CustomerID
+ORDER BY Customers.CustomerName;
+
+从"Customers"表的"City"列提取前4个字符： SELECT MID(City,1,4) AS ShortCity FROM Customers;
+LEN()函数返回文本字段中值的长度： SELECT CustomerName,LEN(Address) as LengthOfAddress FROM Customers;
+从"Products"表选名称和价格舍入为最接近整数：SELECT ProductName, ROUND(Price,0) AS RoundedPrice FROM Products;
+NOW()函数返回当前系统的日期和时间： SELECT ProductName, Price, Now() AS PerDate FROM Products;
+FORMAT()函数用于对字段的显示进行格式化： SELECT ProductName, Price, FORMAT(Now(),'YYYY-MM-DD') AS PerDate FROM Products;
+
+Auto-increment：
+会在新记录插入表中时生成一个唯一的数字。通常希望在每次插入新记录时自动地创建主键字段的值。可在表中创建auto-increment字段。
+CREATE TABLE Persons
+( ID int NOT NULL AUTO_INCREMENT, #自动增加的唯一数字，默认AUTO_INCREMENT开始值是1
+LastName varchar(255) NOT NULL,
+FirstName varchar(255),
+Address varchar(255),
+City varchar(255),
+PRIMARY KEY (ID)
+)TYPE=innodb;
+-------------------------------------------------
+quotacheck -avug #扫描/etc/fstab有加入quota设置的分区（usrquota, grpquota）在各分区文件系统根目录产生quota.user和quota.group
+quotaon -avug #启动支持user/group的quota
+quotaon -vug /var #启动支持user/group的quota（仅/var）
+
+设置：edquota
+参数：
+-t 指定宽限时间
+-u 指定帐号，编辑quota
+-g 指定群组，编辑quota
+-p 借指定账号配置赋予指定账号（例子：edquota -p User1 -u Newuser）
+
+[root@w ~]#edquota -u User1
+Disk quotas for user myquota1 (uid 710):
+Filesystem blocks soft hard inodes soft hard
+/dev/hda3 80 0 0 10 0 0 #在此编辑soft/hard值（单位KB）无限制：0
+
+报告：repquota --> 所有使用者使用情况：repquota -avus
+报表：
+-a 搜寻/etc/mtab具有quota标志的文件系统来报告
+-v 详细信息
+-u 查看用户quota限值(默认)
+-g 个别组的quota限值
+-s 以M/G为单位显示
+
+quotaon/off：
+-a 所有 //quotaon -avug
+-u 用户限制 //quotaon -au /data
+-g 组限制 //quotaoff -ug /date
+------------------------------------------------- Ps
+-a 现行终端下所有进程
+-u 显示属主
+-x 所有终端下所有进程
+-l 列出pid/ppid相关信息
+-f 更为完整的输出
+
+F *程序标志(flag)，4代表使用者为root
+S 程序状态（或显示：STAT）
+UID 属主UID
+PID 进程ID号（其父进程ID是PPID）
+C 占用CPU资源百分比
+PRI 进程优先权，值越小越早被执行！
+NI *进程nice，进程优先级的修正值
+ADDR 内核函数，指出该程序在内存哪部分，若是执行的程序一般就是：-
+SZ 占用的内存空间
+WCHAN *目前此程序是否正在运作当中，- 表示正在运作
+TTY 登入者的终端机位置
+TIME 用掉的CPU时间
+CMD 所下达的指令
+STAT 程序目前状态：
+D： 不可中断深度睡眠，一般由IO引起
+R： 处于运行或就绪状态
+S： 睡眠但可被某些讯号(signal) 唤醒
+T： 被ctrl+z中断或被trace
+Z： 父进程无法将其终止
+
+进程NI值修改：PRI由系统决定不可修改但nice值可由用户指定且越小越优先！（范围-20~19）
+
+nice -n * 命令 #运行前为其指定nice值（数值范围 -20 ~ 19）
+renince * PID #已存在程序的nice重调
+
+kill -9 进程号 #强制杀死：-9，正常结束：-15“默认值”
+kill -u 用户名 #杀死特定用户所有进程
+killall atd #杀死atd的所有进程
+pstree #进程树（若查看UID与PID的关系：pstree -Aup）
+----------------------------------------------------------------------------------------- NTP
+时间同步：
+安装：yum install ntp && chkconfig --add ntpd on levels 235
+
+vim /etc/ntp.conf
+restrict 192.168.0.0 mask 255.255.255.0 nomodify #添加NTP服务器允许更新的客户端，注：NTP服务中防火墙需开放123端口
+
+gnore： 关闭所有NTP联机服务
+nomodify： 客户端不能更改服务端时间参数，但客户可借服务端校时
+notrust： 客户端除非通过认证否则其来源被视为不信任子网
+noquery： 不提供其时间查询
+
+vim /etc/sysconfig/ntpd
+SYNC_HWCLOCK=yes #将时间同步给BIOS
+
+客户端设置：vim /etc/ntpd.conf中：server {address}
+-----------------------------------------------------------------------------------------
+判定：如：test N1 -eq N2
+-eq 两值相等
+-ne 两值不等
+-gt N1>N2
+-lt N1<N2
+-ge N1>=N2
+-le N1<=N2
+
+iptables:
+参数：
+-n 不解析
+-t 指定表 #默认：filter
+-A/I 增加/插入规则 #iptables -I INPUT 1
+-F 清空规则链 #清空所有规则：iptables -F 不指定链则清空所有表内规则（F参数不删除默认规则）
+-P 默认策略 #默认进入拒绝：iptables -t nat -P INPUT DROP
+-L 查看规则 #按数字排序链内规则：iptables -t nat -L -n --line-number
+-R 替换规则
+-D 删除规则 #iptables -D INPUT 3
+-Z 清空计数
+-N 自定义链
+-j 指定动作：
+REDIRECT： 端口重定向 #-j REDIRECT --to-port 3128
+DROP： 直接丢弃 #防黑客扫描
+REJECT： 明示拒绝 #仅测试用
+ACCEPT： 接受数据 #当规则链默认拒绝时使用此参数放行指定流
+MASQUERADE 地址伪装 #用于ADSL|DHCP等地址不固定情况下
+QUEUE： 传递到用户空间 #
+
+iptables -A INPUT -i lo -j ACCEPT #开启环回（不开启将很多服务无法使用）
+iptables -A INPUT -p icmp -j ACCEPT #允许ping
+iptables -A INPUT -p gre -j ACCEPT #放行GRE协议
+iptables -A INPUT -i ppp0 -p icmp --icmp-type echo-request -j DROP #不让别人Ping
+iptables -A OUTPUT -p udp -o eth0 --dport 53 -j ACCEPT #允许DNS服务（out）
+iptables -A INPUT -p udp -i eth0 --sport 53 -j ACCEPT #允许DNS服务（in）
+iptables -A INPUT -p tcp --dport 21 -j ACCEPT #为filter表开放21端口
+iptables -A FORWARD -m mac --mac-source x:x:x:x:x:x -j DROP #阻断来自某MAC地址的数据包通过本机
+iptables -A INPUT -m state --state ESTABLISHED -j ACCEPT #允许已建立连接的INPUT链数据
+-----------------------------------------------------------------------------------------
+表是防火墙的最大集合，包含链和规则；表包括filter过滤表；nat用于地址转换；mangle俗称矫正表和RAW表。链则是规则的集合。
+
+表：
+1.filter 应用：INPUT/OUTPUT/FORWARD
+2.nat 应用：PREROUTING/OUTPUT/POSTROUTING
+3.mangle 所有
+4.raw 负责加快数据包穿越防火墙机制的速度，借此提高防火墙性能。
+
+链：
+1.PREROUTING 路由前：目地地址转换：（PREROUTING在INPUT之前） #iptables -t nat -A PREROUTING -d 192.168.102.55 -p tcp --dport 90 -j DNAT --to 172.20.11.1:800
+2.POSTROUTING 路由后：源地址转换：（POSTROUTING在OUTPUT之后） #iptables -t nat -A POSTROUTING -d 172.20.11.1 -j SNAT --to 192.168.102.55
+3.FORWARD 转发流：借本机转发的流
+4.INPUT 流入流：流入数据
+5.OUTPUT 流出流：本地流出
+
+icmp设置：
+iptables -t filter -I INPUT -p icmp --icmp-type echo-reply -j ACCEPT
+iptables -t filter -I INPUT -p icmp --icmp-type echo-request -j DROP
+-----------------------------------------------------------------------------------------
+nat表：
+1.SNAT： 在POSTROUTING：出口对源地址转换
+2.DNAT： 在PREROUTING：入口对目的地址转换
+
+三个链：
+1.PREROUTING： 路由前
+2.POSTROUTING： 路由后
+3.OUTPUT： 本地产生的流的目的NAT
+
+-t nat -A POSTROUTING -o ppp0 -j MASQUERADE #地址伪装（出口IP不固定环境下）
+-t nat -A POSTROUTING -s 192.168.1.0/24 -o eth0 -j SNAT --to 1.2.3.4 #来自192.168.1.0/24的流修改源地址为1.2.3.4
+-t nat -A PREROUTING -s 192.168.1.0/24 -i eth1 -j DNAT --to 1.2.3.4 #为来自192.168.1.0/24的流修改目的IP地址
+-t nat -A POSTROUTING -s 192.168.0.0/24 -j SNAT --to 1.1.1.1 #内网192.168.0.0/24源地址改为1.1.1.1
+-t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080 #用于透明porxy或保护web服务器
+-t nat -A POSTROUTING -p TCP -j MASQUERADE --to-ports 1024-31000 #进行地址伪装且指定端口范围
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT #拒绝ICMP
+
+SNAT：
+iptables -A POSTROUTING -o eth0 -s 192.168.1.100 -j SNAT --to 202.110.123.100
+iptables -A POSTROUTING -o eth0 -s 192.168.1.200 -j SNAT --to 202.110.123.200
+
+将特定目的IP和端口的流转给指定目的IP和端口：
+-t nat -A PREROUTING -d 192.168.102.37 -p tcp --dport 422 -j DNAT --to 192.168.102.37:22
+
+开放特定MAC地址：
+iptables -A INPUT -m mac --mac-source aa:bb:cc:dd:ee:ff -j ACCEPT
+
+仅允许内网Ping外网：
+iptables -A OUTPUT -p icmp -m state --state NEW,ESTABLISHED, RELATED -j ACCEPT
+iptables -A INPUT -p icmp -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+B的网关指向A，B在网段192.168.10/24，通过A的172.16.100.106访问公网：
+A：#echo 1 > /proc/sys/net/ipv4/ip_forward
+A：#iptables -t nat -A POSTROUTING -s 192.168.10/24 -j SNAT --to-source 172.16.100.106
+---------------------------------------------
+外挂模块：
+iptables -A INPUT -m 模块
+状态模块：state
+硬件地址：mac
+端口范围：multiport
+
+状态：
+INVALID 无效数据如数据损坏的包
+ESTABLISHED 已建立的连接
+NEW 将建立的连接
+RELATED 表示此包与主机发出的包有关联（常用）
+---------------------------------------------------- 防止sync flood攻击：
+/sbin/iptables -N synfoold
+/sbin/iptables -A synfoold -p tcp --syn -m limit --limit 1/s -j RETURN
+/sbin/iptables -A synfoold -p tcp -j REJECT --reject-with tcp-reset
+/sbin/iptables -A INPUT -p tcp -m state --state NEW -j synfoold
+---------------------------------------------------- tcpdump:
+类型: host，net，port, 例：host 210.27.48.2，net 202.0.0.0/24 ，port 23（缺省是host）
+方向： src , dst（缺省是src or dst）
+协议： fddi, ip, arp, rarp, tcp, udp等（默认监听所有协议）
+逻辑： not ! and && or ||
+----------------------------------------------------------------------------------------- wireshark
+参数：dst/src/host/port/ether host/协议/brodcast
+逻辑：&& || !（过滤器语法正确则背景呈绿色，dst/src即可用于IP也可用于端口）
+
+例子：
+ip.addr == 10.1.1.1 #显示IP=10.1.1.1的包
+ip.src == 10.230.0.0/16 #显示来自10.230网段的包
+tcp.port == 25 #显示源/目的TCP=25的包，等于：tcp.port eq 25
+tcp.dstport == 25 #显示目的TCP=25的包。可设范围：tcp.port >= 1 and tcp.port <= 80
+ip.src != 10.1.2.3 #！排除
+eth.dst == A0:00:00:04:C5:84 #过滤目标mac
+eth.src eq A0:00:00:04:C5:84 #过滤来源mac
+http.request.uri matches ".gif$" #匹配HTTP请求URI中含有".gif"并以.gif结尾的数据包（$表示结尾）
+tcp.port >= 1 and tcp.port <= 80 #过滤端口范围
+tcp[20:8] #表示从20开始，取8个字符
+http.request.method == “GET”
+http.request.method == “POST”
+http.request.uri == “/img/logo-edu.gif”
+---------------------------------------------------- wireshark：
+[视图：View] [分析：Analyze] [统计：Statistics] [捕获：Capture]
+
+捕获另存为： File > Save as
+加入旧报文： File > Merge
+查找数据包： Ctrl+F 正则|MAC|主机名
+为规则设置颜色：View > Coloring rules > Edit > 正则/前景/背景颜色 > Apply
+为IP地址备注： 报文右键 > Manually Resolve Address > 名字
+标记报文： 选择报文 > Ctrl+M （前后切换：Shift+Ctrl N/B）
+设置时间格式： View > Time display Format
+跟踪TCP流： 报文右键 > Follw tcp/udp/ssl Stream
+端点流量统计： Statistics > Endpoints
+端点会话查看： Statistics > Conversation
+协议使用统计： Statistics > protocol hierarchy
+修改其分析器： 报文右键 > Decode （端口/协议对应关系）
+I/O情况： Statistics > I/O Graph
+双向时间图： Statistics > TCP Stream Graph > Round Trip time Graph
+包长度情况： Statistics > packet lengths > 正则 > Create stat
+
+接口捕获设置：
+Capture filter：正则过滤器
+Capture file： 自动保存为文件
+自动滚动列表： Automatic scrolling in live capture
+N个时间保存1份：Next file every # minutes/hour/day
+----------------------------------------------------------------------------------------- DHCP
+交互过程：
+请求-客户端:67/udp
+回应-服务器:68/udp
+
+报文类型：
+1.Discover //客户器使用UDP-67向服务器请求： 源地址：0.0.0.0，目的地址：255.255.255.255
+2.Offer //服务器使用UDP-68向客户回应IP： 源IP为服务器IP，目的地址：255.255.255.255
+3.Request //客户使用UDP-67向服务器回应确认： 发向广播地址表示已得到IP（防止网络有多台DHCP时造成的问题）
+4.Ask //服务器使用UDP-68向客户回应确认： 我知道了（即：PC请求--Server回应---PC确认--Server确认）
+注：
+在路由器中可同时配多个DHCP服务而取不同的名：路由器根据各接口所在不同网段决定下发哪个服务，客户在租期超过50%时向为其提供IP的服务器发送dhcp request包请求续租
+
+DHCP中继：跨网段实现DHCP
+环境：PC------*Router-----DHCP #在路由器与PC接口下：Ip helper-address 192.168.2.1
+注：
+在DHCP服务器上还须有去往PC所在网段路由，在中继时设置的IP即DHCP地址（因路由器隔绝广播而此功能单播中继）
+----------------------------------------------------------------------------------------- dhcpd
+yum -y install dhcp ; vim /etc/dhcpd.conf ; service dhcpd start|stop|restart
+
+ddns-update-style interim dhcp与dns服务器的动态信息更新模式
+Default-lease-time 21600 默认租约时间
+Max-lease-time 43200 最大租约时间
+Option domain-name "123.com" 域名服务器名称
+Option domaini-servers 192.168.0.1 域名服务器IP
+Sub 192.168.0.0 netmask 255.255.255.0; 为192.168.0.0/24网段的主机分配IP地址，Sub 后从“{”开始 最后“}”是子网的属性，其配置只对大括号内容有效
+Range 192.168.0.2 192.168.0.100; 分配的地址：192.168.0.2～192.168.0.100
+Option subnet-mask 255.255.255.0; 分配的掩码
+Option routers 192.168.0.254; 分配的网关
+
+Host server01{
+Hardware ethernet x:x:x:x:x:x; MAC （为指定MAC分配固定IP）
+Fixed-address 192.168.0.100; IP
+}
+
+客户端手动DHCP请求：dhclient [interface]
+----------------------------------------------------------------------------------------- DHCP中继
+环境：DHCP---ROUTER---CLIENT #DHCP和客户端的网关指向ROUTER（需安装DHCP软件包）
+
+中继代理服务器不需DHCP主配置文件但需如下配置：
+vim etc/sysconfig/dhcrelay
+INTERFACES="eth0" //指定网卡
+DHCPSERVERS="192.168.13.1" //为其指向DHCP服务器的IP
+
+启动：service dhcrelay start //DHCP分配的网段需有CLIENT所在的IP网段范围
+------------------------------------------------- DNS资源记录：
+SOA： 起始授权记录（域名的七个重要参数）
+IN： 指向？
+A： IPv4地址
+AAAA： IPv6地址
+NS： 本域域名服务（管理本域的服务器主机）
+MX： 邮件服务（邮件服务器主机名，0～99越小越优先）
+CNAME： 别名（实际代表这个主机别名的主机名）
+PTR： 指针记录
+-----------------------------------------------------------------------------------------
+mount -a/l #挂载所有/挂载清单
+mount -L "卷标名" /dev/sdb2 #使用设备的卷标名挂载（e2lable可修改卷标名，fstab中可依据卷标挂载）
+mount -o remount,acl /mnt #重载并加入ACL支持（或在：etc/fstab中：defaults,acl 1 1）
+mount -o remount,usrquota,grpquota /mnt #重载并加入quota支持
+mount -t ext4 /dev/sdb2 /mnt #指定格式挂载（-t参数：iso9660,vft,ntfs,cifs,nfs........）
+mount -o loop /root/xp.iso /mnt/dvd #挂载iso文件
+
+-o参数：rw,ro,remount,acl,usrquota,grpquota
+auto,noauto
+async,sync
+exec,noexec
+suid,nosuid
+remount，userquota/groupquota,acl
+default(默认：rw,suid,exec,auto,nouser,async)
+
+挂载samba目录：mount -t cifs //localhost/a /mnt -o username=admin,password=12345,iocharset=utf-8
+
+注：
+cifs：通用因特网文件系统（windows共享文件夹使用的协议）
+-----------------------------------------------------------------------------------------
+fdisk /dev/sdb #fdisk中t选项指定文件系统类型（注：swap=82 / lvm=8e）
+partprobe #重读分区表，使新分区生效
+mkswap /dev/sdb3 #生成交换空间
+swapon /dev/sdb3 #启用交换空间
+swapon -s #查看swap信息
+free -m #查看内存/交换空间信息
+swapoff /dev/sdb3 #关闭交换空间（关闭所有：swapoff -a）
+
+dd if=/dev/zero of=/tmp/swp bs=1M count=4096
+-----------------------------------------------------------------------------------------
+command1 ; command2 #仅顺序执行
+command1 && command2 #前面执行成功再执行（其$?=0）
+command1 || command2 #前面不成功时才执行（其$?非0） 注：$?的值表示上次执行情况（若成功返回值为“0”）
+
+常用环境变量：
+$HOME 家目录路径
+$PATH Shell按PATH变量中的顺序搜索目录（找到的第1个与命令名称一致的可执行文件将被执行）
+$TERM 终端类型
+$UID 当前用户UID
+$PWD 当前目录绝对路径
+$PS1 主提示符（特权用户下默认主提示符是#，普通用户下默认的主提示符是$）
+-----------------------------------------------------------------------------------------
+阵列：
+系统内核将硬件各种能力通过API输出供应用调用使用，mdadm依靠内核模块“md”将任何块设备做成RAID
+使用mdadm建阵列前需用fdisk命令将设备类型改为"fd"并"partprobe"重读分区，阵列是底层硬件（只需安装驱动）与操作系统影响不大，系统把其当作硬盘使用
+
+分类：
+硬RAID：分为外接阵列卡与内置阵列两种（BIOS中设置）
+软RAID：占用CPU资源，Linux中使用mdadm命令将设备在内核中模拟为逻辑RAID-->/dev/md*
+
+阵列级别 --level：
+[5校验]：数据分散写入，每个盘互相存储数据校验码供数据恢复（和RAID0近似的性能且提高可靠性）
+[0条带]：数据分散写入，同时读写（条带即数据写入时平均在每个设备存几个单位，若4M则数据平均按4M分布，不提供冗余/修复）
+[1镜像]：数据复制写入，写性能下降而读性能提高（用于备份提高可靠性）
+[0+1]： 上层是条带，下层是镜像
+[1+0]： 上层是镜像，下层是条带（比0+1模式更优）
+[jbod]：将多个设备叠加为一个设备使用（按顺序存储）
+
+损坏：mdadm --fail /dev/md1 /dev/sda5 #模拟阵列1的sda5损坏
+移除：mdadm --remove /dev/md1 /dev/sda5 #将阵列中指定设备移除
+添加：mdadm -add /dev/md1 /dev/sda7 #向此阵列添加设备
+停用：mdadm --stop /dev/md1 /dev/sda5 #停用此设备后可将其删除：rm -rf /dev/sda5
+查看：mdadm --detail /dev/md0 #创建mdadm需时间，用cat /proc/mdstat查看
+-----------------------------------
+参数：
+--level/-l 级别
+--chunk 每个条带单元大小（单位KB，默认64KB，单元大小对不同负载下阵列读写性能有影响）
+--raid-devices/n 启用数
+--spare-devices/x 备用数（若阵列中某磁盘失效将自动将备用磁盘加入阵列后重构丢失磁盘的数据）
+--detail/D 查看其详细信息（监视某阵列状态：mdadm --monitor 选项 /dev/md0）
+--fail 将设备标为出错状态
+--manage 对阵列更改
+--create/stop 创建阵列/停用阵列，或：-C/-S （创建后需格式化）
+--remove/add 删除/增加阵列
+
+创建：
+RAID0：mdadm -C /dev/md0 --l 0 --chunk=32 -n 3 /dev/sdb{1,2,3}
+RAID1：mdadm -C /dev/md0 --l 1 --chunk=64 -n 2 -x 1 /dev/sdb{1,2,3}
+RAID5：mdadm -C /dev/md0 --l 5 --chunk=64 -n 5 -x 1 /dev/sdb{1..5}
+
+修改：
+mdadm --remove /dev/md0 /dev/hda6 #阵列中删除（不指定明细则删除阵列）
+mdadm --add /dev/md0 /dev/hda5 #阵列中添加
+
+删除：
+mdadm --fail /dev/md0 /dev/sdb --remove /dev/sdb #损坏指定阵列中的设备并将其移除
+mdadm --fail /dev/md0 /dev/sdc --remove /dev/sdc
+mdadm --stop /dev/md0
+
+查看状态：cat /proc/mdstat，为防止系统启动时启动阵列：rm -f /etc/mdadm.conf ；rm -f /etc/raidtab
+----------------------------------------------------------------------------------------- LVM
+LVM 逻辑卷（设置LVM前需使用fdisk命令的t参数将磁盘分区类型改为“8e”并重读分区表：partprobe）
+1.PE：8e #默认块大小4M
+2.PV：物理卷
+3.VG：卷组 #卷组划分多个lvm
+4.LV：逻辑卷
+
+创建：
+pvcreate /dev/sdb2
+vgcreate -s 4M vg01 /dev/sdb2
+lvcreate -L 5G -n lv01 vg01
+mkfs -t ext4 /dev/vg01/lv01 #格式化 ---> 挂载
+
+扩容：
+pvcreate /dev/sda6 ; vgextend vg01 /dev/sda6
+lvextend -L 1G /dev/vg01/lv01 #不影响原数据
+e2fsck -f /dev/vg01/lv01 #先进行磁盘检查（因修改设备需先检查）
+resize2fs /dev/vg01/lv01 #重设大小（设为其最大容量或指定容量：resize2fs /dev/vg01/lv01 5G）
+
+缩小：
+pvmove /dev/sda5 #数据移到其他PV
+vgreduce vg01 /dev/sdb5 #移除PV
+pvremove /dev/sda5 #删除PV
+resize2fs /dev/vg01/lv01 2G #减小LV01容量到2G（剩余可减小）
+lvreduce -L 3G /dev/vg01/lv01 #把LV01减3G容量（还有lvresize可修改其逻辑边界）
+e2fsck -f /dev/vg01/lv01 #磁盘检查
+mkfs -t ext3 /dev/vg01/lv01
+mount /dev/vg01/lv01 /mnt
+
+删除：
+umount /dev/vg01/lv01 #卸载
+vgchange –an /dev/vg1 #关闭VG，开启：vgchange –ay /dev/vg1
+lvremove /dev/vg01/lv01
+vgremove /dev/vg01
+pvremove /dev/sdb5
+
+创建快照："镜像卷需与原LVM01在同一卷组，快照将进行差异备份来提供还原"
+lvcreate -s -p -L 3G -n LVMMoniter /dev/vg01/lv01 #-p参数设为只读（非必选），-s参数创建快照
+mount /dev/vg01/LVMMoniter /mnt/lvs
+
+还原快照：
+tar -czvf /tmp/LVMMoniter.tar.gz * #在/mnt/lv01目录中打包
+umount /mnt/LVMMoniter ; lvremove /dev/vg01/LVMMoniter #取消快照
+umount /mnt/lv01 ; mkfs -t ext4 /dev/vg01/lv01 #格式化原LVM
+mount /dev/vg01/lv01 /mnt/lv01 #挂载
+tar -xzvf /tmp/LVMMoniter -C /mnt/lv01 #还原
+----------------------------------- setfacl
+-b 重置 #查看：getfacl Filename
+-m/x 设置/取消属性
+-d 目录内有效（在其中新建数据将引用此值）
+-R 递归
+
+setfacl -mR d:u:张飞:rx /srv #让张飞在/srv下有rx权限
+setfacl -m g:Gourp:rx passwd #属组权限为rx
+setfacl -m u:关羽:rx passwd #为关羽赋rw权限
+setfacl -m u::rwx passwd #不指定则属主
+setfacl -b Filename #清空所有设置（查看ACL设置：getfacl filename）
+-----------------------------------
+网卡：/etc/sysconfig/network-scripts/ifcfg-eth*
+DEVICE="eth0" 设备名
+BOOTPROTO=static/dhcp 引导协议，static/none是固定IP；dhcp是从DHCP获得的IP地址
+ONBOOT="yes" 系统启动时是否激活
+IPADDR=192.168.1.188 IP地址
+NETMASK=255.255.255.0 掩码
+GATEWAY=192.168.1.1 网关
+HWADDR="00:0C:29:6F:F0:70" 硬件地址
+NETWORK=192.168.1.0 网络地址
+BROADCAST=192.168.1.255 广播地址
+NM_CONTROLLED="no" 是否关联NetworkManager服务
+TYPE=Ethernet 网卡类型
+USERCTL=no 普通用户能否启动/停止该网卡
+IPV6INIT=no 是否启用IPV6
+PEERDNS=yes 是否使用DHCP的DNS信息并覆盖/etc/resolv.conf的配置
+MTU=1500 帧最大传输单位
+DNS1=202.106.0.20 主DNS地址
+DNS2=8.8.8.8 从DNS地址（关键字也可为：nameserver）
+
+DNS设置：vim /etc/resolv.conf
+nameserver=9.9.9.9
+nameserver=8.8.8.8
+-----------------------------------------------------------------------------------------
+变量替换在单引号中无效，在bash中每个变量的值都是字符串，env可查看所有与终端相关的环境变量，替换文本内容使用：tr echo $var与echo ${var}相同，获得变量长度：echo ${#变量名}
+环境变量是在当前进程中未定义而是从父进程中继承而来的值，export 变量名 ---> 成为环境变量（env）
+标准输入0 标准输出1 错误输出2 所有输出：&>或：2>&1 >覆盖 >>追加，黑洞：/dev/null，输出流导向：echo 123 | tee A.TXT B.TXT
+
+家目录shell历史： ~/.bash_history
+使用哪种解释器： #!/bin/bash
+不等： -ne <==> !=
+转义： ehco "sdfjhjfh\."
+
+格式化输出：
+printf "%-5s %-10s %-4s" no name mark
+no name mark
+1 sdfsd dsfsd
+2 fsdf sdfsd #%s %c %d %f 都是格式替换符 -表示左对齐 %-4.2f 中的.2表示保留2个小数位
+3 sdfsd sdfsdf
+
+数组名=([0]=value,[1]=value)
+数组名[索引从0开始]=value
+所有数组： echo 数组名[*]
+或： echo 数组名[@]
+
+摘要值： sha1sum/md5sum #对目录校验：md5deep -rl 【递归并以相对目录进行】
+加解密： base64 A base64 -d A
+临时文件&目录： mktemp/mktemp -d #将在/tmp中生成并返回路径和名字，重启后清空
+使用正则改名： rename 's/A/B/g' * #rename *.jpg *.png
+不断返回0值： /dev/zero
+查看文件类型： file filename
+格式化： mkfs -t 文件系统类型 /dev/设备名
+递归创建目录： mkdir -p
+查看进程I/O： iotop -p [PID]
+---------------------------------------------------------------------------------------------------------------- 防火墙设置
+iptables -t filter -F
+iptables -A INPUT -s 172.20.20.1/32 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT #状态分别是NEW,ESTABLISHED,RELATED的都放行
+iptables -A INPUT -s 172.20.22.0/24 -m state --state NEW,ESTABLISHED -p tcp -m multiport --dport 123,110 -j ACCEPT
+iptables -A INPUT -s 172.20.1.69/32 -m state --state NEW,ESTABLISHED -p tcp -m multiport --dport 123,110 -j ACCEPT
+iptables -A INPUT -s 172.20.20.1/32 -m state --state NEW,ESTABLISHED -p tcp -m multiport --dport 123,110 -j ACCEPT
+iptables -A INPUT -s 0/0 -m state --state NEW -p tcp -m multiport --dport 123,110 -j DROP #禁止访问123和110端口
+iptables -A INPUT -s ! 172.20.89.0/24 -m state --state NEW -p tcp -m multiport --dport 1230,110 -j DROP #除了172.20.89.0这个IP段的地址都DROP
+
+网络地址转换：
+iptables -t nat -F
+iptables -t nat -A PREROUTING -d 192.168.102.55 -p tcp --dport 90 -j DNAT --to 172.20.11.1:800 #目的地为192.168.102.55且目的端口为90的包做DNAT处理，转向到172.20.11.1:800
+iptables -t nat -A POSTROUTING -d 172.20.11.1 -j SNAT --to 192.168.102.55 #为目的地172.20.11.1做SNAT转换，把源地址改写为192.168.102.55
+
+防止sync flood攻擊：
+/sbin/iptables -N synfoold
+/sbin/iptables -A synfoold -p tcp --syn -m limit --limit 1/s -j RETURN
+/sbin/iptables -A synfoold -p tcp -j REJECT --reject-with tcp-reset
+/sbin/iptables -A INPUT -p tcp -m state --state NEW -j synfoold
+
+防止恶意扫描
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags ALL FIN,URG,PSH -j DROP
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags ALL ALL -j DROP
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags ALL NONE -j DROP
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+/sbin/iptables -A INPUT -i eth0 -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP
+
+防止超量攻擊
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+iptables -A INPUT -p icmp --icmp-type echo-request -j ACCEPT #拒绝ICMP
+
+限制IP连接数：
+ipiptables -I INPUT -p tcp --dport 80 -m connlimit --connlimit-above 10 -j DROP
+----------------------------------------------------------------------------------------------------------------
+针对每个目录apache允许在它们各自目录下放置叫做.htacess的文件，此文件同样也能控制这个目录的属性
+
+worker模块，其支持全新的多线程和多进程混合模型的MPM。编译安装时加上configure --with-mpm=worker即可
+<IfModule worker.c>
+StartServers 2
+MaxClients 150
+MinSpareThreads 25
+MaxSpareThreads 75
+ThreadsPerChild 25
+MaxRequestsPerChild 0
+</IfModule>
+
+Worker由主控进程生成“StartServers”个子进程，每个子进程中包含固定线程数，各线程独立地处理请求。为了不在请求到来时再生成线程MinSpareThreads和MaxSpareThreads设置了最少和最多的空闲线程数
+而MaxClients设置了同时连入的clients最大数。若现有子进程中的线程总数不能满足负载则控制进程将派生新的子进程
+
+
+listen 80 #监听端口，和客户端的请求的IP地址（服务器的IP）
+loadmodule #服务器启动时的动态加载模块。
+serveradmin root@localhost #指定管理员的邮件地址。当出错时，会发送邮件给这个邮件地址。
+servername localhost #缺省不需指定。将自动通过DNS解析获得名字。但有时DNS服务器出错。此处设置即指定对外的正式名字。特别是在有多个别名的情况下总是返回这个正式名给外部。
+documentroot "/var/web/www/html" #存放网页的根目录位置
+
+<directory "/var/web/www/html"> #实现对目的访问控制。目录的权限是可继承的。
+......
+</directory>
+
+option： #用来设置区块的功能
+All: #用户可在此目录中做任何事情
+None: #不允许访问此目录
+FollowSymlinks: #可以使用符号连接到不在此目录中的文件或目录。此项在location中无效。
+execcgi: #允许在此目录中执行CGI程序。
+Indexes: #允许生成此目录的文件列表。在没有index.htm等索引文件时，能向浏览器发送这个目录下的列表。
+Includes: #提供ssi功能。
+includes noexec: #提供ssi功能但不允许执行CGI程序中的#exec #include命令。
+multiviews: #使用权用内容商议功能。服务器和浏览器相互沟通后，决定返回哪个网页给客户，即决定网页传递性质。
+allow override: #目录属性是否可覆盖系统在设置文件的设置，此处设置可另设置与上级目录不一样的权限。也可不使用htaccess文件规定的权限而在此处另设权限。
+all: #缺省值。使访问控制文件可以覆盖系统配置。即以.htaccess文件的权限为准。
+none: #服务器忽略访问控制文件的设置。即htaccess和上级目录权限无法影响到此目录的权限，以此目录自已的权限为准。
+fileinfo: #允许访问控制文件中使用 add type等参数设置。即htaccess文件中可以用addtype参数。
+options: #允许访问控制文件中用option参数定义目录的选项
+authconfig: #允许控制文件使用权用authname/authtype等针对每个用户的认证机制
+deny
+allow #设置接受或拒绝哪些客户/地址可访问
+order #设置当allow和deny冲突时以哪个为准
+--------------------------------------
+索引文件优先顺序：
+DirectoryIndex index.html indx.htm indx.php index.cgi #定义每个目录中的默认的网页文件名称。排在前面的优先。
+
+TypesConfig /etc/mine.types #设置各种文件类型关联。让浏览器知道该使用哪种软件处理这些文件。把网页中包含的各种文件类型通知网页浏览器
+DefaultType text/plain #当无法识别文件类型时，则当成文本来处理。即当web服务器不能识别一个文件的类型时，就用此处定义的类型打开。
+HostnameLookups off #连接时服务器仅记录客户IP，若想同时得到记录客户的主机名则把此项改为"on"。但这样逆向查询dns而增加系统开销
+Errolog logs/error_log
+logLevel warn #记录的错误等级
+
+log format %....... #设置每条记录的格式。有combined/common/referer/agent。不同日志以不同的格式记录。
+customlog logs/access_log combined
+customlog logs/referes_log referer
+
+alias /icons/ "var/www/icons/" #为目录建成立别名。此处为/var/www/icon/建立了较短的别名/icons/
+DefaultLanguage nl #默认语言设定。
+
+<location /url> #用于定义url .无须文件系统支持。
+.....
+</location>
+
+<location /private> #此处定义的不是目录名，而是url中包含的名字符号。
+order allow deny
+deny from all
+</location > #此例中表示拒绝对所有包含/private的url的访问。如：http:www.sina.com/private123/file.htm 将无法访问。
+
+NameVirtualHost 192.168.1.0:80 #可指定虚拟主机的IP地址和端口号，或只指定IP地址。
+<virtualHost *:80> #此处的*号，到时要改为实际的IP地址
+Serveradmin webmaste@dummy-host.example.com #指定管理员信箱
+DocumentRoot /www/docs/dummy-host.example.com #指定存放网页的目录
+ServerName dummy-host.example.com #指定虚拟主机名
+ErrorLog logs/dummy-host.example.com-error_log #指定保存错误消息的日志文件
+CustomLog logs/dummy-host.example.com-access_log common #指定一般日志文件，及日志格式
+</VirtualHost>
+
+Apache是web服务器 （静态解析，如HTML）
+tomcat是java应用服务器 （动态解析，如JSP、PHP）
+1.Tomcat只是一个servlet容器，可以认为是apache的扩展但可独立于apache运行
+2.Apache是有C语言实现的，支持各种特性和模块从而来扩展核心功能
+3.Tomcat是Java编写的，更好的支持Servlet和JSP。
+
+httpd语法：
+-f config #启动时使用config作为配置
+-k start|restart|graceful|stop|graceful-stop #发送信号使httpd启动、重新启动或停止 。
+-e level #在启动时设置LogLevel为level，用于在启动时临时增加出错信息的详细程度以帮助排错。
+-l #输出静态编译的模块列表，不列出使用LoadModule指令动态加载的模块。
+-M #输出所有已在使用的模块
+-v #版本
+
+压力测试：ab -c 20 -n 50000 http://192.168.1.210/
+Document Length: 41005 bytes #请求的页面大小
+Concurrency Level: 20 #并发量
+Time taken for tests: 1180.733 seconds #测试总共耗时
+Complete requests: 50000 #完成的请求
+Failed requests: 0 #失败的请求
+Write errors: 0 #错误
+Total transferred: 2067550000 bytes #总共传输数据量
+HTML transferred: 2050250000 bytes
+Requests per second: 42.35 [#/sec] (mean) #每秒钟的请求量。（仅仅是测试页面的响应速度）
+Time per request: 472.293 [ms] (mean) #即平均请求等待时间（用户等待的时间）
+Time per request: 23.615 [ms] (mean, across all concurrent requests) #服务器平均请求响应时间 在并发量为1时 用户等待时间相同
+Transfer rate: 1710.03 [Kbytes/sec] received #平均每秒多少K，即带宽速率
+
+mod_rpaf：
+是一个Apache模块，利用其可给Apache的后端应用提供客户端真实IP地址。在nginx作为前端apache作为后端的情况下apache只能获取到nginx前端的ip地址而无法获取到用户的真实ip地址
+在这种情况下若php需对用户的ip做限制将无法实现。针对这种环境apache开发了相应的模块mod_rpaf
+
+Prefork MPM :
+此多路处理模块实现了非线程型、预派生的web服务器，适合于没有线程安全库，需避免线程兼容性问题的系统。它是在每个请求需相互独立的情况下最好的MPM，若一个请求出现问题不会影响到其他请求
+
+Worker MPM :
+使网络服务器支持混合的多线程多进程。因使用线程处理请求所以可处理海量请求且系统资源开销小于基于进程的MPM。但是它也使用了多进程（每个进程又有多个线程）以获得基于进程的MPM的稳定性
+
+Event MPM：
+以上两种稳定的MPM方式在非常繁忙的服务器应用下都有些不足。尽管HTTP的Keepalive能减少TCP连接数量和网络负载但Keepalive需要和服务进程或者线程绑定，导致一个繁忙的服务器会耗光所有的线程。
+因此它是解决此问题的一种新模型，它把服务进程从连接中分离出来。在服务器处理速度很快，同时具有非常高的点击率时可用的线程数量就是关键的资源限制
+此时Event MPM方式是最有效的。一个以Worker MPM方式工作的繁忙服务器能够承受每秒几万次的访问量（如在大型新闻服务站点的高峰时），而Event MPM可以用来处理更高负载。
+值得注意的是Event MPM不能在安全HTTP（HTTPS）访问下工作
+
+ErrorLog "/path/to/error_log"
+LogLevel {debug|info|notice|warn|error|crit|alert|emerg}
+LogFormat
+CustomLog "/path/to/access_log" LogFormat_Name
+%h: 客户端地址
+%l: 远程登录名，通常为-
+%u: 认证时输入用户名，没有认证时为-
+%t: 服务器收到 用户请求时的时间
+%r：请求报名的起始行
+%>s: 响应状态码
+%b: 响应报文的长度，单位是字节
+编译安装php
+tar xf php-5.6.10.tar.bz2
+cd php-5.6.10
+./configure –prefix=/usr/local/php –enable-fpm && chkconfig php-fpm on --level 235
+
+节约CPU周期的另一种方法是减少运行PHP应用程序所需的重复工作：
+PHP代码被翻译成操作码后可把它保存并重复使用直到原始代码被修改。缓存用于保存和重用PHP操作码，包括开源 Alternative PHP Cache (APC)、支持 PHP 的 Turck MMCache、XCache、eAccelerator和商业 Zend Platform。后三类加速器能够缓存和优化字节码，这为系统提供了更多的速度提升。
+---------------------------------
+Mysql日志类型：
+二进制： 引起数据改变的操作，默认存放于数据目录，格式：mysql-bin-XXXXXX
+慢查询： 收集耗费时间（超指定时间）的sql命令
+错误： 发生任何严重错误时的信息，"对标准错误输出重定向到该日志"
+查询： 记录所有查询（默认情况下查询日志关闭，开启会影响性能）
+事务： InnoDB特有，可提高事务效率，扩展名"ldf"，记录针对数据库的任何操作并将结果存至独立文件。对每次数据库更新的过程其都有全面的记录。根据它们可恢复数据库更新前的状态！
+中继：
+
+Mysql调优参考：
+1.架构层次： 主从实现读写分离
+2.系统层次： 增加内存，使用阵列，重挂磁盘并加入noatime参数减少磁盘i/o
+3.MySQL调优： 调整几个关键的buffer和cache，关闭skip-name-resolve
+4.应用层次： 根据慢查询日志优化程序的SQL，如增加索引
+-----------------------------------------------------------------------------------------
+初始化Mysql：/usr/bin/mysql_secure_installation
+查并发限制： show variables like 'max_connections';
+数据库迁移： mysqldump -uroot -ppassword --default-character-set=utf8 DBname | mysql [-h ip] -uroot -ppassword --default-character-set=utf8 DBname
+将表导入库： use DBname ; source /home/DBtable.sql
+表修改密码： update mysql.user set password=password(1234) where User="admin";
+导出某个表： mysqldump -uroot -ppaybay123 –database DBNAME –table TABLENAME > ~/dump.sql
+备份所有库的表结构：mysqldump -uroot -p -h ipaddress -A --no-data >
+历史最大连接数：show global status like 'Max_used_connections';
+被连接次数： mysql> show status like 'connections';
+
+导出&导入：
+mysqldump -uUSERNAME -pPASSWORD --default-character-set=utf8 DBname > DBname.sql
+mysql -uUSERNAME -pPASSWORD --default-character-set=utf8 DBname < DBname.sql
+
+设置&修改密码： mysqladmin -uroot password ‘password’ ; mysqladmin -uroot -p password ‘password’
+查看表信息： Mysql> show tables;
+查看表结构： Mysql> desc Tbname
+修改表名： Mysql> rename table OLDNAME to NEWNAME;
+在执行的任务： Mysql> show processlist;
+刷新权限： Mysql> flush privileges;
+刷新日志： Mysql> flush logs;
+删除二进制日志：Mysql> reset master;
+查看支持的引擎：Mysql> show engines \G 或：show variables like 'have%';
+日志相关信息: Mysql> show global variables like "%log%"; --->　常用（关于日志的所有信息）
+当前线程的状态：Mysql> show status like '%thread%';
+系统被连接次数：Mysql> show status like 'connections';
+查线程相关设置：Mysql> show variables like 'thread%';
+使用的2进制log：Mysql> show binary logs | show master logs
+查profile状态： Mysql> show variables like '%profiling%' --->　查执行过的语句所消耗的时间：show profiles;　---> show profiles from [ID]；
+查看MySQL配置: Mysql> show variables;
+查看服务器状态：Mysql> show global status;
+
+创建数据库与权限：
+>create database DBname character set utf8;
+>grant all privileges on *.* to '账号'@'192.168.%.%' identified by '密码' with grant option; flush privileges;
+----------------------------------------------------------------------------------------- 主从：
+主从同步是异步复制过程：M/S间实现同步由3个线程支持，2个线程（Sql/IO）在Slave，1个线程（IO）在Master，首先须打开Master端BinaryLog（Slave将从Master端获取后从自身顺序的执行）
+
+Master服务器：
+Mysql> grant all privileges on *.* to 'remote'@'%' identified by 'paybay123' with grant option ; flush privileges ; #提供权限
+vim /etc/mysql/my.cnf
+[mysqld]
+server-id=1 #标识，主库默认1（从此ID递增）
+bind-address = 0.0.0.0
+log-bin = mysql-bin-log
+binlog-do-db = DBNAME1 #需同步的库（多行）
+binlog-ignore-db = DBNAME0 #不同步的库
+
+重启并查看：service mysqld restart ；mysql -u root -ppaybay123 -e “show master status”
++------------------+----------+--------------+------------------+
+| File | Position | Binlog_Do_DB |Binlog_Ignore_DB |
++------------------+----------+--------------+------------------+
+| mysql-bin.000010 | 353 | | |
++------------------+----------+--------------+------------------+
+
+Slave服务器：
+vim /etc/mysql/my.cnf
+[mysqld]
+server-id = 2
+log-bin = mysql-bin-log
+binlog-format=mixd
+master-host = 192.168.1.100
+master-port = 3306
+master-user = remote
+master-password = paybay123
+log_slave_updates = 1 #将从服务器从主服务器收到的更新记入从服务器自己的二进制日志文件中（多级复制时使用）
+
+同步准备：
+sql> slave stop;
+sql> change master to master_host='192.168.1.100',master_user='origin', master_password='123456',master_log_file='mysql-bin.000010', master_log_pos=353;
+sql> slave start; ---> Slave创建1个I/O线程连到Master并请求master发送bin-log
+
+show slave status\G;
+slave_IO_runnning:yes ---> 成功（IO线程： 用于从主服务器拉取二进制日志）
+slave_SQL_running:yes ---> 成功（SQL线程： 在本地完全顺序执行其操作）
+-------------------------------------------------------------------------- InnoDB优化
+其innodb_buffer_pool_size决定innodb存储引擎表数据和索引数据的最大缓存大小，其同时为数据块和索引块提供数据缓存，值越大则缓存命中率越高，访问innodb表需要的磁盘I/O越少
+
+修改打开文件数限制：ulimit -n 65536
+
+vim /etc/my.conf 公共参数：
+max_binlog_size = 100M #每个binlog日志文件容量（建议定期删除）
+expire_logs_days = 7 #设置binlog日志文件保存时长（定期删除）
+sort_buffer_size = 16M #查询排序缓冲（仅对order by与group by作用，可增大为16M）
+query_cache_limit = 1M #查询缓存限制（仅1M以下查询结果才被缓存，以免结果数据较大把缓存池覆盖）
+query_cache_size = 32M #查询缓存大小（其缓存SELECT结果，当有同样SELECT查询时直接从缓存池返回，可适当成倍增加此值）
+open_files_limit = 2048 #打开文件数限制（若show global status like 'open_files'的值等于或大于open_files_limit时将会无法连接数据库或卡死）
+
+InnoDB：
+innodb_buffer_pool_size = 6G #索引&数据的缓冲区（设为内存的60%-70%） 【重点】
+innodb_buffer_pool_instances = 4 #缓冲池实例个数，推荐设为4个或8个
+innodb_flush_log_at_trx_commit = 2 #0：每秒写到日志并同步磁盘，数据库故障会丢失1秒左右事务数据，1：执行SQL后立即写到日志并同步磁盘，2：先把日志写到缓存区再每秒同步磁盘
+innodb_file_per_table = ON #默认共享表空间，共享表空间idbdata文件不断增大影响I/O性能。推荐开启独立表空间模式。
+innodb_log_buffer_size = 8M #日志缓冲区大小（最长每秒刷新1次所以不用超过16M）
+innodb_log_file_size = 256M #在日志组中每个日志文件的大小，一般是innodb_buffer_pool_size的25%，其大小与数据库的写入速度，事务大小，异常重启后的恢复有很大关系。
+innodb_log_files_in_group = 3 #日志文件个数，默认2个
+innodb_log_group_home_dir #日志文件存储路径
+
+vim /etc/sysctl.conf 系统优化：
+net.ipv4.tcp_fin_timeout = 30 #TIME_WAIT超时（默认60s）
+net.ipv4.tcp_tw_reuse = 1 #开启复用（允许TIME_WAIT socket重用于新的TCP连接）
+net.ipv4.tcp_tw_recycle = 1 #开启TIME_WAIT socket快速回收
+net.ipv4.tcp_max_tw_buckets = 4096 #保持TIME_WAIT socket的最大量（若超出此值将随机清除一些TIME_WAIT并输出警告）
+net.ipv4.tcp_max_syn_backlog = 4096 #进入SYN队列的数量（加大可容纳更多的等待连接）
+
+mysql> show global status like 'innodb_buffer_pool_pages_%';
++----------------------------------+-------+
+| Variable_name | Value |
++----------------------------------+-------+
+| Innodb_buffer_pool_pages_data | 761 |
+| Innodb_buffer_pool_pages_dirty | 0 |
+| Innodb_buffer_pool_pages_flushed | 1791 |
+| Innodb_buffer_pool_pages_free | 7428 | #当值为0时说明剩余空间用完需增大容量：vim /etc/my.conf ---> innodb_buffer_pool_size = 8G
+| Innodb_buffer_pool_pages_misc | 3 |
+| Innodb_buffer_pool_pages_total | 8192 |
++----------------------------------+-------+
+6 rows in set (0.00 sec)
+
+数据预热：默认只有某条数据被读取才会缓存在innodb_buffer_pool。所以数据库启动时需进行数据预热，将磁盘上所有数据缓存到内存从而提高性能
+日志备忘：修改重做日志文件大小的步骤：停止数据库 ---> 备份重做日志 ---> 设置参数值 ---> 删除之前重组日志 ---> 启动数据库 --->
+-------------------------------------------------------------------------- thread：
+Thread Cache池将空闲连接线程存放其中而非完成请求后销毁。当有新的连接请求时首先检查Thread Cache中是否存在空闲线程，若存在则取出直接使用，若没有则创建新的连接线程
+
+查看服务端线程信息：
+mysql> show variables like 'thread%';
++--------------------+---------------------------+
+| Variable_name | Value |
++--------------------+---------------------------+
+| thread_cache_size | 8 | #线程缓存池容量
+| thread_concurrency | 10 | #线程并发数
+| thread_handling | one-thread-per-connection | #线程工作模式，默认：1个连接1个线程
+| thread_stack | 196608 |
++--------------------+---------------------------+
+4 rows in set (0.00 sec)
+
+vim /etc/my.conf
+max_connections = 2046 #连接的并发数（推荐设为上限连接数80%）
+Thread_cache_size = 16 #Thread Cache池中应该存放的连接线程数
+Thread_stack #当连接线程被创建时为其分配的内存大小。当创建新的连接线程时需为其分配的内存堆栈空间，以便存放客户端的请求的Query及自身各种状态与处理信息
+
+当前系统中连接线程状态值： show status like '%thread%';
++------------------------+-------+
+| Variable_name | Value |
++------------------------+-------+
+| Delayed_insert_threads | 0 |
+| Slow_launch_threads | 0 |
+| Threads_cached | 3 | #Thread Cache池中共缓存了3个连接线程
+| Threads_connected | 4 | #正在使用（处于连接状态）的线程
+| Threads_created | 7 | #服务启动以来，创建了多少个线程
+| Threads_running | 1 | #正忙的线程，处于c/s连接传输的线性（正在查询数据，传输数据等等操作）
++------------------------+-------+
+6 rows in set (0.00 sec)
+-----------------------------------------------------------------------------------------
+安装：yum install php php-mbstring php-mysql php-common php-pecl-apc php-gd php-xml php-pdo
+php-mbdtring： 多字节处理模块，国际化支持
+php-mysql： 对Mysql支持（PHP与Mysql关联需安装php-mysql或php5-mysql）
+php-common： 通用组件
+php-pecl-apc PECL是扩展库，APC是一种缓存技术
+php-gd 处理图形的扩展库
+php-xml 对XML格式支持
+php-pdo 对数据库支持
+
+PHP-FPM是FastCGI管理器，仅用于PHP，提供更好的PHP进程管理方式，可有效控制内存和进程、平滑重载PHP配置（使cgi常驻内存）
+设置：/usr/local/php/sbin/php-fpm {start|stop|quit|restart|reload|logrotate}
+-----------------------------------------------------------------------------------------
+PHP会话：/var/lib/php/session
+
+vim /etc/php.ini
+max_execution_time = 300
+max_input_time = 300 #输入超时
+date.timezone =?Asia/Shanghai #时区设置
+post_max_size = 32M #上传限制
+memory_limit = 128M #内存限制
+mbstring.func_overload = 2
+upload_max_filesize = 64 #上传文件容量限制
+Mpost_max_size = 64M
+
+LAMP测试：vim index.php：<?php phpinfo(); ?> #显示PHP参数
+-------------------------------------------------------------------
+root@paybay:/# iostat -p /dev/sda -m #查看指定硬盘各分区的读写状态和统计状态
+Linux 3.16.0-30-generic (paybay) 01/18/2016 _x86_64_ (4 CPU)
+avg-cpu: %user %nice %system %iowait %steal %idle
+0.27 0.00 0.09 0.65 0.00 98.99
+Device: tps MB_read/s MB_wrtn/s MB_read MB_wrtn
+sda 3.48 0.00 0.07 566 62796
+sda1 3.48 0.00 0.07 565 62796
+sda2 0.00 0.00 0.00 0 0
+sda5 0.00 0.00 0.00 0 0
+-------------------------------------------------------------------
+root@paybay:~# dstat --top-cpu --top-mem --top-io 1 2 #查找占用CPU，内存，I/O量最多的进程，每秒1次共2次
+-most-expensive- --most-expensive- ----most-expensive----
+cpu process | memory process | i/o process
+java 0.1|java 380M|mysqld 1886B 33k
+mysqld 0.8|java 380M|mysqld 33k 10k
+
+root@paybay:~# dstat -c #CPU相关
+----total-cpu-usage----
+usr sys idl wai hiq siq
+0 0 99 1 0 0
+0 0 100 0 0 0
+0 0 100 0 0 0
+0 0 100 0 0 0
+0 0 100 0 0 0
+
+root@paybay:/# dstat -C 0,1,2,3 #大C指定多个CPU
+You did not select any stats, using -cdngy by default.
+-------cpu0-usage--------------cpu1-usage--------------cpu2-usage--------------cpu3-usage------ -dsk/total- -net/total- ---paging-- ---system--
+usr sys idl wai hiq siq:usr sys idl wai hiq siq:usr sys idl wai hiq siq:usr sys idl wai hiq siq| read writ| recv send| in out | int csw
+0 0 99 1 0 0: 0 0 99 1 0 0: 0 0 99 0 0 0: 0 0 99 0 0 0| 634B 69k| 0 0 | 0 0 | 176 398
+3 1 95 1 0 0: 3 1 95 1 0 0: 4 0 96 0 0 0: 4 0 96 0 0 0| 0 4096B|5230B 1892B| 0 0 | 584 2178
+4 2 76 18 0 0: 4 0 68 28 0 0: 4 1 92 3 0 0: 2 2 91 5 0 0| 0 244k| 71k 20k| 0 0 |1610 4456
+
+root@paybay:/# dstat -d #显示硬盘读写
+-dsk/total-
+read writ
+638B 68k
+
+root@paybay:/# dstat -n #显示网络状态
+-net/total-
+recv send
+0 0
+1127B 426B
+627B 158B
+
+root@paybay:~# dstat -l #负载情况：uptime
+---load-avg---
+1m 5m 15m
+0.03 0.12 0.13
+0.03 0.12 0.13
+0.03 0.12 0.13
+
+root@paybay:~# dstat -m #内存情况
+------memory-usage-----
+used buff cach free
+892M 208M 690M 2121M
+892M 208M 690M 2120M
+
+root@paybay:/# dstat -s #交换分区使用情况
+----swap---
+used free
+0 4060M
+-------------------------------------------------------------------
+/proc：
+其内的多种文件提供的系统信息不针对某个特定进程，而是能在整个系统范围的上下文使用（是伪文件系统，不占用外存空间）
+系统根目录/proc中，每个数字目录都是运行中的进程PID。进入任一个进程目录可通过其中文件或目录来观察进程的各项运行指标
+如：task目录描述进程中的线程，因此也可以通过下面的方法获取某进程中运行中的线程数：ls /proc/[PID]/task | wc -l
+
+Sysctl用于配置&显示/proc/sys中的内核参数，若参数长期保存需：vim /etc/sysctl.conf <--- #其包含一些TCP/IP堆栈与虚拟内存系统的高级选项，是改变运行中的Linux系统的接口
+
+参数：
+-a 显示所有系统参数
+-w 临时改变参数的值，如：sysctl -w net.ipv4.ip_forward=1
+-p 指定文件加载参数，默认从/etc/sysctl.conf加载，如：sysctl -p filename
+
+echo 1 > /proc/sys/net/ipv4/ip_forward <===> sysctl -w net.ipv4.ip_forward=1
+echo 30 > /proc/sys/net/ipv4/tcp_fin_timeout
+
+DNS：域名解析服务
+1.域名查询的过程依赖于数据库，DNS是一种分布式数据库（每一级直接管理自己下级，下级仅了解最上层的根）
+2.正向解析即FQDN到IP，反向解析即IP到FQDN
+3.对于本域的授权来自其上级（上级赋予其合法地位）
+4.主DNS通过修改自身版本号使从DNS与其同步数据库 #refresh，retry，expire
+5.所有类型的DNS服务器都有本地缓存在工作
+6."域"是逻辑关系而"区域"是物理关系
+7.本地优先查询的解析文件是：/etc/hosts #格式：IP FQDN
+8.配置本机DNS服务器的是：/etc/resolve.conf #格式：nameserver 8.8.8.8 alias）
+9.数据查询的过程称为：递归/迭代 #dns使用udp/tcp的53端口（c/s间用UDP，s/s间用TCP）
+10.查询有两种情况：外部来查询和本地来查找 #named启动是否成功要查看/var/log/messages信息
+11.一台DNS可为多个DNS域提供解析服务（在区域数据库文件中设置多个相同域的子域下的DNS）
+12.FQDN完全合格域名：www.baidu.com.（"."表示最上层的根，查询过程从根开始自上而下）
+13.缓存DNS不提供权威授权信息，转发DNS对需查询信息进行转发请求
+14.目前bind程序已进行chroot（相关目录参考 /etc/sysconfig/named）
+15.每个正/反解域都需区域数据库档案（其文件名在/etc/named.conf设定）
+16.当DNS查询时若本身没有数据库档案则前往root（即.）或forwarders服务器查询
+17.不使用DHCP提供的DNS需在网卡配置文件中设置：PEERDNS=no
+18.slave服务器没有自己的区域数据库（其数据库由master提供）
+
+DNS类型：
+1.缓存服务器： 仅有域名解析的缓存（域名被解析后暂存在本地的查询文件）
+2.转发服务器： 转发给其他DNS服务器来解析
+3.从服务器： 仅从该域主DNS获取区域文件并保存（无权威信息源），可减轻维护工作量
+4.主服务器： 特定域所有信息的权威信息源，在特定域中主DNS是唯一的存在
+
+1.正向代理： 普通代理，一般用于内部局域网通过一台代理服务器上网的情况。客户端要上网浏览器需要指定代理服务器
+2.反向代理： 反向代理服务的后端不是内部客户机而是Web应用服务器，提供给外部用户来访问内部服务器。方向与普通代理相反
+3.透明代理： 通过某种服务器端设置，使得局域网中的客户机不用指定代理服务器就能上网，感觉本机就是Internet上的主机
+-----------------------------------------------------------------------------------------
+流程：
+1、浏览器输入www.qq.com域名后先检查本地hosts文件是否有此网址映射，若有则掉用其地址完成解析
+2、若hosts没有此映射则查找本地DNS解析器缓存是否有此映射，若有则直接返回地址完成解析
+3、若以上均无相应映射，再找TCP/IP参数中的首选DNS服务器，在此称为本地DNS，此服务器收到查询时若要查询的域名包含在本地配置区域资源中则返回解析结果来完成解析（具有权威性）
+4、若查询的域名不由本地DNS服务器负责解析，但该服务器已缓存此网址映射则调用其来完成解析（不具有权威性）
+5、若本地DNS服务器本地区域文件与缓存解析都失效则根据本地DNS服务器设置（是否设置转发器）进行查询，若未用转发模式则本地DNS把请求发至13台根DNS，根收到请求后判断此域名(.com)由谁管理，并返回负责该顶级域名服务器的IP。本地DNS服务器收到后再联系.com域服务器。负责.com域的服务器收到请求后若自己无法解析则会找管理.com域的下一级DNS服务器地址(qq.com)给本地DNS服务器。当本地DNS服务器收到此地址后再去找qq.com服务器（重复上面的动作进行查询，直至找到www.qq.com主机）
+6、若使用的是转发模式，此DNS会把请求转发至上级DNS服务器由上级服务器解析，上级服务器若不能解析再去找根DNS或把转请求转至上上级，以此循环。
+
+注：不论本地DNS用是转发还是根提示最后都是把结果返回给本地DNS服务器，并由其返回给客户机
+-----------------------------------------------------------------------------------------
+域名解析服务器：DNS（Domain Name System）是将域名&IP相互映射的分布式数据库
+
+windows：\Windows\System32\Drivers\Etc\hosts
+
+递归查询： 从客户端到本地DNS服务器
+迭代查询： DNS服务器之间的交互查询
+FQDN： 完全限定域名，唯一地标识在DNS分层树中的位置
+----------------------------------------------------------------------------------------- Openssh
+公钥：~/.ssh/id_rsa.pub
+私钥：~/.ssh/id_rsa
+质询：~/.ssh/authorized_keys
+-----------------------------------：
+[wy@bogon 桌面]#ssh-keygen -t rsa #-t指定算法（RSA/DSA）
+Enter file in which to save the key (/home/wy/.ssh/id_rsa): #默认保存在~/.ssh/
+Enter passphrase (empty for no passphrase): #私钥丢失的备用密码（可不写）
+Enter same passphrase again:
+Your identification has been saved in /home/wy/.ssh/id_rsa.
+Your public key has been saved in /home/wy/.ssh/id_rsa.pub.
+The key fingerprint is:
+a8:05:04:ab:a1:17:f1:f3:3e:b7:44:bf:15:e7:a2:a7 wy@bogon #其中乱码即公钥
+The keys randomart image is:
++--[ RSA 2048]----+
+| o.. |
+| = |
+|. o + |
+|.o . + . |
+|o . + S . . |
+| . + . . + |
+| . o o . o . |
+| + . +.. |
+| . Eo |
++-----------------+
+
+上传：
+1. scp ./ssh/id_rsa.pub root@192.168.1.1:~/.ssh/authorized_keys
+2. ssh-copy-id -i [公钥路径] root@192.168.1.1 #存至：~/.ssh/authorized_keys （双机信任时双方都需执行下列操作）
+-----------------------------------:
+常规：
+/proc/sys/net/ipv4/ip_local_port_range = 4096 60000 #向外服务的端口范围（默认很小：32768~61000，可改为：1024~65000）
+/proc/sys/net/core/netdev_max_backlog #进入包的最大设备队列，默认300，对重负载而言太低可调到1000
+/proc/sys/net/core/somaxconn #系统中每个端口最大监听队列长度（是全局参数，默认128，对繁忙的服务器，增加该值有助于网络性能，可调到2048）
+/proc/sys/net/core/optmem_max #socket buffer的最大初始化值，默认10K
+/proc/sys/net/core/wmem_max #最大socket写buffer（socket发送窗口），可参考：873200
+/proc/sys/net/core/rmem_max #最大socket读buffer（socket接收窗口），可参考：873200
+
+TCP：
+/proc/sys/net/ipv4/icmp_echo_ignore_all = 1 #忽略ICMP
+/proc/sys/net/ipv4/tcp_wmem #TCP写buffer（TCP发送窗口），参考值: 8192 436600 873200
+/proc/sys/net/ipv4/tcp_rmem #TCP读buffer（TCP接收窗口），参考值: 32768 436600 873200
+/proc/sys/net/ipv4/tcp_max_syn_backlog #TCP的SYN最大请求量，默认1024 （即：SYN队列长度）
+/proc/sys/net/ipv4/tcp_syncookies = 1 #当SYN等待队列溢出时启用cookies处理（可防范少量SYN攻击）
+/proc/sys/net/ipv4/tcp_retries2 #失败重传次数，默认15（重传N次后彻底放弃，可减到5来尽早释放内核资源）
+/proc/sys/net/ipv4/tcp_fin_timeout = 30 #此参数决定了保持在FIN-WAIT-2状态的时间（仅当由本端要求关闭连接时）
+/proc/sys/net/ipv4/tcp_tw_reuse = 1 #重用：将TIME-WAIT sockets重新用于新的TCP连接
+/proc/sys/net/ipv4/tcp_tw_recycle = 1 #回收：开启TCP连接中TIME-WAIT sockets快速回收
+/proc/sys/net/ipv4/tcp_max_tw_buckets = 5000 #同时保持TIME_WAIT套接字的最大量，若超过此值TIME_WAIT套接字将被清除并打印警告。默认180000，改为5000。
+
+TCP KeepAlive：
+/proc/sys/net/ipv4/tcp_keepalive_time = 1200 #TCP探测间隔时间，用于确认TCP链是否有效，默认7200s（2 hour）
+/proc/sys/net/ipv4/tcp_keepalive_intvl = 30 #未获得响应时重发间隔，默认75s
+/proc/sys/net/ipv4/tcp_keepalive_probes = 3 #确认失效前的尝试次数
+
+/proc/sys/net/ipv4/tcp_mem 131072 262144 524288
+确定TCP栈应如何反映内存使用，值的单位是内存页（通常4KB）
+第1个值是内存使用的下限
+第2个值是内存压力模式开始对缓冲区使用应用压力的上限
+第3个值是内存使用的上限（在此层次上可将报文丢弃从而减少对内存的使用。对于较大的BDP可增大这些值）
+-------------------------------------------------------------------------- socket：
+cat /proc/net/sockstat
+
+sockets: used 137 已使用的所有协议套接字总量
+TCP: inuse 49 orphan 0 tw 3272 alloc 52 mem 46 正使用（在侦听）的TCP套接字数量，无主（不属于任何进程）的TCP连接数（无用、待销毁的TCP socket），等待关闭的TCP，....？
+UDP: inuse 1 mem 0 正使用的UDP套接字数量，套接字缓冲区使用量
+RAW: inuse 0
+FRAG: inuse 0 memory 0 使用的IP段数量
+
+常用：
+/proc/cpuinfo
+/proc/meminfo
+/proc/ioports
+/proc/mdstat
+-------------------------------------------
+HTTP/1.1格式：protocol://hostname[:port]/path/[;arges][?query]#fragment 附：<scheme>://<user>:<password>@<host>:<post>/<path>;<params>?<query>#<frag>
+
+请求方法：
+HEAD： #只请求页面首部（与GET几乎相同但HEAD仅请求消息报头）
+GET： #请求指定页面
+POST： #使服务器接受其实体主体（常用于提交表单）多用于网关程序
+PUT： #请求传输文件（保存到请求URI指定的位置，其自身不带验证机制）
+DELETE： #请求删除指定文件（其自身不带验证机制）
+OPTIONS： #服务端、客户端支持的方法列表（eg：客户端使用 OPTIONS * HTTP/1.1 ---> 服务器回应： HTTP/1.1 200 OK ; Allow：GET,POST,HEAD,OPTIONS）
+TRACE： #用于跟踪web服务器路径（不常用，server返回时附加via首部）
+CONNECT： #与代理连接时建立隧道，利用隧道协议进行TCP通信，主要使用SSL、TLS把通信内容加密后经网络隧道传输（eg：connext 代理服务器:端口 HTTP版本）
+PATCH： #实体中包含一个表，表中说明与该URI所表示的原内容的区别
+MOVE： #请求服务器将指定的页面移至另一个网络地址
+COPY： #请求服务器将指定的页面拷至另一个网络地址
+LINK： #请求服务器建立链接关系
+UNLINK： #断开链接关系
+WRAPPED： #允许客户端发送经过封装的请求
+Extension-mothed：协议拓展方法。
+GET /index.html HTTP/1.1
+Accept: text/plain
+Accept: text/html
+User-Agent:Mozilla/4.5(WinNT)
+
+流程：
+建立连接： 接受客户端链接（若不希望与此客户端建立连接则将其关闭）
+接受请求： 读取HTTP请求报文
+处理请求： 对请求报文解释并执行
+访问资源： 访问报文中指定的资源
+构建响应： 生成带有正确首部的http响应报文
+发送请求： 将响应回送给客户端
+记录日志： 将完成事务记录到日志文件
+----------------------------------------------------------------------
+HTTP协议结构
+不论请求报文request message，或回应报文response message，都分4部分：
+1.报头：initial line
+2.若干：header line
+3."空行作为http报文头的结束"
+4.实体主体（可选）
+
+Request Headers：
+GET /index.html HTTP/1.1
+Host: 127.0.0.1:8080
+Referer:http://class/download.microtool.de/
+User-Agent: Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.3) Gecko/2008092816 Icew easel/3.0.3 (Debian-3.0.3-3)
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-us,en;q=0.5
+Accept-Encoding: gzip,deflate
+Accept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.7
+Connection: keep-alive
+Keep-Alive: 300
+
+Response Headers：
+HTTP/1.1 200 OK
+Server: xiyouhttpd/0.1.0
+Content-Type: text/html
+Content-Length: 72
+Content-MD5：sakjd384
+Cache-Control:no-cache
+实体主体（可选）
+----------------------------------------------------------------------
+请求头--Request Headers：
+Client-IP： #客户端IP
+From： #客户端邮箱
+Host： #服务端hostname&端口（常用于虚拟主机）
+Referer： #请求的来源URL（eg：通过百度链接其他网站，在此网站时百度即此Referer）
+User-Agent： #客户端浏览器信息
+UA-OS： #客户端操作系统信息
+UA-CPU： #客户端CPU信息
+UA-Disp： #客户端显示器信息
+UA-Pixels： #客户端显示器像素信息
+UA-Color： #客户端显示器颜色信息
+Accept： #可处理的媒体类型
+Accept-Charset： #优先的字符集
+Accept-Encoding： #优先编码类型
+Accept-Language： #优先的的语言
+TE： #客户端可处理扩展传输码（extension transfer codings）
+Authorization： #客户端验证数据（此首部携带用户名&密码，之间以冒号分隔，以base64编码方式传输）
+Cookie： #服务器为辨别用户、session跟踪，由Server生成发给User-Agent，浏览器将Cookie的key/value保存到某目录文本文件内，下次请求同一网站时发送其给服务器
+Max-Forwards： #转发（经proxy或gateway）的最大“跳数”
+Proxy-Authorization： #与Authorization类似
+Proxy-Connetion： #与Connetion类似
+
+Expect： #列出所请求服务器的行为；
+If-Match： #实体标签（entity tag）匹配时，请求才有效；
+If-None-Match： #与If-Match相反；（用于缓存新鲜度验证，其携带序列号或校验码）
+If-Modified-Since： #若资源从某个时间点之后被修改过，就获取该资源；
+If-Unmodified-Since： #与If-Modified-Since相反；
+Range： #请求指定范围内的资源；
+If-Range： #允许对指定范围内的资源进行条件请求
+
+响应头--Response Headers：
+Age： #响应时间
+Date： #提供日期和时间标志（报文在server端的构建时间）
+Public： #Server对其上面的资源能够支持的Method；
+Retry-After： #找不到资源时的重试时间间隔；
+Server： #Server端服务程序的名称和版本
+Title： #资源标题；
+Warning： #警告消息，比start-line中的reason phrase更丰富
+Accept-Ranges： #服务器能够接受资源类型的范围
+Vary：
+Via： #报文经过的中间的节点（代理，网关）
+Set-Cookie： #server发往Client的Cookie，多用于用户身份识别
+WWW-Authenticate： #要求用户输入用户名和密码进行身份验证，（server端使用401通知client需验证）客户端使用Authorization首部携带验证信息返回server端
+
+Allow： #此资源支持哪些Method（如GET、POST等）
+Location： #服务器返回302 Redirect时指定客户端要重定向的地址
+Content-Base：
+Content-Encoding： #消息中实体内容的编码（eg：是否压缩）
+Content-Language： #实体匹配的语言
+Content-Type： #实体的MIME类型，还可指定支持的字符集charset，如Content-Type: text/html; charset=iso-8859-4
+Content-Length： #实体长度；可用来判断一个消息是否有残缺；此外在长连接中无法使用关闭连接的信息来判定消息是否传送完毕，此时就需要Content-Length提供的信息
+Content-Location： #资源位置
+Content-MD5： #实体内容的校验和
+Content-Range： #当传送的资源被分割成多个部分响应时，该头域指明了当前响应消息中的实体内容属于整体资源的哪个部分
+ETag： #资源的版本号（可用来判断过期的cache对象是否需重新激活，常用于缓存）
+Expires： #对象的失效时间（绝对时间）
+Last-Modified： #资源最后修改时间
+Cache-Control： #限定这个资源的缓存方法（不缓存：Cache-Control：no-store）
+----------------------------------------------------------------------
+代理：处于B/S间，接收所有客户端http请求后把请求转发给服务器（可能对请求进行修改或过滤，记录等）
+中继：类似代理，对于盲中继可能出现一些问题（如持久化连接的问题）盲中继可能不识别持久化连接的标识，导致客户端和服务器端以为自己建立的是持久化连接但实际不是
+缓存：特殊的HTTP代理服务器，将经过代理传送的常用文档复制保存起来。当有下个请求时可直接调用此缓存中的副本（client从较近的缓存下载比从服务器下载速度高，同时也降低服务器负载）
+网关：特殊的服务器，作为其他服务器的中间实体使用，作用是协议的转换！
+隧道：隧道是建立起来后就会在两条连接之间对原始数据进行盲转发的HTTP程序，常见用途是通过HTTP连接承载加密的安全套接字层SSL流量，这样SSL流量就可穿过只允许web流量的防火墙
+
+隧道eg：原理是通过http连接到网关，网关根据connect首部通过tcp协议与其他服务器连接:（建立连接后客户端即可发送具体的数据）
+CONNECT www.test.com HTTP/1.1
+Host: webturnl.com
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+HTTP/1.1 200 Connection Established
+----------------------------------------------------------------------------------------- tomcat：
+<Engine name="Catalina" defaultHost="localhost" JvmRoute="TomcatB"> ---> JvmRoute是在负载均衡中使用的标识符
+<Host
+name="localhost" ---> virtual host名称
+appBase="webapps" ---> war包存放位置，相对路径为CATALINA_HOMEM
+unpackWARs="true" ---> 是否自动解压war包
+autoDeploy="true" ---> web.xml变化时自动重部署（此功能必需允许后台处理）
+>
+<Context path="/ggg" docBase="E:\google\mail"/> ---> 一组属性-元素的配置集合
+<Valve ---> 用于登陆日志&请求过滤等
+className="org.apache.catalina.valves.AccessLogValve" ---> 参数固定为指定java类"用于日志"：org.apache.catalina.valves.AccessLogValve
+directory="logs" ---> 日志目录
+prefix="localhost_access_log." ---> 日志前缀
+suffix=".txt" ---> 日志后缀
+pattern="%h %l %u %t &quot;%r&quot; %s %b" ---> 日志参数（pattern可设置成两种方式，第一种是pattern="common"，第二种是pattern="combined"）
+resolveHosts="false" ---> 是否DNS解析
+fileDateFormat ---> 日志文件名的时间设置，如：access_log.2007-09-22.txt中的2007-09-22，若每小时生成一个日志文件则将其设为：fileDateFormat="yyyy-MM-dd.HH"
+/>
+</Host >
+</Engine>
+----------------------------------------------------------------------------------------- tomcat内存优化
+vim tomcat6/bin/catalina.sh
+
+JAVA_OPTS='-Xms1024m -Xmx2048m -XX:PermSize=256M -XX:MaxNewSize=256m -XX:MaxPermSize=256m' 或：JAVA_OPTS="$JAVA_OPTS -Xms2048M -Xmx2048M -Xss128K"
+
+-server ---> 启用jdk的server版
+-Xms ---> JVM初始化堆的大小
+-Xmx ---> JVM堆的最大容量（当应用所需内存超出堆的最大值时虚拟机将提示内存溢出并导致应用服务崩溃，建议堆的最大值设为可用内存的最大值的80%，如：JAVA_OPTS='-Xms3g -Xmx6g'）
+-XX:PermSize ---> 内存永久保留区域（非堆内存初始值，默认物理内存1/64）
+-XX:MaxPermSize ---> 内存最大永久保留区域（最大非堆内存容量，默认物理内存的1/4）
+
+重启后查看是否生效：/tomcat6/bin# jmap –heap -F [JAVA-PID]
+----------------------------------------------------------------------------------------- server.xml优化
+vim server.xml
+
+<Connector port="8080" protocol="HTTP/1.1"
+maxHttpHeaderSize="8192" http头最大容量
+maxThreads="1000" 最大线程数
+minSpareThreads="100" 初始化时创建的线程数
+maxSpareThreads="1000" 连接器最大空闲线程数
+#minProcessors="100" 最小空闲连接线程数（用于提高系统处理性能，默认10）
+#maxProcessors="1000" 最大并发数（默认75）
+connectionTimeout="20000" 连接超时（单位毫秒，-1则永不超时）
+redirectPort="8443" 在需基于安全通道的场合把请求转发到基于SSL的端口
+enableLookups="false" 是否解析（IP转域名）为提高处理能力应设为false
+URIEncoding="utf-8" 编码
+acceptCount="1000" 指定当所有可使用的处理请求的线程都被使用时所使用的监听端口队列容量，超过此值的请求不予处理（不能小于maxSpareThreads）
+disableUploadTimeout="true" ?
+compression 开启压缩
+compressionMinSize 最小压缩限制
+compressableMimeType 压缩类型
+/>
+
+线程池：
+<Executor
+name="tomcatThreadPool" 线程池名字（唯一性，在Connector中对其调用）
+namePrefix="catalina-exec-" 线程名字前缀（标记线程名字，每个线程用此前缀加上线程编号，eg：catalina-exec-1 catalina-exec-2）
+maxThreads="1000" 线程池中最大线程数量（默认200，其仅限制而不占用资源）
+minSpareThreads="50" 最小保持活跃线程数量（默认25，太小影响反应速度，反之占用资源）
+maxIdleTime="600000" 超过最小活跃线程数量的线程，空闲时间超过此值后将被关闭（默认1分钟）
+/>
+Connector中调用线程池：<Connector port="80" ... maxThreads="5000" executor="tomcatThreadPool" ... /> #若调用线程池则其它线程属性如maxThreads等将被忽略
+
+设置session过期时间：
+vim \conf\web.xml
+<session-config>
+<session-timeout>180</session-timeout> #单位：分
+</session-config>
+----------------------------------------------------------------------------------------- Example：
+<Server port=”8005” shutdown=”SHUTDOWN”>
+...
+<Service name=”Catalina”>
+<Connector port=”8080” protocol=”HTTP/1.1”
+maxThreads=”150”
+connectionTimeout=”20000”
+redirectPort=”8443” />
+<Connector port=”8009”
+protocol=”AJP/1.3”
+redirectPort=”8443” />
+<Engine name=”Catalina” defaultHost=”localhost”> ---> 1个Engine是1个容器（servlet容器）其可处理多个虚拟Host请求（defaultHost：当Engine找不到请求对应的host时使用此host）
+<Realm className=”org.apache.catalina.realm.UserDatabaseRealm” resourceName=”UserDatabase”/>
+<Host
+name=”localhost”
+appBase=”webapps”
+unpackWARs=”true”
+autoDeploy=”true”
+xmlValidation=”false”
+xmlNamespaceAware=”false”
+>
+</Host>
+</Engine>
+</Service>
+</Server>
+----------------------------------------------------------------------------------------- Apache：
+多路处理模块类型：（查询生效的MPM模块：httpd -l ---> "prefork.c"：）
+1.preforck #预先生成进程：每个请求对应一个进程（稳定可靠）编译时：--with-MPM=preforck
+2.worker #基于线程：每个请求对应一个线程（1个进程下的多个线程响应多个用户请求）编译时：--with-MPM=worker
+3.event #事件驱动：每个进程处理多个用户请求（2.4版源生支持）编译时：--with-MPM=event
+
+多路处理模块"MPM"默认工作于preforck模式（1个进程处理1个用户请求），修改服务MPM模型：vim /etc/sysconfig/httpd ---> httpd=/usr/***/*.event （通常在编译时指定其MPM模式）
+特定用户"user"的主目录通常是："~user/"，模块："mod_userdir"在网络中沿用此概念，允许用URL访问用户主目录文件如：http://www.example.com/~user/file.html
+master process：
+动态程序服务器生成一个主进程："master process"，其负责管理其子进程，子进程负责实际的处理请求并在完成后被"master process"回收
+
+当指令作用于文件系统时用： <Directory>或<Files>
+当指令作用于不存在于文件系统的对象时用： <Location> #根据请求定位文件的默认操作过程：取出路径(URL中主机名和端口后的部分)附加到由DocumentRoot定义的路径之后
+
+其mod_proxy和mod_jk模块都用于将用户请求代理至后端（Nginx中使用upstream模块也可以实现向后代理，但仅支持http方式）
+正向代理（proxyRequests）与反向代理（proxypass）不能同时存在
+SSL协议的特性决定了基于名字的虚拟主机无法成为SSL服务器
+----------------------------------------------------------------------------------------- distributed system
+分布式系统由多台计算机和通信的软件组件通过网络（本地或广域网）组成，是建立在网络之上的软件系统。正因为软件的特性所以分布式系统具有高度内聚性和透明性
+因此，网络和分布式系统之间的区别更多的在于高层软件（特别是OS）而非硬件。分布式系统可应用在不同平台如：Pc、工作站、局域网和广域网等。
+
+分布式计算优点
+可靠性 ： 一台服务器的系统崩溃并不影响到其余的服务器
+可扩展性： 在分布式计算系统可以根据需要增加更多设备
+资源共享： 共享数据是必不可少的应用，如银行，预订系统...
+灵活性： 由于该系统非常灵活因此很容易安装，实施和调试新的服务
+更快的速度：分布式计算系统利用多台设备的计算能力使得其拥有更快的处理速度
+开放系统： 由于它是开放的系统，本地或远程都可以访问
+更高的性能：相较于集中式计算机网络集群可以提供更高的性能（及更好的性价比）
+
+分布式计算缺点
+故障排除： 故障排除和诊断问题
+软件： 更少的软件支持
+网络传输： 高负载，信息丢失等....
+安全性： 开放的特性使其存在数据安全性和共享风险等问题
+----------------------------------------------------------- 内存寻址：
+内存地址分三种：
+1 逻辑地址
+2 线性地址
+3 物理地址
+
+在分段的CPU结构中程序中引用的地址都是逻辑地址：
+逻辑地址经分段单元成为线性地址后再经分页单元成为实际的内存物理地址，若CPU体系结构不支持分段则逻辑地址等于物理地址。一般RSIC指令CPU不支持分段，如arm。复杂指令CPU支持分段，如x86...
+
+1.硬件中的分段：
+因x86体系结构是分段的所以程序由很多段组成。程序的逻辑地址由段与偏移量组成。实现这种机制由特殊的硬件来完成
+主要有段寄存：cs, ss, ds, es, fs, gs
+全局段描述符寄存器：gdtr
+局部段描述符寄存器：ldtr
+2.linux中的分段：
+其设计目标是简单实用，而分段单元使程序变得复杂。所以Linux不分段但在x86必须分段，所以linux采用巧妙的方法：
+在用户态与内核态使用四个段，分别是用户代码段，用户数据段，内核代码段，内核数据段。而且段描述符的基地址都是0,这样换算下来的逻辑地址等于线性地址。分段的唯一用途就是可以检查权限
+
+进程页表：
+进程的线性地址空间分为两部分：
+从0x00000000到0xbfffffff的线性地址，无论进程运行在内核态还是用户态都可以寻址
+从0xc0000000到0xffffffff的线性地址，只有内核态的进程才能寻址。
+这也就是说，在内核代码的线性地址都是大于0xc0000000的，但是可以寻址小于0xc0000000的地址，而用户态的代码只能寻址小于0xc0000000的线性地址。。也全局目录小于0xc0000000的地址，具体的页目录项依赖具体的进程，但是大于0xc0000000的页目录项都是相同的都等于内核页全局目录。
+
+CPU寻址：
+要读某个地址的数据时（内存里不分指令和数据）会给出一个System Address（虚拟地址&物理地址转换过程略过，当它转换完后得到一个系统地址空间的地址）
+然后Source Address Decoder会翻译，确定这个系统地址属性是DRAM，并且确定这个地址的内存在哪个CPU的那个Home Agent后面（不是多处理器系统就略过这一步）
+然后就把请求丢给SAD解码出来的Home Agent就好了。Home Agent搞定Cache一致性的事情后（不是多处理器就略过这一步），会把这个读请求丢给下面的Memory Controller，Memory Controller通过Traget Address Decoder把这个长长的System Address翻译成DDR通道上能认识的地址，然后这个请求就甩到DDR通道上了。经过一系列处理呢，过一会儿内存就会把这个地址对应的数据返回给Memory Controller了，然后这么一路回去到请求的Core。PS：内存条里又不用存物理地址的咯，它只要能得到一个地址，然后返回对应的数据就好了。一个4G的内存条的话，DDR通道上的访问地址不会超过4G的，多个内存条靠Rank编号什么的区分的，这就是TAD的用处嘛。PPS：指令里一些跳转的绝对地址或偏移量啥的，存在内存里的时候不还是数据么。
+
+每个连到I/O总线的设备都有自己的I/O地址集，即所谓的I/O端口（I/O port）
+有四条专用汇编指令允许CPU对I/O端口进行读写：
+分别是in、ins、out和outs。在执行一条指令时CPU使用地址总线选择所请求I/O端口，使用数据总线在CPU寄存器和端口间传数据
+
+执行指令的开销：CPU快得离谱，在Core 2 3.0GHz上大部分简单指令的执行仅1个时钟周期即1/3纳秒。即使真空中传播的光在这段时间内也只能走10厘米
+
+正常情况下当CPU操作一块内存区域时其中的信息要么已保存在L1/L2 cache，要么需将之从系统主存调入cache后再处理：
+若是后一种情况就碰到了第一个瓶颈，一个大约250个时钟周期的延迟。在此期间若CPU没有其他事情要做则往往是处在停机状态的（stall）
+-----------------------------------------------------------
+同步阻塞： 老张把水壶放到火上立等水开。老张觉得自己有点傻
+同步非阻塞: 老张把水壶放到火上去客厅看电视，时不时去厨房看看水开没有。老张还是觉得自己有点傻，于是变高端了，买了把会响笛的那种水壶...
+异步阻塞: 老张把响水壶放到火上立等水开。老张觉得这样傻等意义不大
+异步非阻塞: 老张把响水壶放到火上去客厅看电视，水壶响之前不再去看它了，响了再去拿壶。老张觉得自己聪明了！
+
+对unix来讲：阻塞式I/O(默认)，非阻塞式I/O(nonblock)，I/O复用(select/poll/epoll)都属于同步I/O，因它们在数据由内核空间返回进程缓冲区时是阻塞的。
+仅异步I/O模型"AIO"符合异步I/O操作含义，即在数据准备完成时由内核空间拷贝回缓冲区后通知进程（等待通知的时间里可以干别的事）
+----------------------------------------------------------- 中断：
+中断： 因遇到紧急情况而中断现有操作转而处理紧急情况，完成后再回到以前状态继续执行，但这是狭义的概念（其仅解释内/部中断而对软件中断不能套用）
+中断分4个步骤：中断请求 ---> 中断响应 ---> 中断处理 ---> 中断返回
+
+中断分类：
+1.可屏蔽中断： 朋友叫你踢足球，但你可能正与心仪的美眉聊得开心，于是不响应中断
+2.不可屏蔽中断： 叫你去领奖金且过期不侯，那么无论如何也要响应这个中断（如：电源掉电等...）
+
+内部中断：是CPU自己发生异常产生。最重要的是“除0中断”和“溢出中断”。除数不能为0，若CPU运行过程中出现了这种情况就会产生中断，由系统自动执行，由于中断号为“0”，所以也叫0号中断；
+外部中断：外部设备给CPU的中断请求，如：时钟、键盘、鼠标等。这些中断都可屏蔽。如：键盘输入‘A’后在屏幕上显示即是中断在其中起的作用
+溢出中断：是CPU运算过程中产生溢出，由应用程序执行。溢出概念复杂，需计算机编码知识。
+软件中断：是应用程序提出的中断，是不能被屏蔽的。每个软件中断都对应一个标准的功能，如：在屏幕上显示字串，准备从键盘接受一个字符等....
+
+IRQ：
+为什么中断要编号?，因只有编号CPU才知道向CPU提出的是什么中断。比如IRQ1是时钟中断，IRQ2是键盘中断等等...
+
+注：可屏蔽与非可屏蔽中断对应CPU两根针，是严格区分的
+---------------------------------------------------------------------- Nginx&memcache：
+upstream memcacheds {
+server 10.1.240.166:22222;
+}
+server {
+listen 8080;
+server_name nm.ttlsa.com;
+index index.html index.htm index.php;
+root /data/wwwroot/test.ttlsa.com/webroot;
+location /images/ {
+set $memcached_key $request_uri;
+add_header X-mem-key $memcached_key;
+memcached_pass memcacheds;
+default_type text/html;
+error_page 404 502 504 = @app;
+}
+location @app {
+rewrite ^/.* /nm_ttlsa.php?key=$request_uri;
+}
+location ~ .*\.php?$
+{
+include fastcgi_params;
+fastcgi_pass 127.0.0.1:10081;
+fastcgi_index index.php;
+fastcgi_connect_timeout 60;
+fastcgi_send_timeout 180;
+fastcgi_read_timeout 180;
+fastcgi_buffer_size 128k;
+fastcgi_buffers 4 256k;
+fastcgi_busy_buffers_size 256k;
+fastcgi_temp_file_write_size 256k;
+fastcgi_intercept_errors on;
+fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+}
+}
+----------------------------------------- NTP server：
+vim /etc/ntp.conf
+server 210.72.145.44 #进行校准的服务器（中国国家授时中心IP）
+server 0.cn.pool.ntp.org #第一个（格式：Number.country.pool.ntp.org ）
+server 1.cn.pool.ntp.org #第二个
+restrict 192.168.56.12 #允许同步的终端（允许所有：restrict default nomodify notrap ）
+fudge 127.127.1.0 stratum 0 stratum #时间服务器层次。为0则为顶级，若向别的NTP更新时间则不为0
+driftfile /var/lib/ntp/ntp.drift
+
+vim /etc/sysconfig/ntpd #同步时间到BIOS
+SYNC_HWCLOCK=yes
+
+/etc/init.d/ntpd start ; chkconfig ntpd on --level 235 ; iptables -I INPUT -p udp -m udp --sport 123 -j ACCEPT
+----------------------------------------- NTP Client：
+chkconfig crond on --level 2345
+crontab -e
+*/10 * * * * /usr/sbin/ntpdate 192.168.1.32 ; /sbin/hwclock -w
+
+修改时区：
+vim /etc/sysconfig/clock ---> ZONE="Asia/Shanghai"
+------------------------------------------------------------------------------------ HAProxy
+负载均衡及基于TCP/HTTP应用的代理，支持虚拟主机！免费快速可靠并自带web管理，其转发特性与Nginx相比有更多定制，基于事件驱动："一个进程响应多个请求"
+当代理的后端服务故障时自动将其摘除并在恢复后自动其加入
+
+工作模式：
+1.四层模式：仅在C/S间转发双向流量（lvs负载均衡属于4层应用，效率比HAproxy的7层应用高）
+2.七层模式：分析协议,并能通过允许、拒绝、交换、增加、修改或者删除请求 (request)或回应(response)里指定内容来控制协议，这种操作要基于特定规则
+
+HAProxy借助OS常见技术实现性能最大化：
+1.单进程、事件驱动模型显著降低上下文切换开销及内存占用（多进程模型在HAproxy中不建议）
+2.事件检查器(event checker)允许其在高并发连接中对任何连接，任何事件即时探测
+3.在任何可用的情况下单缓冲(single buffering)机制能以不复制任何数据的方式完成读写，节约CPU时钟周期及内存带宽
+4.借助于Linux2.6以上的splice()系统调用，其可实现零复制转发(Zero-copy forwarding)，在Linux 3.5及以上的OS中还可实现零复制启动(zero-starting)
+5.MRU内存分配器在固定大小的内存池中实现即时内存分配，显著减少创建一个会话的时长
+6.树型存储：侧重于作者多年前开发的弹性二叉树，实现以O(log(N))的低开销来保持计时器命令、保持运行队列命令及管理轮询及最少连接队列
+7.优化的HTTP首部分析：优化的首部分析功能避免了在HTTP首部分析过程中重读任何内存区域
+8.降低昂贵的系统调用，大部分工作都在用户空间完成，如时间读取、缓冲聚合及文件描述符的启用和禁用
+
+负载均衡性能评估三点：
+1.会话率
+2.并发能力
+3.数据率
+
+配置分段：
+defaults <name> #为其他段提供默认参数
+frontend <name> #定义监听套接字并接受C端请求并与之建立连接
+backend <name> #定义S端服务器并将对应C端的请求转至后端服务器
+listen <name> #通过关联"前端"和"后端"定义完整的代理，通常只对TCP流量有用（listen可替代frontend与backend）
+------------------------------------------------------------------------------------
+vim /etc/haproxy.cfg
+global
+log 127.0.0.1 local0
+maxconn 4096 #最大并发
+chroot /usr/local/haproxy
+uid 99
+gid 99
+daemon #守护进程方式工作
+nbproc 1 #单核心运行（建议）
+pidfile /usr/local/haproxy/run/haproxy.pid
+ulimit-n 65535 #文件描述符
+defaults
+log global #定义全局的syslog服务器，每个实例最多定义两个（若使用下面的参数则可省略）
+log 127.0.0.1 local3 #日志文件的输出定向
+mode http #处理类型（使用tcp模式时将在c/s间全双工连接且不对报文检查，常用于ssl，ssh，smtp等应用）
+option dontlognull #不记录健康检查的日志信息
+option abortonclose #负载很高时自动结束当前队列处理较久的连接
+option redispatch #当serverid对应的服务器挂掉后，强制定向到其他健康服务器
+retries 2 #N次连接失败则认为后端不可用（主要通过后面的check检查）
+contimeout 5000 #连接超时
+stats enable #启用状态监控
+stats refresh 2 #统计页刷新间隔
+stats uri /haproxy-stats #监控页访问地址：http://localhost:1080/haproxy-stats
+stats realm status\ HAproxy #监控页提示信息
+stats auth admin:admin #监控页用户:密码
+stats admin if TRUE #启/禁用后端服务器（haproxy-1.4.9以后版本）
+clitimeout 50000 #C端连接超时
+srvtimeout 50000 #S端连接超时
+timeout check 2000 #心跳检测超时
+#WEB信息提示（可定制）
+errorfile 403 /etc/haproxy/errorfiles/403.http
+errorfile 500 /etc/haproxy/errorfiles/500.http
+errorfile 502 /etc/haproxy/errorfiles/502.http
+errorfile 503 /etc/haproxy/errorfiles/503.http
+errorfile 504 /etc/haproxy/errorfiles/504.http
+frontend HHHHH
+bind 192.168.1.1:80 #监听地址和端口（对外提供服务）
+mode http #处理类型
+option httplog #启用http的log
+option httpclose #每次请求完毕后主动关闭http通道（不支持keep-alive，仅模拟这种模式的实现）
+option forwardfor #后端需获得客户ip（从Http Header获得）
+#日志设置
+capture request header Host len 40 #捕获请求首部（格式：capture {request|response header 首部名称 首部长度）
+capture request header Content-Length len 10 #捕获请求首部
+capture request header Referer len 200 #捕获请求首部
+capture response header Server len 40 #捕获响应首部
+capture response header Content-Length len 10 #捕获响应首部
+capture response header Cache-Control len 8 #捕获响应首部
+--------acl策略配置--------
+acl [策略1] hdr_reg(host) -i ^(www.itnihao.cn|ww1.itnihao.cn)$ #若请求的域名满足正则表达式中的2个则返回true -i：忽略大小写
+acl [策略2] hdr_dom(host) -i blog.itnihao.cn #若请求的域名满足www.itnihao.cn返回true
+acl [策略3] hdr(host) -i itnihao.cn #若请求的域名满足itnihao.cn返回true
+acl [策略4] url_sub -i killall= #在请求url中包含killall=，则此控制策略返回true
+acl [策略5] url_dir -i allow #在请求url中存在allow作为部分地址路径，则此控制策略返回true
+acl [策略6] hdr_cnt(Content-length) eq 0 #当请求的header中Content-length等于0时返回true
+--------acl策略匹配--------
+block if [策略3]
+block if ![策略3]||[策略1]
+use_backend [后端1] if [策略1]
+use_backend [后端2] if [策略2]
+default_backend [后端3]
+backend [后端3]
+mode http #处理类型
+balance roundrobin #负载算法（此处轮询，还有：source，roundrobin，leastconn，static-rr）
+log 127.0.0.1 local3 err #vim /etc/logrotate.conf
+option httpchk GET /index.htm #健康检测（指定心跳检测文件）
+server node0 192.168.1.2:3306 check port 3306 intval 2 rise 1 fall 2 maxconn 2500 #代理Mysql（需TCP模式）
+server node1 192.168.16.2:80 cookie web1 check inter 1500 rise 3 fall 3 weight 1 maxconn 2000
+server node2 192.168.16.3:80 cookie web2 check inter 1500 rise 3 fall 3 weight 2 maxccon 2500
+#cookie指定serverID为web1（用于实现持久连接），心跳检测频率1500毫秒，离线设备恢复后rise3次正确则可用，3次失败则不可用
+-----------------------------------------------------------------------------------------
+vim /etc/rsyslog.conf ----> local3.* /var/log/haproxy.log
+vim /etc/sysconfig/rsyslog ----> SYSLOGD_OPTIONS="-m 2 -r" #监听514端口进入的UDP包：-r，传送日志信息
+service rsyslog restart
+
+启动：/usr/local/haproxy/sbin/haproxy -f /usr/local/haproxy/haproxy.cfg
+
+负载算法：
+1.roundrobin： 基于权重轮询，设计上后端服务器最多支持4128个连接
+2.static-rr： 基于权重轮询，运行时调整后端权重不会生效，但其后端连接数无限制
+3.source： 将请求源地址hash运算并与后端的权重总和相除后派发至某特定服务器，使同一客户的请求始终派发至特定服务器
+4.uri： 对URI左半部分（即"?"标记之前的部分）或整个URI进行hash并由服务器总权重相除后派发至某特定服务器；使对同一URI的请求总是派发至特定服务器
+5.url_param： 通过URL指定的参数在每个HTTP GET请求中被索引，找到指定参数且其通过等于号“=”被赋予一个值，那么此值将被执行hash运算并被服务器的总权重相除后派发至特定服务器
+6.har(): 对于每个HTTP请求，通过指定的HTTP首部将会被检索，如果对于那个的首部没有出现或其没有有效值，则使用轮询算法对响应请求进行调度，其有一个可选项“use_domain_only”可以指定检索类似host类的首部时仅计算域名部分以降低hash算法的运算量
+----------------------------------------------------------------------------------------- NFS
+NFS用于linux系统间文件共享（端口：2049）其在内核中将远程文件系统映射为本地文件系统使用
+在传送资料或其他相关信息时NFS服务器使用称为"远程过程调用"（Remote Procedure Call，RPC）的协议来协助NFS服务器本身的运行 <使用ip+port通信>
+
+yum -y install available nfs-utils rpcbind
+vim etc/exports <---- "默认不存在"
+/home www.wy.net（rw,async） #提供/home给域或其所有主机：*.wy.net
+/public *（rw,async） #所有客户端使用*
+/abc 192.168.1.0/24 #指定共享网段
+
+权限：
+只读ro，读写rw，同步sync，异步async，屏蔽远程root权限：root_squash | no_root_squash，屏蔽所有远程用户权限：all_squash
+将远程用户映射为匿名并指定用户：anonuid=xxx
+将远程组映射为匿名组并指定属组：anongid=xxx
+
+启用：
+/etc/rc.d/init.d/rpcbind restart #远程过程服务调用
+/etc/rc.d/init.d/nfs restart #启动日志：/var/log/massage
+
+查看NFS运行状态： nfsstat
+查看NFS配置信息： exportfs
+挂载/etc/exports内容： exportfs -a
+重读配置信息： exportfs -r
+
+客户端：mount -t nfs 192.168.2.1:/var/web /var/web
+-----------------------------------------------------------------------------------------
+Nginx原理：http://www.linuxidc.com/Linux/2012-11/74598.htm
+
+/sbin/nginx：
+-t 检测语法
+-v 版本
+-s 信号 {stop|reload} #reload <---> 热部署
+-V 版本&编译相关
+-----------------------------------------------------------------------------------------
+user nginx;
+group nginx;
+worker_processes {number|auto};
+error_log logs/error.log crit;
+pid logs/nginx.pid;
+worker_rlimit_nofile 204800;
+events
+{ use epoll; #异步阻塞模型
+mylti_accept on; #同时处理多个连接
+worker_connections 65535; #并发 = worker_processes * worker_connections
+client_header_buffer_size 32k; #客户端请求头部缓冲区大小
+}
+
+http
+{ include mime.type;
+default_type application/octet-stream; #默认支持的类型
+servertokens off; #禁显示版本信息
+charset utf-8;
+client_max_body_size 30m;
+sendfile on;
+tcp_nopush on; #不做推送：仅在启用sendfile（内核级别转发）时开启（将小字节报文汇总后发出）
+keepalive_timeout 60; #超时
+
+gzip on;
+gzip_http_version 1.1;
+gzip_min_length 5K; #最小压缩
+gzip_types text/plain text/css application/x-javascript text/xml application/xml; #压缩类型
+gzip_comp_level 2;
+gzip_vary on;
+
+fastcgi_connect_timeout 300;
+fastcgi_send_timeout 300;
+fastcgi_read_timeout 300;
+fastcgi_buffer_size 64k;
+fastcgi_buffers 4 64k;
+fastcgi_busy_buffers_size 128k;
+fastcgi_temp_file_write_size 128k;
+proxy_buffering on;
+proxy_connect_timeout 600; #与后端发起握手等候响应超时时间
+proxy_read_timeout 600; #等待后端处理请求的时间
+proxy_send_timeout 600; #规定时间内后必须传完所有数据
+proxy_buffer_size 16k; #代理请求缓冲，保存用户头信息提供Nginx进行规则处理
+proxy_buffers 4 32k; #读取后端设备应答的缓冲数及容量
+proxy_busy_buffers_size 64k; #当Nginx很忙时可申请的proxy_buffers
+proxy_temp_file_write_size 64k; #限制缓存文件夹大小，大于此值则从upstream服务器传
+proxy_next_upstream http_500 http_503 #确定何种情况下请求将转发到下个服务器，eg：[error|timeout|invalid_header|http_500|http_502|http_503|http_504|http_404|off]
+Proxy_cache_path /usr/local/nginx/proxy_cache levels=1:2 keys_zone=代理缓存名:20m inactive=1d max_size=100m;
+fastcgi_cache_path /var/logs/nginx/fastcgi_cache levels=1:2 keys_zone=FCGI缓存名:128m inactive=1d max_size=200m;
+
+log_format main '$host $status [$time_local] $remote_addr [$time_local] $request_uri"$http_referer" "$http_user_agent" "$http_x_forwarded_for" $bytes_sent $request_time $sent_http_x_cache_hit';
+access_log logs/access.log main buffer=32k;
+
+upstream Servergroup{ #ip_hash不能与weight同时存在，按响应时间分配：fair
+server 10.10.141.30:8080 weight=1 max_fails=2 fail_timeout=30s;
+server 10.10.141.30:8081 weight=1 max_fails=2 fail_timeout=30s;
+server 10.10.141.31:8080 weight=1 max_fails=2 fail_timeout=30s down;
+server 10.10.140.32:8081 weight=5 max_fails=3 fail_timeout=20s backup;
+}
+server {
+listen 80; server_name www.unix.com;
+root /var/www/
+index index.html index.php #列出所有：autoindex on
+error_page 404 /404.html
+error_page 500 502 503 504 /50x.html
+location ~* \.(html|jpg)$ {
+Root "/var/www/html/";
+proxy_cache 缓存名;
+proxy_cache_valid 200 304 301 302 1d;
+proxy_cache_valid any 10m;
+proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_pass http://Servergroup$request_uri;
+if ($request_method = "PUT") {
+proxy_pass http://172.16.100.12; #读写分离
+break;
+}
+deny 192.168.1.0/24;
+deny 192.168.2.0/24;
+allow all;
+}
+location ~ \.php$ { #动静分离
+fastcgi_pass 127.0.0.1:9000;
+fastcgi_index index.php;
+include fastcgi_params;
+fastcgi_param SCRIPT_FILENAME /scripts$fastcgi_script_name;
+fastcgi_cache 缓存名;
+fastcgi_cache_min_uses 2; #被请求几次则被缓存到fastcgi_cache
+fastcgi_cache_valid 200 302 301 1h;
+fastcgi_cache_valid any 1m;
+}
+location ~ \.(htm|html|gif|jpg|jpeg|png|bmp|swf|ioc|rar|zip|txt|flv|mid|doc|ppt|pdf|xls|mp3|wma)$ { expires 3d; } #client端缓存时间（绝对时间）
+location /status { #状态信息
+stub_status on;
+auth_basic "说明文字"
+auth_basic_user_file /etc/Filename; #访问控制验证文件，Apache：htpasswd -c -m /etc/Filename tom
+access_log off;
+}
+location / { #Memcached缓存/下的数据
+set $memcached_key $uri; #Memcached可缓存任何对象数据
+memcached_pass 127.0.0.1:11211;
+default_type text/html;
+error_page 404 502 504 = @app; #缓存不存在的页面从"@app"获取
+}
+location @app { proxy_pass http://172.16.0.1; }
+}
+}
+----------------------------------------------------------------------------------------- FPM
+yum install -y php-fpm "新版PHP已集成php-fpm，将PHP包./configure时加入–enable-fpm即可"
+
+cd /usr/local/php ; cp etc/php-fpm.conf.default etc/php-fpm.conf
+
+vim etc/php-fpm.conf
+error_log = log/php-fpm.log
+log_level = error
+daemonize = yes #后台执行
+user = Nginx #与Nginx相同
+group = Nginx #与Nginx相同
+listen = 127.0.0.1:900 #FPM监听端口
+listen.allowed_clients = 127.0.0.1 #允许访问的IP
+pm = {dynamic|static} #若static则由pm.max_children指定固定的子进程数
+pm.max_children = 100
+"当pm = dynamic时如下"
+pm.start_server = 5
+pm.min_spare_server = 2
+pm.max_spare_server = 8
+pm.max_requests = 1000 #每个子进程服务的次数
+pm.status_path = /status #FPM状态页
+pid = /usr/local/php/var/run/php-fpm/pid
+
+chkconfig php-fpm on --level 235 ; netstat -atupnl | grep 9000
+--------------------------------------------------------------------------------- Nginx正向代理：
+server {
+listen 8090;
+location / {
+resolver 218.85.157.99 218.85.152.99; #DNS地址
+resolver_timeout 30s; #超时时间 <Nginx中添加头内容：addheader X-cache-status $cache-status>
+proxy_buffers 256 4k;
+proxy_max_temp_file_size 0; #关闭磁盘缓存读写减少I/O
+proxy_connect_timeout 30;
+proxy_cache_valid 200 302 10m;
+proxy_cache_valid 301 1h;
+proxy_cache_valid any 1m;
+proxy_pass $scheme://$host$request_uri;
+proxy_set_header Host $http_host;
+}
+access_log /data/httplogs/proxy-$host.log;
+}
+"因Nginx不支持CONNECT所以无法正向代理Https网站（网上银行，Gmail）"
+-----------------------------------------------------------------------------------------
+让浏览器信任自己颁发的证书：
+将生成的server.crt文件导入到系统的证书管理器：控制面板 -> Internet选项 -> 内容 -> 发行者 -> 受信任的根证书颁发机构 -> 导入 -> 选择server.crt
+----------------------------------- FTP
+控制链路端口：21 #传输命令&列表
+数据传输端口：20 #数据传输
+-----------------------------------
+FTP两种工作模式：
+1.主动：C用>1024端口“N”向S的21端口发出请求建立链路命令，S主动使用20端口与C的“N+1”端口建立数据链路，仅S开放21端口即可，防火墙对其影响较小但NAT对其有影响（S的20端口仅在数据传输时启用）
+2.被动：C用>1024端口“N”向S任意端口发出请求建立链路命令，S响应后C再用“N+1”端口向S的任意端口要求建立数据链路，S给予响应（C主动），防火墙对被动模式有影响但NAT模式对其无影响
+----------------------------------------------------------------- PPTP
+PPTP使用TCP对隧道维护，使用通用路由封装“GRE”将C端的包封装成PPP帧通过tunnel传送并可对PPP帧中的负载加密&压缩
+
+1.PPTP通过PPTP控制连接来创建、维护、终止一条隧道并使用通用路由封装GRE对PPP帧进行封装： [帧][IP header][TCP][PPTP Control message][FCS]
+2.封装后在隧道中传输的数据包格式： [帧][IP header][GRE header][PPP header]["加密数据"Encrypted ppp payload:(IP包/IPX包/...)][FCS]
+
+流程：
+1.C端使用动态分配的TCP端口与PPTP服务器的保留TCP:1723建立控制连接（PPTP控制连接携带PPTP呼叫控制&管理信息，来维护PPTP隧道）C端与S端通过控制连接来创建、维护、终止一条隧道；
+2.然后PPP帧的有效载荷经过加密、压缩或是两者的混合处理
+3.接着使用通用路由封装"GRE"对PPP帧封装后将再封装进IP数据报中通过IP网络如Internet或其他企业专用Intranet等发送给对端PPTP服务器
+4.最后S端收到PPTP数据包后进行常规处理
+
+MPPE：
+将通过由MS-CHAP、MS-CHAP v2或EAP-TLS身份验证过程所生成的密钥对PPP帧加密，PPTP利用底层PPP加密功能直接对经加密的PPP帧封装
+PPTP协议将控制包与数据包分开，控制包采用TCP控制，C端连接到VPN服务器1723/TCP，用于控制和管理VPN隧道的功能。
+数据包部分先封装在PPP协议中然后封装到GRE中最后封装到IP中后发出
+-----------------------------------------------------------------
+Samba使用smbd/nmbd服务支持（需开启两个服务）
+Samba使用smb与cifs协议
+nmbd服务使用137,138/udp（用于名字解析）
+smbd服务使用139,445/tcp（数据传输，不一定存在）
+
+早期SMB运行于NBT协议（NetBIOS over TCP/IP），使用UDP协议的137、138及TCP协议的139端口，后期SMB经开发可直接运行于TCP/IP，没有额外的NBT层，使用TCP/445
+
+进程：
+nmbd：进行NetBIOS名解析并提供浏览服务显示共享资源列表
+smbd：管理Samba服务器上的共享目录、打印机等，主要针对网络上的共享资源进行管理务
+-----------------------------------------------------------------------------------------
+vim /etc/samba/smb.conf
+[global]
+workgroup = workgroup #将samba加入windows工作组
+netbios name = smbserver #不用
+server string = Samba Server Version %v #说明
+interfaces = lo eth0 192.168.12.2/24 #监听地址，可网卡名
+hosts allow = 127. 192.168.1. #允许源IP，如：172.17.2.0/255.255.0.0
+hosts deny = 172.
+log file = /var/log/samba/log.%m #日志记录（%m：主机名，表示对每台访问的机器都单独记录一个日志）
+max connections = 0 #最大连接，0不限制
+deadtime = 0 #超时时间（单位：分，0：不限制）
+max log size = 50 #日志最大容量（0：不限制）
+time server = yes/no #是否成为windows时间服务器
+security = share #安全级别（share不用密码）分为：share|user|server|domain
+passdb backend = tdbsam #目前有3种用户后台：smbpasswd、tdbsam、ldapsam
+#smbpasswd使用smb自己的工具smbpasswd为系统用户设置Samba账号&密码，文件默认在/etc/samba（有时手工建立）
+#tdbsam使用库文件建立用户：passdb.tdb，默认/etc/samba。passdb.tdb，用户数据库可使用smbpasswd –a建立，要建立的用户必须先是系统用户
+smb passwd file = /etc/samba/smbpasswd #定义samba用户密码文件（若不存在则手工创建）
+guest account = nobody #设置guest用户名
+load printers = yes #加载打印机
+cups options = raw
+[共享名]
+comment = Home Directories #说明
+public = yes #是否允许guest
+guest ok = yes #单纯用于共享时使用户可登陆，意义同“public”
+path = /var/spool/samba/%u #共享路径，以每个用户名创建其路径：%u
+browseable = no #是否公开
+writable = yes #可写
+available = yes/no #生效
+valid users = user1,@group1 #有效用户（用户组前面加@）
+write list = user1,@group1 #允许写用户
+invalid users = #禁访问用户
+creat mask = 0765 #umask权限
+[printers] #打印机设置
+comment = All Printers
+path = /var/spool/samba
+browseable = no
+guest ok = no
+writable = no
+printable = yes
+
+关闭安全策略并测试： iptables -F && setenforce 0 && testparm
+添加用户：（旧版本） useradd -s /sbin/nologin user1 ; sambapasswd -a user1 #删除：-x，禁用/启用：-e
+开机启动： chkconfig --level 35 nmbd/smbd on
+查找samba服务器： findsmb
+查看samba链接： smbstatus
+---------------------------------------------
+客户链接： windows中：\\IP
+查看samba： smbclient -L //127.0.0.1
+挂载： mount -t cifs //192.168.174.138/share /mnt -o username=**,password=**
+-----------------------------------------------------------------------------------------
+关闭防火墙Selinux:
+vim /etc/selinux/config ----> sed -i s/SELINUX=enforcing/SELINUX=disabled/g
+更改主机名：
+vim /etc/sysconfig/network
+添加hosts主机记录
+vim /etc/hosts ----> 127.0.0.1 <Hostname>
+--------------------------------------------- netstat status
+netstat -atupnl
+CLOSED： 无连接是活动的或正在进行
+LISTEN： 监听状态
+SYN_RECV： 连接请求已到达，等待确认
+SYN_SENT： 打开新连接
+ESTABLISHED： 正常传输状态（当前并发数）
+FIN_WAIT1： 已经完成
+FIN_WAIT2： 对方同意释放
+ITMED_WAIT： 等待所有分组死掉
+CLOSING： 两边同时尝试关闭
+TIME_WAIT： 另一边已初始化一个释放
+LAST_ACK： 等待所有分组死掉
+--------------------------------------------- KeepAlive
+global_defs {
+notification_email { admin@lvtao.net }
+notification_email_from admin@lvtao.net
+smtp_server 127.0.0.1
+smtp_connect_timeout 30
+router_id LVS_DEVEL
+}
+
+vrrp_script chk_nginx {
+script "~/check_nginx.sh" #状态检查脚本
+interval 2
+weight 2
+}
+
+vrrp_instance 实例1 {
+state {BACKUP|SLAVE}
+interface eth2
+virtual_router_id 51
+mcast_src_ip 10.0.1.133 #本机Vrrp组播通告源IP
+priority 50
+advert_int 1
+authentication {
+auth_type PASS
+auth_pass 密码
+}
+virtual_ipaddress { 10.0.1.2 }
+track_script { chk_nginx } #检测脚本
+}
+
+virtual_server 10.0.1.2 80 {
+delay_loop 6
+lb_algo rr #负载调度算法，rr即轮询算法
+lb_kind DR #LVS负载均衡的机制：NAT、TUN、DR
+persistence_timeout 50 #会话保持时间。此选项对动态网页非常有用
+protocol TCP
+real_server 10.0.1.132 80 {
+weight 6
+TCP_CHECK {
+connect_timeout 10
+nb_get_retry 3
+delay_before_retry 3
+connect_port 80
+}
+}
+real_server 10.0.1.133 80 {
+weight 3
+TCP_CHECK {
+connect_timeout 10
+nb_get_retry 3
+delay_before_retry 3
+connect_port 80
+}
+}
+}
+--------------------------------------------- LVS loadbalance
+NAT模式：
+将C端来的数据的目的IP换为其中一台RS的IP并发至此RS处理,RS处理后把数据交给LVS后LVS再把源IP改为自己IP并将目的IP改为C端IP。不论进出流量都必须经过负载均衡，"性能不是很好"
+特点：集群中的服务器可使用任何支持TCP/IP的系统而LVS仅需有1个合法IP即可，但当服务器节点过多时大量数据交汇在LVS导致速度变慢成为性能瓶颈
+
+IP隧道：
+将C端来的数据"封装"增加新的目的IP发往RS，RS把数据的头解开并还原数据包，处理后直接返回C端（不再经LVS）因RS需对LVS发来的包还原所以必须支持IPTUNNEL协议，所以RS的内核必须编译支持IPTUNNEL
+特点：LVS仅负责将请求包分发给后端节点从而减少LVS的大量数据交互，这种方式在公网即可进行不同地域分发..但各后端节点需合法IP并且需要所有节点支持"IP Tunneling"协议
+
+DR模式：
+LVS和RS都使用相同IP对外服务但仅DR对ARP请求响应，所有RS对此IP的ARP请求静默，也就是说网关把对此IP的请求全部定向给DR
+当DR收到后根据调度算法找出对应RS把目的MAC改为RS的MAC（因IP一致）并将请求分发给这台RS，RS处理后由于IP一致因此可直接将数据返回C端，"等于直接从客户端收到这个数据包无异"
+因LVS(DR)要对二层包头改换所以LVS和RS间必须在一个广播域（可简单理解为在同一台交换机中）
+特点：与TUN相比这种实现不需隧道结构因此可使用大多数操作系统做为后端节点，但其要求负载均衡器的网卡必须与物理网卡在一个物理段
+
+后端调度算法：
+rr： 纯轮询方式
+wrr： 带权重轮询
+lc： 最小连接数
+wlc： 带权重的，性能高的权重高
+lblc： 缓存服务器集群。基于本地的最小连接。把请求传递到负载小的服务器上
+lblcr： 带复制调度的缓存服务器集群。某页面缓存在服务器A上，被访问次数极高，而其他缓存服务器负载较低，监视是否访问同一页面，如果是访问同一页面则把请求分到其他服务器
+dh： realserver中绑定两个ip。ld判断来者的ISP商，将其转到相应的IP
+sh： 源地址散列。基于client地址的来源区分
+sed： 最短的期望的延迟（较复杂）
+nq： 无需队列。若有台realserver的连接数＝0就直接分配过去
+---------------------------------------------------------------------- vrrp：
+是实现路由器高可用的协议，将N台提供相同功能的路由器组成一个路由器组，组里有一个master和多个backup
+需配置每个设备的虚拟路由器ID（VRID）和优先值，用VRID将设备分组（有相同VRID的设备为同组，VRID：0~255）同组的设备使用优先值选举MASTER（大者为MASTER，优先值：0~255）
+当内部主机通过ARP查询虚拟IP对应的MAC时MASTER回复的MAC为虚拟的VRRP的MAC而非实际网卡MAC，这样在路由器切换时内网机器觉察不到；
+VRRP报文的源地址是本机IP，目的IP为224.0.0.18；IP协议号112；IP包的TTL：255
+vrrp用多播传输VRRP报文并使用特殊的虚拟源MAC发送而非自身网卡MAC，运行时仅MASTER定时发送VRRP通告表示其正常（BACKUP仅接收）若指定时间没收到：各BACKUP宣告自己成为MASTER并选举
+1.MASTER实现对虚拟设备的IP的各种网络功能如ARP请求，ICMP，及数据转发；
+2.其他设备不拥有该IP且状态是BACKUP：除接收MASTER的VRRP状态通告外不对外服务
+3.当MASTER失效时BACKUP接管
+
+keepalived仅一个配置文件keepalived.conf，其主要有几个配置区域：global_defs、static_ipaddress、static_routes、vrrp_script、vrrp_instance、virtual_server。
+keepalived三个模块：
+1.core： 为其核心，负责主进程的启动、维护及全局配置文件的加载/解析
+2.check： 负责健康检查，包括各种检查方式
+3.vrrp： 实现VRRP协议
+
+
+SELECT：
+若对外的VIP就是本身配置的IP，该路由器始终都是MASTER（此时优先值为255）
+若不具备VIP将进行选举，各路由器都发送VRRP通告来宣告自己是MASTER，若收到其他设备发来通告的优先级比自己高则转回BACKUP，若优先级相等则比较路由器实际IP（大的优先）
+
+MASTER：
+定时通告、用VRRP虚拟MAC响应路由器IP的ARP请求并转发目的MAC是VRRP虚拟MAC的数据；否则丢弃
+收到shutdown事件时删除定时通告，发送优先权级为0的通告并转初始化状态；若定时通告定时器超时则发送VRRP通告信息；
+收到VRRP通告信息时若优先权为0则发送VRRP通告；否则判断数据的优先级是否高于本机或相等而且实际IP地址大于本地实际IP，设置定时通告定时器，复位主机超时定时器，转BACKUP状态；否则丢弃该通告；
+
+BACKUP：
+主机超时定时器、不响应针对虚拟IP的ARP请求信息并丢弃所有目的MAC是虚拟MAC的数据；收到shutdown事件时删除主机超时定时器，转初始化状态；
+主机超时定时器超时则发送VRRP通告，广播ARP地址并转MASTER状态；收到VRRP通告时若优先权为0，表示进入MASTER选举；否则判断数据的优先级
+------------------------------------------------------------
+最简单的rsync同步：
+ssh-ketgen -t rsa
+ssh-copy-id -i <公钥路径> root@192.168.1.1 "或生成公私钥后将公钥vim粘贴到authorized.key"
+rsync -av <文件/目录> root@192.168.30.4:/path/
+crontab -e
+------------------------------------------------------------ rsync
+可镜像保存整个目录树和文件系统，容易做到保持原来文件的权限、时间、软硬链接等等，可使用rcp、ssh等方式传输，也可通过socket连接，支持匿名传输以方便进行网站镜象
+分命令行与服务模式，前者和scp命令相似而后者与samba工作模式相似
+------------------------------------------------------------ 参数
+-r 递归
+-a 存档模式（-rlptgoD）
+-l 拷贝链接
+-p 保持原权限
+-P 传输进度
+-t 保持原时间
+-g 保持原组
+-o 保持原属主
+-D 相当于块设备文件
+-z 压缩传输
+-v 可视化（与-P一起）
+-e 使用ssh加密连接
+-u 仅更新，需注意双方时钟相同
+--delete 若S端删除文件则C端也相应删除
+--password-file=/password/path/file 指定密码文件用于脚本，需密码文件仅属主可读
+--------------------------------------------------------- rsync Server："配置文件需创建"
+vim /etc/rsyncd.conf
+uid = root
+gid = root
+use chroot = no
+max connections = 8 #最大并发
+strict modes = no #检查口令文件权限
+pid file = /var/run/rsyncd.pid
+lock file = /var/run/rsync.lock #max connections的锁文件
+log file = /var/log/rsyncd.log
+port = 873
+transfer logging = yes
+log format = %t %a %m %f %b
+syslog facility = local3
+read only = no
+
+[项目1]
+path = 需同步PATH
+exclude = 排除PATH
+ignore errors #忽略无关的IO错误
+read only = no
+write only = no
+list = no #不许列文件
+auth users = 账号 #认证，若无则是匿名（与系统用户无关）
+secrets file = /etc/rsync.pas #认证文件 <---- vim /etc/rsync.pas <---- 账号:密码 ; chown root.root rsync.pas ； chmod 600 rsync.pas
+hosts allow = 192.168.1.1,10.10.10.10
+hosts deny = 0.0.0.0/0
+
+启动：/usr/bin/rsync --daemon --config=/etc/rsyncd/rsyncd.conf
+策略：iptables -A INPUT -p tcp -m state --state NEW -m tcp --dport 873 -j ACCEPT
+--------------------------------------------------------- Client：
+vim /etc/rsync.pas ---> 密码
+
+#将S端[项目1]备份到本地/mnt/backup：
+/usr/local/bin/rsync -vzrtopg --delete --exclude "*access*" --password-file=/etc/rsync.pas root@192.168.10.1::项目1 /mnt/backup
+"建议写入crontab"
+
+列出S端同步资源：rsync --list-only root@192.168.145.5::
+--------------------------------------------------------- rsync+inotify：
+wget http://nchc.dl.sourceforge.net/project/inotify-tools/inotify-tools/3.13/inotify-tools-3.13.tar.gz
+
+vim inotify_rsync.sh
+#!/bin/bash
+if [ ! -f /etc/21.pas ];then echo "123456" > /etc/21.pas ; chmod 600 /etc/21.pas
+host1=192.168.9.226
+host2=192.168.9.228
+src=/data/www/
+des=web2
+user=www
+log=/usr/local/inotify/logs/rsync.log
+
+/usr/local/bin/inotifywait -mrq --timefmt '%d/%m/%y %H:%M' --format '%T %w%f' -e modify,delete,create,attrib ${src} | while read file
+do
+rsync -vzrtopg --delete --progress ${src} ${user}@${host1}::${des1} --password-file=/etc/1.pas &&
+echo "At ${TIME} on ${DATE}, file $FILECHANGE was backed up via rsync" >> $log
+done
+
+运行：bash /inotify_rsync.sh &
+---------------------------------------------------------------------------------------- mongodb
+mongodb由C++编写。是文档数据库，存储二进制对象
+基于分布式文件存储的数据库。为WEB应用提供可扩展的高性能数据存储，介于关系/非关系数据库间（提供面向文档存储，操作简单）支持各编程语言，其非常占用磁盘空间
+mongodb的默认数据库为"db"（存储在data目录）MongoDB单个实例可容纳多个独立数据库，每个都有自己的集合和权限，不同的库可放置在不同文件中
+mongodb使用js语法操作，在其集合中的每个文档都可有自己独特的结构，是树形结构数据库，而传统数据库关联复杂（其没有结构的限制，甚至可嵌套）
+
+分片：若需更多存储空间和更强处理能力时可分布在网络中其他节点上
+文档：是键值"key-value"对"即BSON"。文档不需设置相同字段并且相同字段也不需相同数据类型，这与关系型数据库有很大区别
+
+保留库：
+1.admin： 从权限的角度看是"root"库。将用户添加到此库则其继承所有数据库权限。一些特定服务端命令只能从此库运行，如：列出所有的数据库或关闭服务
+2.local: 其永不被复制，用来存储仅限于本地单台服务器的任意集合
+3.config: 当用于分片设置时，config库在内部使用，其保存分片相关信息
+
+[root@localhost mongodb/bin]#./mongod -port 10001 --fork --dbpath data/ --logpath log/mongodb.log #浏览器访问：http://localhost:10001/
+
+C端连接：
+[root@localhost mongodb]# ./bin/mongo localhost:10001 #指定用户名，密码登录localhost的A数据库：mongodb://fred:foobar@localhost/A
+> db.集合名.save({a:1}) #插入
+> db.集合名.find() #查询
+> show dbs #显示所有库及其容量
+> db.集合名.drop(); #删除集合
+> show tables #查看表（集合）
+> db.dropDatabase() #删除当前库
+> use runoob #连到指定库（若不存在则创建，若库内无键值则不予显示需向其中插入数据后查看）
+> db #显示当前库对象或集合
+> db.集合名.insert({"n":"1"})
+> db.集合名.insert( #插入文档（若集合不存在则直接创建）
+{ title: 'MongoDB 教程',
+description: 'MongoDB是一个Nosql数据库，此段信息存储在runoob库的col集合中',
+by: '菜鸟教程',
+url: 'http://www.runoob.com',
+tags: ['mongodb', 'database', 'NoSQL'],
+likes: 100
+});
+> 变量名=({title: 'MongoDB 教程'}); #也可将数据定义为变量
+> db.集合名.insert(变量名) #执行变量插入操作
+> db.集合.insert({_id:1,name:wy}); #增一篇
+> db.集合.insert([{_id:2,name:wy1},{_id:3,name:wy2},{_id:4,name=wy3}]); #增多篇（使用数组的形式）
+> db.集合.insert({_id:1,name:wy,经历:[小学，初中，高中，大学]}); #增嵌套（文档可任意深度）
+> db.集合.remove({name:wy}); #删除指定表中名字为wy的文档
+> db.集合.remove(); #删除所有
+> db.集合.remove({name:wy,true}); #默认删除所有匹配的条件
+> db.集合.update({name:wy},{name:new}); #将wy改为new【此操作将原内容全部修改，需更新时指定所有新内容】
+> db.集合.update({name:wy},{$set:{name:new}}); #仅将表中的wy改为new，其他不变
+> db.集合.find().count(); #查看集合内行数
+------------------------------------------------------------------ username/password
+添加用户： db.addUser('username','passowrd','true/false'); #帐号密码以及是否只读（若要生效需启动时增加--auth选项）
+删除用户： use dbname ; db.removeUser('username'); #若在adimin库中添加用户则是超级管理员权限
+修改密码： use dbname ; db.changeUserPassword('username','passowrd');
+入库认证： use dbname ; db.auth('username','passowrd');
+------------------------------------------------------------------ update
+$set:{} 修改某列的值
+$unset:{} 删除某列的值
+$rename:{} 修改列名
+$incr:{} 增长
+db.集合名.update({name:wy},{$set:{name:宇},$unset:{学历:专},$rename:{别名:wy},$inc:{age:1}}); #update默认仅更改一行，即使表达式匹配多行
+db.集合名.update({name:wy},{$set:{name:宇},$unset:{学历:专},$rename:{别名:wy},$inc:{age:1}},{multi:true}); #允许更改多行数据
+db.集合名.update({name:wy},{$set:{name:宇},$unset:{学历:专},$rename:{别名:wy},$inc:{age:1}},{upsert:true}); #若不存在则增加
+------------------------------------------------------------------ find
+mongodb: mysql:
+= {<key>:<value>} db.集.find({"T":"菜鸟"}).pretty() where T = '菜鸟' #使用pretty()方法易读显示
+< {<key>:{$lt:<value>}} db.集.find({"T":{$lt:50}}).pretty() where T < 50
+<= {<key>:{$lte:<value>}} db.集.find({"T":{$lte:50}}).pretty() where T <= 50
+> {<key>:{$gt:<value>}} db.集.find({"T":{$gt:50}}).pretty() where T > 50
+>= {<key>:{$gte:<value>}} db.集.find({"T":{$gte:50}}).pretty() where T >= 50
+!= {<key>:{$ne:<value>}} db.集.find({"T":{$ne:50}}).pretty() where T != 50
+
+db.col.find({"by":"菜鸟教程", "title":"MongoDB 教程"}).pretty() #类似：WHERE by='菜鸟教程' AND title='MongoDB 教程'
+db.col.find({"likes": {$gt:50}, $or: [{"by": "菜鸟教程"},{"title": "MongoDB 教程"}]}).pretty() #AND和OR联合使用
+------------------------------------------------------------------- export/import
+数据导出： #导入/导出可以是本地也可以是远程服务器
+
+在本地执行导出远程mongodb服务器的数据：
+mongoexport： mongoimport：
+-d 库 -type [csv/json] #默认json
+-c 集合 -file 文件路径
+-f 列名 -f 导入的数据存于哪些列
+-q 条件 --headrline 跳过第一行
+-o 导出名
+--csv EXCEl
+
+导出：mongoexport -d test -c 集合 -f 列1，列2 -q '{name:{$lte:1000}}' -o ./dump.json
+导入：mongoimport -d test -c 集合 --type csv --headrline -f 列1，列2 --file ./dump.csv
+
+二进制导出：mongodump -d 库 [-c 表] -f 列1,列2 #默认导出到mongo的dump目录（包括数据及索引信息）
+二进制导入：mondorestore -d 库 --directoryperdb dump/库 #--directoryperdb指定备份的二进制文件所在路径
+------------------------------------------------------------------- replication
+多台服务器使用相同副本来提高可用性（若干服务器使用相同数据集）类似Mysql读写分离思想
+
+从 <----> 主 <----> 从 #从/从间也进行通信：（当主挂掉时自动从若干从服务器选主）使用rs.status();查看
+
+实例：
+准备目录：mkdir -p /home/mongodb/localDB17 /home/mongodb/localDB18 /home/mongodb/localDB19 #三个实例
+启动并声明实例属于某复制集：
+bin]#./mongod --port 100017 --dbpath /home/mongodb/localDB17 --logpath log/mongodb.17.log --fork --replset [复制集1]
+bin]#./mongod --port 100018 --dbpath /home/mongodb/localDB18 --logpath log/mongodb.18.log --fork --replset [复制集1]
+bin]#./mongod --port 100019 --dbpath /home/mongodb/localDB19 --logpath log/mongodb.19.log --fork --replset [复制集1]
+
+进入数据库指定集合名和成员（JS语言格式）：
+use admin;
+var rsconf = {_id:复制集1,members:[{_id:0,host:'192.168.1.1:100017'},{_id:1,host:'192.168.1.1:100018'},{_id:2,host:'192.168.1.1:100019'}]};
+rs.conf(); #查看配置
+rs.initiate(rsconf); #根据配置进行repliset初始化，重读配置文件：rs.reconfig(rsconf);
+rs.status(); #查看各成员主从身份和健康状态
+
+后期：
+删除节点：rs.remove('IP:Port');
+添加节点： #重新执行var rsconf = (....)命令后进行rs.reconfig(rsconf)初始化
+
+正常情况下从库仅能与主库交互而不能写操作，可使用命令：rs.slaveOK();
+
+命令帮助：rs.help();
+------------------------------------------------------------------ 分片：
+当数据量很大时需用到分片：将数据分若干部分（称分段或分片）存在不同服务器中，可将大型的集合分割保存到不同服务器上，与其他的分区方案相比MongoDB几乎能自动为我们完成所有事情。
+只要我们进行简单配置并告诉MongoDB要分配的数据即可自动维护数据在不同服务器间的平衡。同时根据需增减设备时也会自动转移数据
+
+结构：insert/request----> [mongos"路由器"] -------> [configsvr] -------> shard1.....shardN
+实例：
+1.先启动若干mongodb服务器（shard1:100012 shard2:100013 shard1:100014）
+2.设置configserver：
+./mongod --port 10001 --dbpath /home/mongodb/localDB18 --logpath log/mongodb.18.log --fork --configsvr
+3.设置mongos：
+./mongos --port 22222 --logpath log/mongodb.log --configdb [IP:port] --fork
+4.进入mongos:
+./mongos --port 22222
+use DBname;
+sh.addShard('IP:port'); #在路由器中添加后端片节点IP/端口 查看其状态：sh.status(); ---> 可查看分片设置&状态
+5.设置分片策略：
+./bin.mongos --port 22222
+use DBname;
+sh.enableSharding('ABC'); #允许ABC库可以被分片
+sh.shardCollection('ABC.001',001ID); #允许ABC库的001集合（表）可以被分片，分片时依据的列名（片键）是001ID
+
+
+#默认chunk=64MB,其将大量文档存储在chunk中，当不同的shard中chunk使用量区别较大时将自动移动数据，有时会增加IO
+
+手动预先分片：
+for(var i=1;i<20000;i++) { sh.splitAt('库名.表名',{ID类型的列:i*10000})}; #遇到10000倍数时则进行分片（减少了IO）
+------------------------------------------------------------------ 复制集与分片结合：
+大致结构：前端分片连接到后端复制集
+
+实例：
+先创建若干的不同复制集，如：集合1 集合2 集合3
+设置config服务器： mkdir -p /home/md /home/mongoconfigsvr.log ; mongod --configsvr --dbpath /home/md --logpath /home/mongoconfigsvr.log --port 10000 --fork
+设置前端mongos： ./bin/mongos --logpath /home/mongos.log --fork --port 30000 --configdb [IP:port] #生产环境中需多个configdb
+mongos中添加分片： ./bin/mongos [IP:Port]
+sh.addShard('集合1/IP:port');
+sh.addShard('集合2/IP:port');
+sh.addShard('集合3/IP:port');
+
+声明需分片的数据库：
+sh.enableSharding('库名');
+sh.shardCollection('库名.集合名',{userid:1}); #指定要分片的库中的表及片键
+sh.splitAt('库名.集合名',{userid:10000});
+sh.splitAt('库名.集合名',{userid:20000});
+sh.splitAt('库名.集合名',{userid:30000}); #遇到10000的倍数时则进行分片至不同的复制集 查看分片：sh.status();
+
+测试：
+use 库名
+for(var i=1;i<=4000;i++){db.集合名.insert({userid:i,name:wy,from:China})} #进入任意的一个库查看其数据量：db.集合名.find().count();
+----------------------------------------------------------------------------------------------- cdn
+1.当用户访问加入CDN服务的网站时域名解析请求将最终交给全局负载均衡DNS处理
+2.全局负载均衡DNS通过预先定义好的策略将当时最接近用户的节点地址提供给用户使其得到快速的服务
+3.同时还与分布在世界各地的所有CDNC节点保持通信并搜集各节点通信状态以确保不将用户的请求分配到不可用的CDN节点"实际上是通过DNS做全局负载均衡"
+
+每个CDN节点由两部分组成：
+1.负载均衡设备
+2.高速缓存服务器
+
+负载均衡设备负责每个节点中各个Cache的负载均衡，保证节点工作效率的同时还负责收集节点与周围环境的信息来保持与全局负载DNS的通信以实现整个系统的负载均衡。
+CDN的管理系统是整个系统能够正常运转的保证，它不仅能对系统中的各子系统和设备进行实时监控，对各种故障产生相应告警，还可以实时监测到系统中总流量和各节点流量并保存在系统的数据库中
+使网管能方便地分析。通过完善的网管系统可对系统配置进行修改...
+
+理论上最简单的CDN网络有一个负责全局负载均衡的DNS和各节点一台Cache即可运行。
+DNS支持根据用户源IP地址解析不同的IP，实现就近访问。为保证高可用性等...需监视各节点的流量、健康状况等内容，一个节点的单台Cache承载数量不够时需多台Cache
+多台Cache同时工作才需要负载均衡器，使Cache群协同工作
+----------------------------------------------------------------------------------------------- lvs
+实例：
+负载均衡：eth0:0 192.168.12.25 VIP：192.168.12.135 gw 192.168.12.1 #在DR与TUN模式中数据由实际服务器返回用户因此每个节点都需设置VIP（可绑定于环回口但负载设备需绑定在物理口）
+后端服务：lo 192.168.12.246 VIP：192.168.12.135 gw 192.168.12.1
+后端服务：lo 192.168.12.237 VIP：192.168.12.135 gw 192.168.12.1
+
+检查系统是否支持LVS的ipvs模块：modprobe -l | grep ipvs
+
+步骤：
+LVS端：
+iptables -F ; service iptables stop
+ifconfig eth0:0 192.168.12.135 broadcast 192.168.12.135 netmask 255.255.255.255 up #设置负载端VIP，注：指定广播地址也为VIP且掩码为4个255
+route add -host 192.168.12.135 dev eth0:0
+echo 1 > /proc/sys/net/ipv4/ip_forward #在DR模式中可开启但在NAT模式中必须开启
+
+ipvsadm -C #清除内核虚拟服务器列表中所有记录
+ipvsadm -A -t 192.168.12.135:80 -s rr -p 600 #在内核虚拟服务器列表中添加了一条192.168.12.135的HTTP虚拟服务器记录，调度策略为rr，在每个Real Server中持续时间为600秒
+
+#在虚拟服务器192.168.12.135中添加两条新的Real server记录并指定为直接路由模式：DR
+ipvsadm -a -t 192.168.12.135:80 -r 192.168.12.246:80 -g
+ipvsadm -a -t 192.168.12.135:80 -r 192.168.12.237:80 -g
+ipvsadm #启动服务
+
+Real Server端：
+#!/bin/bash
+VIP=192.168.12.135
+/sbin/ifconfig lo:0 $VIP broadcast $VIP netmask 255.255.255.255 up #在环回设备绑定VIP，与负载端VIP保持互通，然后禁止本机的ARP请求
+/sbin/route add -host $VIP dev lo:0
+echo 1 > /proc/sys/net/ipv4/conf/lo/arp_ignore #因本机的VIP与前端LVS负载的VIP是共享的，若有ARP请求时两端均作回应则出现问题，因此禁止Real Server的ARP响应
+echo 2 > /proc/sys/net/ipv4/conf/lo/arp_announce #
+echo 1 > /proc/sys/net/ipv4/conf/all/arp_ignore #
+echo 2 > /proc/sys/net/ipv4/conf/all/arp_announce #
+sysctl -p
+--------------------------------------------------------------------------------
+ipvsadmin --help
+选项：
+-i 隧道模式
+-m NAT模式
+-g 直接路由模式（默认）
+-w 真实服务器权值
+
+-A 在内核中设置前端负载均衡器的VIP地址
+-t 虚拟服务器提供tcp服务eg：[vip:port] or [real-server-ip:port]
+-u 虚拟服务器提供udp服务eg：[vip:port] or [real-server-ip:port]
+-s 调度算法：rr|wrr|lc|wlc|lblc|lblcr|dh|sh|sed|nq（默认： wlc）
+-C 清除内核虚拟服务器表中的所有记录
+-E 编辑内核虚拟服务器表中虚拟服务器
+-D 删除内核虚拟服务器表中的虚拟服务器记录
+-R 恢复虚拟服务器规则
+-S 保存虚拟服务器规则
+-a 在内核虚拟服务器表的记录中添加新的真实服务器（在一个虚拟服务器中增加一台新的真实服务器）
+-r 指定真实的服务器,eg：[Real-Server:port]
+-e 编辑虚拟服务器记录中的某条Real Server记录
+-d 删除虚拟服务器记录中的某条Real Server记录
+-Z 虚拟服务表计数器清零（清空当前的连接数量等）
+-p 持久稳固的服务（来自同一地址的多次请求被同一真实的服务器处理。timeout默认300秒）
+-f 说明是经iptables标记过的服务类型
+-t 提供TCP服务，eg：-t [ip:port] #IP可以是后端虚拟或真实IP
+-u 提供UDP服务，eg：-u [ip:port] #
+--set tcp tcpfin udp 设置连接超时值
+
+-L 显示内核虚拟服务器表
+-c 显示LVS目前连接信息
+--timeout 显示timeout值
+--deamon 显示守护进程状态
+--stats 显示统计信息
+--rate 显示速率信息
+--sort 对虚拟服务器&真实服务器排序列出
+-------------------------------------------------------------------------------- amil
+mutt是MUA"邮件用户代理"类似foxmail和outlook，其不负责发送&接收邮件，若发送需调用msmtp：其实现MTA功能且比sendmail方便
+
+wget http://downloads.sourceforge.net/msmtp/msmtp-1.4.16.tar.bz2?modtime=1217206451&big_mirror=0
+tar -jxvf msmtp-1.4.16.tar.bz2
+./msmtp-1.4.16/configure --prefix=/usr/local/msmtp ; make && make install
+cd /usr/local/msmtp && mkdir etc
+vi /usr/local/msmtp/etc/msmtprc ; chmod 6000 msmtprc
+account default
+logfile /usr/local/msmtp/msmtp.log #日志
+account test@163.com
+host smtp.163.com #smtp服务域名/IP
+from inmoonlight@163.com #发送者Email
+auth login #可用auth方法：plain、cram-md5、digest-md5、gssapi、external、login、ntlm。对于smtp服务器需验证的情况应设为login
+user inmoonlight #邮箱账号
+password 123456 #邮件密码
+
+测试：/usr/local/msmtp/bin/msmtp youremail@test.com <--- Ctrl+D
+
+yum install mutt
+vim /etc/Muttrc
+set sendmail="/usr/local/msmtp" #msmtp命令路径
+set port 25
+set use_from=yes
+set realname="inmoonlight@163.com" #发件人
+set from=inmoonlight@163.com
+set envelope_from=yes
+
+echo "测试测试" | mutt -s "测试" youremail@test.com
+--------------------------------------------------------------------------------
+网络存储技术是基于数据存储的一种通用网络术语。其存储结构大致分三种：
+DAS：直连式存储，如本机磁盘即属于直接存储设备。
+NAS：网络连接式存储，直接提供文件系统，可以立即使用。
+SAN：存储网络："ISCSI"
+--------------------------------------------------------------------------------
+ISCSI基于TCP/IP，C/S模式，由IBM开发，可创建存储区域网络（SAN）传输以数据块级别在多个数据存储网络间进行。
+
+iscsi target： 存储设备端，存放存储设备以提供"磁盘"，即S端
+Iscsi initiator： 使用target提供"磁盘"的C端
+
+yum -y install scsi-target-utils
+/etc/tgt/target.conf #配置
+/usr/sbin/tgt-admin #查询、删除target等功能的命令
+/usr/sbin/tgtd #提供iscsi target服务的主程序
+
+Iscsi对应用透明，以下几种方式可以作为“磁盘”分享给initiator使用：
+1.大型文件"dd命令生成"
+2.阵列、磁盘或磁盘分区...
+3.LVM
+
+实例：
+dd if=/dev/zero of=/home/test.img bs=1M count=768
+dd if=/dev/zero of=/home/trunk.img bs=1M count=768
+
+vim /etc/tgt/targets.conf
+<target iqn.2013-09.com.inter.10.1:test-target> #在相同target的磁盘将它定义为逻辑单位编号（LUN）iSCSI initiator跟target协调后就会取得LUN的存取权
+backing-store /home/test.img #虚拟设备位置
+direct-store /dev/sdb #真实设备位置
+initiator-address 192.168.10.2 #限制来源地址
+</target> #
+<target iqn.2013-09.com. inter.10.1:trunk-target> #
+backing-store /home/trunk.img #
+initiator-address 192.168.10.3 #
+</target> #
+#建议使用IP将C端权限分开。一个target给多个initiator使用既完成1对多的挂载但iscsi不保证写操作一致所以在1对多情况下1个initiator可rw其他initiator可r是可行方案
+
+iSCSI的target名称命名方式：
+iqn.yyyy-mm.<reversed domain name>[:identifier]
+1.iqn表示“iSCSI Qualified Name”，简称iqn
+2.yyyy-mm表示“年-月”
+3.reversed domain name表示倒过来的域名
+4.identifier是识别名称。
+
+write-cache： 默认on，开启缓存加速，在特殊情况有丢失数据的可能
+incominguser： 用户名密码，可设定initiator使用账户密码才可使用对应target，若在target中使用该配置则C端需在initiator的/etc/iscsi/iscsid.conf中打开如下配置：
+vim /etc/iscsi/iscsid.conf
+discovery.sendtargets.auth.username = username
+discovery.sendtargets.auth.password = password
+node.session.auth.username = username
+node.session.auth.password = password
+
+启动：/etc/init.d/tgtd start
+查看：netstat -atupnl | grep tgtd
+
+查看target信息：
+[root@10.1 ~]# tgt-admin --show
+Target 1: iqn.2013-09.com.inter.10.1:test-target
+System information:
+Driver: iscsi
+State: ready
+I_T nexus information:
+LUN information:
+LUN: 0
+Type: controller
+SCSI ID: IET 00010000
+SCSI SN: beaf10
+Size: 0 MB, Block size: 1
+Online: Yes
+Removable media: No
+Prevent removal: No
+Readonly: No
+Backing store type: null
+Backing store path: None
+Backing store flags:
+LUN: 1
+Type: disk
+SCSI ID: IET 00010001
+SCSI SN: beaf11
+Size: 805 MB, Block size: 512
+Online: Yes
+Removable media: No
+Prevent removal: No
+Readonly: No
+Backing store type: rdwr
+Backing store path: /home/test.img
+Backing store flags:
+Account information:
+ACL information:
+192.168.10.2
+Target 2: iqn.2013-09.com.inter.10.1:trunk-target
+System information:
+Driver: iscsi
+State: ready
+I_T nexus information:
+LUN information:
+LUN: 0
+Type: controller
+SCSI ID: IET 00020000
+SCSI SN: beaf20
+Size: 0 MB, Block size: 1
+Online: Yes
+Removable media: No
+Prevent removal: No
+Readonly: No
+Backing store type: null
+Backing store path: None
+Backing store flags:
+LUN: 1
+Type: disk
+SCSI ID: IET 00020001
+SCSI SN: beaf21
+Size: 805 MB, Block size: 512
+Online: Yes
+Removable media: No
+Prevent removal: No
+Readonly: No
+Backing store type: rdwr
+Backing store path: /home/trunk.img
+Backing store flags:
+Account information:
+ACL information:
+192.168.10.3
+------------------------------------------------------
+客户端：
+yum install iscsi-initiator-utils
+/etc/iscsi/iscsid.conf：主要配置文件
+/sbin/iscsid： 启动initiator的服务程序
+/sbin/iscsiadm： 管理initiator的管理程序
+/etc/intit.d/iscsid： 主要服务进程
+/etc/init.d/iscsi： 启动该脚本，可使发现过的iscsi target配置生效，一般直接使用该脚本即可，initiator未执行的话会调用/etc/init.d/iscsid启动initiator。
+
+寻找服务端： "侦测结果会写入/var/lib/iscsi/nodes/，因此只需启动/etc/init.d/iscsi就能在下次开机时自动连接到正确的target"
+[root@10.2 ~]#iscsiadm -m discovery -t sendtargets -p 192.168.10.1:3260
+192.168.10.1:3260,1 iqn.2013-09.com.inter.10.1:test-target
+
+服务会启动iscsid并加载发现的target，之后使用fdisk –l命令来查看加载的磁盘并可以对该磁盘进行格式化并挂载后使用：
+[root@10.2 ~]# /etc/init.d/iscsi start
+[root@10.2 ~]# chkconfig iscsi --level 35 on
+[root@10.2 ~]# chkconfig iscsid --level 35 on
+Starting iscsi: [ OK ]
+[root@10.2 ~]# mkfs -t ext4 /dev/sda
+[root@10.2 ~]# mount -t ext4 /dev/sda /tmp/test
+------------------------------------------------------
+其它常用命令：
+在initiator端显示发现的target主机： iscsiadm -m node
+在initiator端断开与指定target的连接： iscsiadm -m node iqn.2013-09.com.inter.10.1:test-target -u
+在initiator端连接指定target： iscsiadm -m node iqn.2013-09.com.inter.10.1:test-target -l
+在initiator端显示已经建立的target连接： iscsiadm -m session
+-------------------------------------------------------------------------------- file system
+Linux文件系统中的文件是数据的集合：
+文件系统不仅包含文件中的数据且还有文件系统结构，所有Linux用户和程序看到的文件、目录、软连接及文件保护信息等都存储在其中
+Ext4文件系统被分成一系列块组。为减少磁盘碎片产生的性能瓶颈，块分配器尽量保持每个文件的数据块都在同一块组从而减少寻道。以4KB的数据块为例：一个块组可包含32768个数据块，即：128MB。
+Linux文件系统使用索引节点来记录文件信息，它是数据结构，包含了文件的文件名，位置，大小，建立或修改时间，访问权限，所属关系等文件控制信息
+文件系统维护了一个索引节点的数组，每个文件或目录都与索引结点数组中的唯一一个元素对应，系统为每个索引结点分配一个号码，也就是该结点在数组中的索引号，称为索引结点号。
+超级块包含了i节点表和空闲块表等重要的文件系统信息。
+btrfs文件系统没有对文件个数的限制并且有文件校验，快照，镜像，克隆，无文件系统大小限制的特性，"ext4是其过度产品"
+
+查看连接某服务最多的IP地址：
+netstat -an -t | grep ":80" | grep ESTABLISHED | awk '{printf "%s %s\n",$5,$6}' | sort
+-------------------------------------------------------------------
+root@paybay:/# mpstat 1 2
+Linux 3.16.0-30-generic (paybay) 01/18/2016 _x86_64_ (4 CPU)
+
+02:18:51 PM CPU %usr %nice %sys %iowait %irq %soft %steal %guest %gnice %idle
+02:18:52 PM all 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 100.00
+02:18:53 PM all 0.00 0.00 0.25 0.00 0.00 0.00 0.00 0.00 0.00 99.75
+Average: all 0.00 0.00 0.12 0.00 0.00 0.00 0.00 0.00 0.00 99.88
+
+%user #处理用户进程所用CPU的百分比
+%nice #使用nice命令对进程进行降级时CPU的百分比
+%system #内核进程使用的CPU百分比
+%iowait #等待进行I/O所用的CPU时间百分比
+%irq #用于处理系统中断的CPU百分比
+%soft #用于处理软件中断的CPU百分比
+%idle #CPU空闲时间
+%intr/s #每秒CPU接收的中断总数
+
+在/proc中每个以数字命名的目录都是运行中的进程PID：
+进入任意PID目录可通过其中的文件/目录观察进程的运行指标，如/proc/<pid>/task目录描述进程的线程，因此若需获取进程的线程数时：ls /proc/PID/task | wc -l
+
+"pmap命令输出进程的内存状况，可用来分析线程堆栈"
+root@paybay:/proc/1/task# pmap <pid>
+1: /sbin/init
+00007fa4492ad000 44K r-x-- libnss_files-2.19.so
+00007fa4492b8000 2044K ----- libnss_files-2.19.so
+00007fa4494b7000 4K r---- libnss_files-2.19.so
+00007fa4494b8000 4K rw--- libnss_files-2.19.so
+...............................
+
+[ -f "/etc/shadow" ] && echo "This computer uses shadow passwors" #&&可理解为then
+-----------------------------------------------------------------------------------------
+打开内核主配置界面：make menuconfig
+
+Y 将选中功能集成到内核
+N 将选中功能从内核排除
+M 将选中功能设为内核可拼接的模块（需要时调用）
+? 介绍选中功能
+/ 搜索（如：输入netfilter打开网络过滤模块，可查看模块在内核中的层次结构和介绍）
+* 编译到内核中
+
+对iptables的Netfilter模块添加功能：
+Networking support -->
+Networking options -->
+Network Packet filtering framework (Netfilter) -->
+Core Netfilter Configration -->
+*速率限制功能："rateest" Netfilter Configration
+*网段匹配功能："iprange" address range match support
+----------------------------------------------------------------------------------------- nmap
+地址格式：
+hostname
+192.168.1.1 192.168.1.2 192.168.1.3
+192.168.1.1,2,3
+192.168.1.* --exclude 192.168.0.100
+192.168.1.1-200
+nmap -iL filename #filename中一行/address
+
+扫描类型：
+-v 详细信息
+-F 快速扫描，仅扫描nmap-services文件中的端口
+-p 指定端口，使用TCP扫描8080与80：T:8080,80 扫描指定范围：-p 80-160
+-sU UDP扫描，如：nmap -sU 53
+-sS 半连接扫描，不进行完整的ACK应答，不易被发现（half-open）
+-sP PING扫描，查看是否在线"默认情况下nmap首先进行PING扫描"
+-sA ACK扫描，通常用来穿过防火墙
+-sW 滑动窗口扫描，类似ACK的扫描
+-b FTP反弹，连接到防火墙后的FTP做代理再进行端口扫描
+
+通用选项：
+-P0 扫描之前不ping主机
+-PI 使用真正的ping(ICMP echo请求)来扫描目标主机是否正在运行。
+-PS 使用SYN包而不是ACK包来对目标主机进行扫描。
+-O 操作系统类型
+-f 使用碎片IP数据包发送SYN、FIN、XMAS、NULL。包增加包过滤、入侵检测系统的难度
+-g port 扫描的源端口 "推荐使用53，20等..."也可使用关键字：–source-port
+-e <interface> 扫描的源接口
+-S <spoofip> 扫描的假源接口"网络内其他的主机"
+-D ip,ip,ip 扫描的假源接口"不存在的"
+--host_timeout 扫描一台主机的时间，以毫秒为单位。默认的情况下，没有超时限制
+–scanflags 可选标志位：URG, ACK, PSH,RST, SYN,and FIN
+-----------------------------------------------------------------------------------------
+
+
+
+
+
+scp 文件 账户@地址:/路径
+
+ssh -i 私钥路径 账户@地址 #默认.ssh/identity
+
+init 进程是系统所有进程的起点，你可以把它比拟成系统所有进程的老祖宗，没有这个进程，系统中任何进程都不会启动。
+init 程序首先是需要读取配置文件 /etc/inittab。
+
+许多程序需要开机启动。它们在Windows叫做"服务"（service），在Linux就叫做"守护进程"（daemon）。
+init进程的一大任务，就是去运行这些开机启动的程序。
+
+
+
+MBR位于硬盘第一个物理扇区（绝对扇区）柱面0，磁头0，扇区1处。
+-MBR中包含硬盘的主引导程序和硬盘分区表。
+rpm -e --nodeps mysql 删除且不依赖
+拷贝filea到fileb
+# cat < filea > fileb
+
+
+
+进程与程序的区别在于其动态性，动态的产生和终止，从产生到终止进程可以具有的基本状态为： 运行态 、 就绪态 和 等待态（阻塞态） 。
+/etc/sudoers 《----》 visudo
+
+
+
+1 SIGHUP 启动被终止的程序，可让该 PID 重新读取自己的配置档，类似重新启动
+2 SIGINT 相当於用键盘输入 [ctrl]-c 来中断一个程序的进行
+9 SIGKILL 代表强制中断一个程序的进行，如果该程序进行到一半， 那么尚未完成的部分可能会有『半产品』产生，类似 vim会有 .filename.swp 保留下来。
+15 SIGTERM 以正常的结束程序来终止该程序。由於是正常的终止， 所以后续的动作会将他完成。不过，如果该程序已经发生问题，就是无法使用正常的方法终止时， 输入这个 signal 也是没有用的。
+17 SIGSTOP 相当於用键盘输入 [ctrl]-z 来暂停一个程序的进行
+
+vmstat常用于查看硬件状态
+dstat常用于查看系统状态
+
+
+
+
+
+
+查看crontab服务状态：
+service crond status
+
+mmap将一个文件或者其它对象映射进内存。文件被映射到多个页上，如果文件的大小不是所有页的大小之和，最后一个页不被使用的空间将会清零。
+
+
+---------------------------------------------------------------------------------------------------
+----------------------------------------
+nmap在任何情况下都先进行ping扫描，确定其存在后再进行后续扫描（“-P0”在扫描前不ping！）
+格式：
+nmap [-s{O|S|T|U|P}] [参数] 目标地址
+
+类型：
+-sO 使用IP协议扫描
+-sS TCP-SYN扫描（半连接握手扫描：不发ACK，很少有系统将其列入日志）
+-sT 查询TCP服务（基本的TCP扫描方式，目标主机会进行日志记录）
+-sU 查询UDP服务
+-sP ping扫描，若阻塞echo请求则无效
+
+高级：
+-sA ACK扫描（这种扫描方法通常用于穿过防火墙）
+-sW 滑动窗口扫描，非常类似ACK的扫描
+-sR RPC扫描，和其它不同的端口扫描方法结合使用
+-b FTP反弹攻击，连接到防火墙后面的一台FTP服务器做代理，接着进行端口扫描
+
+参数：
+-v 详细信息
+-PI 用真实的ping请求进行扫描
+-PT 扫描前用TCP-ping确定是否存在
+-PB 默认ping扫描选项。使用ACK(-PT)和ICMP(-PI)两种方式扫描，若防火墙仅过滤其中1种，则其可穿过防火墙
+-PS 使用SYN包而不是ACK包来对目标进行扫描
+-O 获得目标系统类型：TCP/IP指纹特征
+-I 打开nmap的反向标志扫描功能
+-f 使用碎片IP数据包发送SYN、FIN、XMAS、NULL包增加包过滤/入侵检测系统的难度使其不知企图
+-S 用其指定源IP（特殊情况下nmap无法确定自身源IP）
+-oS 扫描结果输出到标准输出
+-p 设置扫描的端口号范围（如：-p 20-30,139,60000）
+-g 设置扫描源端口，一些防火墙和包过滤规则集允许源端口为DNS(53)或FTP-DATA(20)包通过&连接，可躲避检查
+-M 进行TCP-connect()扫描时最多用多少套接字并行扫描
+-exclude排除指定主机
+----------------------------------------
+扫描Web服务： nmap -sTU -PS -p 80 192.168.10/24
+查看本机端口： nmap -sTU localhost
+-----------------------------------------------------------------------------------------
+zmap速度比nmap快得多
+参数：
+-p 指定扫描目的端口
+-s 制定扫描的源端口（可指范围如：-s 30000-50000）
+-o 结果输出到文件
+-n 扫描IP地址数量（也可写成-n 0.1%形式）
+-N 最大扫描到结果IP的数量（-N 100：扫描到100个存在的结果就停止）
+-t 最大扫描时间（秒）
+-B 每秒发送包的大小（单位：G/M/K）
+-d 打印出每个包的内容（实用）
+-G 设置网关的mac地址，可伪造，指定出口的mac地址须为网关的实际mac地址否则返回数据找不到
+-M 设置扫描模式，参数：tcp_synscan（默认），icmp_echoscan（ping），udp（速度逊于前2个）
+--summar 将输出结果进行汇总（实用）
+
+例子：
+使用10M带宽，用源端口23扫描2000个IP的80端口，并汇总后将结果输出到1.txt
+#zmap -B 10M -s 23 -p 80 -N 2000 --summar -o 1.txt
+
+
+
+
+
+NIS域名服务
+NIS即Network Information System，其将etc/passwd变成数据库来提供账号服务，客户机使用NIS上的账户登录本机
+在windows中是AD（活动目录）提供类似服务，其保存在DC（域控制器）上，微软的AD功能比linux的NIS服务功能强大
+
+NIS角色：
+1.服务器：集中维护账号信息（数据库）为客户机服务
+2.客户机：登录任一客户机均从NIS服务器进行登录认证从而实现账号集中管理
+----------------------------------------------
+服务软件包：rpm -ivh ypserv*
+时间同步：chkconfig time on //设置time和time-udp服务启动状态
+时间同步：chkconfig time-udp on //两种时间服务，用于统一C/S时间
+守护进程：service xinetd restart //其为time/time-udp提供支持
+
+配置本机所属域：（大型网络有多个域(不同用途客户端加入不同域)建议修改/etc/hosts中相关解析）
+nisdomainname workgroup //本次运行生效
+echo '/bin/nisdomainname workgroup' >> /etc/rc.d/rc.local //开机执行脚本
+echo 'NISDOMAIN=workgroup' >> /etc/sysconfig/network //设置本计算机所在域
+
+服务器配置：vim /etc/ypserv.conf
+客户所在网段|可访问的本机域|可访问的域中数据库|安全级别 //客户端访问控制
+192.168.1.0/255.255.0.0 :* :* :none
+* :* :* :deny
+
+安全配置：vim /var/yp/securenets //默认不存在（对NIS客户进行访问控制）
+hosts 127.0.0.1 //允许的主机
+255.255.255.0 192.168.1.0 //允许的网段（先写网段）
+
+启动服务：
+#service portmap start //远程过程调用服务
+#service ypserv start //NIS服务（ypserv）
+#service yppasswdd start //注：此3个服务都启动后即可用useradd命令添加用户了
+
+构建NIS数据库：
+#/usr/lib/yp/ypinit -m //ypinit可构建NIS服务端数据库，其按照/var/yp/的makefile内容构建数据库文件
+//-m即main（使其成为主NIS服务器）将在/usr/lib/yp/下生成对应域名的目录
+-----------------------------------
+客户机配置：
+rpm -ivh ypbind* //默认安装
+rpm -ivh yp-tools* //默认安装
+
+设置对服务器的解析和所属域：
+echo "IP 域名" >> /etc/hosts
+nisdomainname workgroup
+echo 'NISDOMAIN=workgroup' >> /etc/sysconfig/network
+
+客户配置：vim etc/yp.conf
+domain workgroup server Hostname（指定此域和此域所在NIS服务器）
+
+账号查找：vim etc/nsswitch.conf（告知配置文件向nis服务器查找而非本地）
+passwd: files nis
+shadow: files nis
+group: files nis
+hosts: files nis dns
+
+启动服务：service portmap/ypbind start
+
+测试：
+#yptest //对NIS服务器进行自动测试
+#ypwhich //显示NIS客户机所使用的NIS服务器的主机名称和数据库文件列表（参数：-x）
+#ypcat //显示数据库文件列表和指定数据库的内容（参数：-x，passwd）
+
+
+
+
+
+理论部分增加：
+ext4文件系统原理及概念
+radis
+hadoop安装
+SVN或Git掌握其中一种
+cacti及nagios
+企业级日志收集系统ELK
+varnish
+openVPN配置及VPN原理【细致学习！】
+1邮箱服务：POSTFIX&邮箱协议 mutt smtp pop3 imap
+apache工作模式
+Nginx原理
+FPM
+http://www.linuxidc.com/Linux/2012-11/74598.htm （Linux下的工作模型以及Nginx工作原理）
+
+
+CRT中，使用rz命令上传文件 pwd -P 显示绝对路径 chmod -R 777 [path] 递归修改权限
+
+
+mysql启动时使用指定配置文件：mysqld --default-file=/PATH/filename --user mysql
+
+在mysql的my.conf中：
+
+
+
+环境变量是从父进程继承而来的变量。例如 HTTP_PROXY
+HTTP_PROXY=http://192.168.0.2:3128
+export HTTP_PROXY
+
+定义数组的方式：
+array=(1 2 3 4)
+
+array[0]="1"
+array[1]="2"
+array[2]="3"
+array[3]="4"
+
+echo ${array[0]} 输出一个元素
+echo ${array[*]} 输出数组所有值
+echo ${array[@]} 输出数组所有值
+echo $(#array[*]) 打印长度
+
+
+var=value 是赋值操作
+var = value 是相等操作
+
+别名设置： alias install='sudo apt-get install'
+
+set -x 在执行时显示参数和命令
+set +x 禁止调试
+set -v 当命令进行读取时显示输入
+set +v 禁止打印输入
+
+
+查找txt和pdf: find . \( -name "*.txt" -o -name "*.pdf" \) -print
+正则查找txt和pdf: find . -regex ".*\(\.txt|\.pdf\)$" -iregex： 忽略大小写的正则
+查找所有非txt文本: find . ! -name "*.txt" -print
+指定搜索深度: find . -maxdepth 1 -type f
+按类型搜索： find . -type d -print //只列出所有目录
+按时间搜索：
+-atime 访问时间
+-mtime 修改时间
+-ctime 变化时间
+
+最近7天访问过的文件： find . -atime 7 -type f -print
+寻找大于2k的文件: find . -type f -size +2k
+按权限查找： find . -type f -perm 644 -print
+按用户查找： find . -type f -user weber -print
+删除当前目录的swp文件： find . -type f -name "*.swp" -delete
+执行动作: find . -type f -user root -exec chown weber {} \;
+将找到的文件copy： find . -type f -mtime +10 -name "*.txt" -exec cp {} OLD \;
+结合多个命令
+
+-exec ./commands.sh {} \;
+
+env 查看当前终端的环境变量
+pgrep debug.sh 查看某进程ID
+cat /proc/PID/environ 查看该进程的环境变量
+
+
+[ $var -eq 0 ] or [ $var -eq 0 ]
+-gt 大于
+-lt 小于
+-ge 大于或等于
+-le 小于或等于
+
+[[ $str1 = $str2 ]] 检查字符串相等
+[[ $str1 == $str2 ]] 检查字符串相等
+[[ $str1 != $str2 ]] 检查字符串不相等
+[[ $str1 > $str2 ]] 比较字母序列
+[[ $str1 < $str2 ]]
+[[ -z $str2 ]] 是空字符串
+[[ -n $str2 ]] 是非空字符串
+
+不间断查看：watch -n number(s) `command`
+
+
+整数测试 [ expression ]
+字符测试 [[ expression ]]
+条件测试 test expression test 根据表达式求值的结果返回 0（真）或 1（假）
+
+[:space:] 空白字符
+[:alnum:] 数字和大小写字母
+[:punct:] 所有标点符号
+[:lower:] 所有小写字母
+[:upper:] 所有大写字母
+[:digit:] 数字（非字母开头并且数字结尾：[^[:alpha:]]*[[:digit:]]）
+[:alpha:] 所有大小写字母
+
+DELETE FROM table_name WHERE some_column=some_value;
+DELETE FROM table_name <===> DELETE * FROM table_name;
+SELECT * FROM Customers WHERE Country NOT LIKE '%land%';
+SELECT * FROM Customers WHERE City IN ('Paris','London');
+SELECT * FROM Products WHERE (Price BETWEEN 10 AND 20) AND NOT CategoryID IN (1,2,3);
+
+
+navicat创建一个复杂表，复制到nodpad++
+
+
+mongodbC连接S端：
+mongodb://username:password@ipaddress
+mongodb://username:password@ipaddress/baz
+
+
+仅显示2个记录： db.集合.find().limit(2)
+指定字段降序排列： db.集合.find().sort({"字段":-1})
+
+
+
+
+环回口： loopback <===> 127.0.0.1
+TTL： 每经过网络中一台设备其值-1
+
+
+
+系统负载： cat /proc/loadavg <===> uptime
+
+
+
+显示所有CPU核心状态： mpstat -P ALL 5 2 #5/s共2次
+显示指定CPU核心状态： mpstat -p 0,1 5 3
+所有磁盘的统计数据： vmstat -d -S M #-S指定以MB为单位
+查看系统中断信息： cat /proc/interrupts
+
+---------------------------------------------
+将指定硬件的硬件中断绑定到指定CPU处理：
+cat /proc/interrupts <----- #找到指定硬件的硬件中断识别号
+cat /proc/irq/<中断号>/smp_affinity #若全f则意味可分配到所有可用CPU
+/etc/init.d/irqbalance stop #先关闭IRQ自动调节的服务进程
+echo 2 > /proc/irq/<中断号>/smp_affinity #绑定到指定CPU
+---------------------------------------------
+
+
+SMP (Symmetrical Multi-Processing)：指在一个计算机上汇集了一组处理器(多CPU)，各CPU之间共享内存子系统以及总线结构。
+
+CPU affinity：中文唤作“CPU亲和力”，是指在CMP架构下，能够将一个或多个进程绑定到一个或多个处理器上运行。
+
+修改进程亲和力：
+yum -y install schedutils
+把CPU#1 #2 #3分配给PID为2345的进程： taskset -cp 1,2,3 2345 <===> taskset -c 1,2,3 /etc/init.d/mysql start
+
+Nginx绑定到指定CPU：
+worker_processes 3;
+worker_cpu_affinity 0010 0100 1000; #这里0010 0100 1000是掩码，分别代表第2、3、4颗cpu核心
+-------------------------------------------------------------
+硬件中的分页： 分页使得线性地址转换成物理地址，还有一个关键的任务就是进行线性地址访问权限的检查。为了方便，线性地址分为相应的组：称为页。而物理地址也相应的分为组：称为页框。页的大小由处理器决定。
+内存地址分类： 逻辑地址，线性地址，物理地址
+物理地址空间： 一部分给物理RAM（内存）用，一部分给总线用，这是由硬件设计来决定的，因此在32 bits地址线的x86处理器中，物理地址空间是2的32次方，即4GB，但物理RAM一般不能上到4GB，因为还有一部分要给总线用（总线上还挂着别的 许多设备）
+
+在分段的CPU结构中，程序中引用的地址都是逻辑地址，逻辑地址经过分段单元成为线性地址。然后经过分页单元成为物理地址，物理地址就是硬件电路寻址的实际地址。如果CPU体系结构不支持分段，那么逻辑地址等于物理地址。
+
+
+iptables -R INPUT 1 -s 192.168.0.1 -j DROP #-R取代指定规则
+iptables -t nat -F INPUT #删除指定链的规则
+iptables -N allowed #定义新的规则链
+
+iptables -p tcp --tcp-flags SYN,FIN,ACK SYN
+iptables -A INPUT -p tcp -m multiport --source-port 22,53,80,110 #多端口
+iptables -A INPUT -m mac --mac-source 00:00:00:00:00:01 #匹配MAC
+iptables -t mangle -A INPUT -m mark --mark 1 #打标记
+iptables -A OUTPUT -m owner --uid-owner 500 #匹配用户
+iptables -A OUTPUT -m owner --gid-owner 0 #匹配组
+iptables -A OUTPUT -m owner --pid-owner 78 #匹配程序
+iptables -A INPUT -m state --state {INVALID,ESTABLISHED,NEW,RELATED} #TCP状态
+-j
+ACCEPT、REJECT、DROP、REDIRECT、MASQUERADE、LOG、DNAT、SNAT、MIRROR、QUEUE、RETURN、MARK
+REDIRECT --to-ports 8080
+MASQUERADE --to-ports 1024-31000
+LOG --log-prefix "INPUT packets" # /var/log中进行记录
+SNAT --to-source 194.236.50.155-194.236.50.160:1024-32000
+DNAT --to-destination 192.168.1.1-192.168.1.10:80-100
+iptables -F -t nat
+iptables -X -t nat
+iptables -Z -t nat
+iptables -P INPUT DROP #指定链的默认策略
+丢弃非法链接：
+iptables -A INPUT -m state --state INVALID -j DROP
+iptables -A OUTPUT -m state --state INVALID -j DROP
+iptables-A FORWARD -m state --state INVALID -j DROP
+
+-m iprange 指定IP段
+--src-range ip-ip
+--dst-range ip-ip
+iptables -t nat -A PREROUTING -d 192.168.80.140 -p tcp --dport 80 -j DNAT --to-destination 172.16.15.30 添加规则，将请求192.168.80.140的web转换到172.16.15.30上
+
+SNAT --to -source IP 源地址转换 如：-j SNAT --to -source 192.168.130.120(目标地址)
+DNAT --to-destination IP[:端口] 目标地址转换 如果请求的端口和目标地址端口不一样则要加上端口
+如源地址端口为80端口，目标地址端口为8080，则 -j DNAT --to-destination 192.168.130.120:8080
+
+lvcreate -L4.4G -s -n 快照1 VolGroup00/LogVol02; #创建LogVol02的快照
+tar -zcvpf /tmp/backup.tar.gz /mnt/快照1/*; # 用tar命令进行文件备份;
+# iptables -X -t nat
+# iptables -Z -t nat
+
+libcurl是一个用于传递数据的库；libevent则是提供服务器相应操作的库。
+
+nmap -v server2.tecmint.com -v给出更详细信息
+nmap 192.168.0.101 192.168.0.102 192.168.0.103 扫描多台
+nmap 192.168.0.101-110 扫描多台
+nmap 192.168.0.* --exclude 192.168.0.100 排除指定
+nmap 192.168.0.* 扫描网段
+map -p 80 server2.tecmint.com 扫描指定端口（map -p 80 server2.tecmint.com ）
+nmap -sP 192.168.0.* 仅查看是否在线而不扫描端口
+
+
+mpstat -P ALL 1 2 查看所有CPU各自状态信息，1秒/次共2次
+
+S (TASK_INTERRUPTIBLE)，可中断的睡眠状态
+处于这个状态的进程因为等待某某事件的发生（比如等待socket连接、等待信号量），而被挂起。这些进程的task_struct结构被放入对应事件的等待队列中。当这些事件发生时（由外部中断触发、或由其他进程触发），对应的等待队列中的一个或多个进程将被唤醒。
+
+通过ps命令我们会看到，一般情况下，进程列表中的绝大多数进程都处于TASK_INTERRUPTIBLE状态（除非机器的负载很高）。毕竟CPU就这么一两个，进程动辄几十上百个，如果不是绝大多数进程都在睡眠，CPU又怎么响应得过来。
+
+
+genrsa 是openssl命令生成私钥的一个子命令：openssl genrsa -out /PATH/TO/PRIVATE_KEYFILE NUM_BITS
+
+
+cut -d : -f 1-5
+
+${var:-DEFAULT} #如果var未声明或是空值则以$DEFAULT为其值
+${var=DEFAULT} #如果var没有被声明, 那么就以$DEFAULT作为其值
+
+
+
+${#string} #$string的长度
+${string:position} #在$string中, 从位置$position开始提取子串
+${string:position:length} #在$string中, 从位置$position开始提取长度为$length的子串
+
+
+${string/substring/replacement} #使用$replacement, 来代替第一个匹配的$substring
+
+[chengmo@localhost ~]$ test='I love china'
+[chengmo@localhost ~]$ echo ${test:5}
+e china
+[chengmo@localhost ~]$ echo ${test:5:10}
+e china
+
+${变量名:起始:长度}得到子字符串
+
+[0-9] <---> [[:digit:]]
+[a-z] <---> [[:lower:]]
+[A-Z] <---> [[:upper:]]
+
+^$ : 空白行
+
+grep -C 1 GUANJIANZI #前后各一行
+
+
+vim中：o #另起一行
+CTRL+d 向前滚动半屏
+cc 删除当前行，并进入编辑模式 #比dd更好
+nyy 复制n行
+sed -e '1,/man/d' filename //删除档内第 1 行到含 "man" 字符串的资料行 #-e可不加，使用多个正则时使用-e
+
+sed -e '1,100c\
+How are you?\
+data be deleted!
+' filename #替换指定行的内容
+
+sed -e '/man/w filename2' filename1 //搜索man所在行，写到 filename2中
+sed -e '/man/r filename2' filename1 //将filename2中的内容读到man所在行
+
+awk '$2 >5 && $2<=15' file
+awk '/101/ {print $1,$2 + 10}' file #显示文件file的匹配行的第一、二个域加10。
+awk -F $Sep ‘{print $1}’ file #按照环境变量Sep的值做为分隔符。
+
+cat -n file1 > file2： #把file1的档案内容加上行号后输入file2这个档案里
+
+
+哪些店的总营业额有超过 $1,500（不能用WHERE，因为此项是算出的值。条件关键字HAVING）
+SELECT store_name, SUM(sales)
+FROM Store_Information
+//GROUP BY store_name
+HAVING SUM(sales) > 1500
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
