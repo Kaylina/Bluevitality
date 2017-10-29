@@ -58,7 +58,7 @@ sed -n 's!test!TEST!g'
 sed 's/\/bin/\/usr\/local\/bin/g'
 ```
 
-### example
+### Example
 ```bash
 sed '2,$d'          删除文件的第2行到末尾所有行
 sed '/ccc/{x;p;x;}' 在匹配行前加入一个空行  
