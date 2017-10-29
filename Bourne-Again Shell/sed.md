@@ -14,6 +14,7 @@ sed [options] -f scriptfile file(s)
 -f 调用sed脚本文件
 
 参数汇总：
+e 耍流氓的参数!（很久没找到），形式如：'e/old/new/e'作用是将替换后的new字符串作为shell命令执行...
 a 在当前行下面插入文本
 i 在当前行上面插入文本
 c 修改当前行的文本
