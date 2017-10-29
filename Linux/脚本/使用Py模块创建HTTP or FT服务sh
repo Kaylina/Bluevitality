@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function HTTP_serv() {
+  # Python内置了简单的HTTP服务器，只需在命令行敲如下命令即可运行：(后面的80端口是可选的，默认端口为8000)
+  # 若当前目录有index.html，则默认显示该文件，否则会以文件列表的形式显示目录下所有文件。这样已实现了最基本的文件分享的目的
+  # 官方文档：https://docs.python.org/2/library/simplehttpserver.html
+  python -m SimpleHTTPServer 80
+ 
+}
+
+function FTP_serv() {
+  # Python没有内置一个直接可以用的FTP服务器，所以需要第三方组件的支持
+  pip install pyftpdlib || exit 1
+  
+  # 当模块安装完成后即可直接运行
+  python -m pyftpdlib -p 21 
+  
+  echo -e "访问：ftp://<ftp_service_ip>:21 \n 默认匿名"anonymous" \n 密码为空"
+  
+}
+
+
+[[ "$1" == "http" ]] && HTTP_serv
+[[ "$1" == "ftp" ]] && FTP_serv
+
+
+
+#修改pyftpdlib的源码：~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  from pyftpdlib.authorizers import DummyAuthorizer
+#  from pyftpdlib.handlers import FTPHandler
+#  from pyftpdlib.servers import FTPServer
+  
+#  def main():
+#      # Instantiate a dummy authorizer for managing 'virtual' users
+#      authorizer = DummyAuthorizer()
+#  
+#      # Define a new user having full r/w permissions and a read-only
+#      # anonymous user
+#      authorizer.add_user('user', '12345', '.', perm='elradfmwM')  # <--- 账号设置
+#      authorizer.add_anonymous(os.getcwd())
+#  
+#      # Instantiate FTP handler class
+#      handler = FTPHandler
+#      handler.authorizer = authorizer
+#  
+#      # Define a customized banner (string returned when client connects)
+#      handler.banner = "pyftpdlib based ftpd ready."
+#  
+#      # Specify a masquerade address and the range of ports to use for
+#      # passive connections.  Decomment in case you're behind a NAT.
+#      #handler.masquerade_address = '151.25.42.11'
+#      #handler.passive_ports = range(60000, 65535)
+#  
+#      # Instantiate FTP server class and listen on 0.0.0.0:2121
+#      address = ('', 2121)   # <--- 默认访问端口
+#      server = FTPServer(address, handler)
+#  
+#      # set a limit for connections
+#      server.max_cons = 256      # <--- 服务最大连接数
+#      server.max_cons_per_ip = 5   # <--- 每个IP最大连接数
+#  
+#      # start ftp server
+#      server.serve_forever()
+#  
+#  if __name__ == '__main__':
+#      main()
