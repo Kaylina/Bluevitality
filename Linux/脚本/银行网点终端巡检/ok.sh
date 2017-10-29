@@ -14,7 +14,7 @@ rm -rf /root/.ssh/known_hosts
 #截图：
 function ssh_screencap() {
         echo -e "\033[31m 连接至反向链接服务器，需输入密码：ubox \033[0m"
-        ssh root@121.42.155.2 -p ${ssh_port} 'su -c "screencap -p /sdcard/6.png"'
+        ssh root@121.42.15X.X -p ${ssh_port} 'su -c "screencap -p /sdcard/6.png"'
         if [[ "$?" != "0" ]];then
                 echo  -e "\033[31m 尝试更换端口重新进行SSH连接！！ \033[0m"
                 temp_port=$(($RANDOM%9+1))
