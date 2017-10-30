@@ -1,4 +1,4 @@
-####　说明
+#### 说明
 ```bash
 # 在awk中如果调用next，那么next之后的命令就不执行了。此行的处理到此结束并开始读取下条记录并操作
 # 与next相似，getline也读取下1行数据。
@@ -40,8 +40,10 @@ awk '$1=100{print $1 > "output_file"}' file
 # getline接收用户输入有2种形式：
 getline string  < "/dev/tty"
 getline string  < "-"
-# 提示用户输入参数： [root@localhost ~]# awk 'BEGIN{print "input";getline v <"-" ; print v}'  #"-"是标准输入，很多工具都支持
-# 获取awk位置参数：  [root@localhost ~]# awk 'BEGIN{print ARGV[1],ARGV[2]}' a b
+# 提示用户输入参数： 
+[root@localhost ~]# awk 'BEGIN{print "input";getline v <"-" ; print v}'  #"-"是标准输入，很多工具都支持
+# 获取awk位置参数： 
+[root@localhost ~]# awk 'BEGIN{print ARGV[1],ARGV[2]}' a b
 
 # 保存shell的全部输出：
 [root@localhost ~]# awk 'BEGIN{srs=RS;RS="" ; "ls ./" | getline TMP ; RS=srs ; print TMP }'
@@ -91,7 +93,8 @@ drwxr-xr-x 2 root root   6 10月 30 01:25 hhh
 # 如果比它大就j-$i，要是比它小就$i-j，保证文件相减都是整数
 # 当然更法很多，可判断是否小于0，小于0就负负为正，也可以替换到负号这个符号等等
 # 总结的说getline可实现2个文件的同步读取而实现一系列的操作。下面是数组的解法：
-[root@localhost ~]# awk 'ARGIND==1{a[FNR]=$1;next}{for(i=1;i<=NF;i++)$i=$i-a[FNR];$0=gensub(/-/,"","g")}1' numberB numberA
+[root@localhost ~]# awk 'ARGIND==1{a[FNR]=$1;next}{for(i=1;i<=NF;i++)$i=$i-a[FNR];$0=gensub(/-/,"","g")}1' \
+ numberB numberA
 
 # 要求文件a里的数据依次替换文件b中的xxx字样
 [root@localhost ~]# cat a
