@@ -6,8 +6,8 @@ Rsync v3.1.0 安装说明
 编译安装
 
 2、安装文件
-Install.sh		  Rsync源码编译安装
-inotify.sh	    inotify-tools源码编译安装安装 ( 用于监控某目录内的变化，以及时触发rsync进行同步 )
+Install.sh	Rsync源码编译安装
+inotify.sh	inotify-tools源码编译安装安装 ( 用于监控某目录内的变化，以及时触发rsync进行同步 )
 
 3、安装目录
 /usr/local/rsync
@@ -48,5 +48,4 @@ Pid: /usr/local/rsync/logs/rsyncd.pid
 	rsync -arP --delete --password-file=/xx/user.pass --exclude-from=/xx/not_sync_list.txt * username@10.50.201.187::blockname
 
 从某服务器上下载文件
-	/usr/local/rsync/bin/rsync -azP --password-file=/xx/sitename.pass goldenman@10.50.201.98::video /www/video
-  注：/www/video 为下载后文件存放的目录
+	/usr/local/rsync/bin/rsync -azP --password-file=/xx/sitename.pass nman@10.50.201.98::video /www/
