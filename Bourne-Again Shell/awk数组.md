@@ -1,4 +1,4 @@
-#### 数组
+#### 说明
 ```bash
 # awk是按行处理文本数据的，将1行为1个记录；1个记录还可依分隔符变量"FS"来分隔为若干字段
 # awk数组叫做关联数组，因为下标可是数也可是串。awk中数组不必提前声明，也不必声明大小...
@@ -61,8 +61,56 @@ abc ddd  sss klm
 abc 1
 efg 1
 ddd 2
-[root@localhost ~]# < 1 awk '$2=="ddd" {i=i+1} END {print i}'       #统计"ddd"出现的次数
-[root@localhost ~]# < 1 awk '{if($2=="ddd") i=i+1} END {print i}'   #统计"ddd"出现的次数
+[root@localhost ~]# < 1 awk '$2=="ddd" {i=i+1} END {print i}'       #统计"ddd"出现的次数
+[root@localhost ~]# < 1 awk '{if($2=="ddd") i=i+1} END {print i}'   #统计"ddd"出现的次数
 [root@localhost ~]# < 1 awk '$2 ~ /ddd/{++i}END{print i}'           #统计"ddd"出现的次数
 
+
+# 注：
+# var++的形式：先读取var值，再对值+1
+```
+#### 用awk数组去除重复域
+```bash
+# 先讲下 awk’!a[$1]++’ 格式的每个部分的意义
+# 基本格式 awk ‘pattern{action}’ ，省略action时默认action是{print}，如awk ’1′ 是 awk ’1{print}’ 
+# var++的形式：先读取var变量值，再对var值+1
+# awk处理第1行时先读取a[$1]值再自增，a[$1]即a[1]值为空(0)，即 awk ‘!0′，即 awk ’1′，即 awk’1{print}’ 
+# awk处理第2行时先读取a[$1]值再自增，a[$1]即a[1]值为1，即 awk ‘!1′，即 awk ’0′，即 awk ’0{print}’ 
+
+
+#Example
+[root@localhost ~]# cat 1
+1 2 3
+1 2 2
+2 2 2
+3 4 4
+3 4 5
+2 2 2
+4 4 4
+5 5 5
+6 6 6
+7 7 7
+8 8 8
+1 4 3
+[root@localhost ~]# < 1 awk '!a[$1]++'  #可看出第1个域重复的第2、5、6、13行都被过滤了
+1 2 3
+2 2 2
+3 4 4
+4 4 4
+5 5 5
+6 6 6
+7 7 7
+8 8 8
+
+#如果要顾虑的时候参考的不止一个域那就可在方括号里写上要参考的域，如 awk '!a[$1 $3]++'
+[root@localhost ~]# < 1 awk '!a[$1$ $3]++'  #可以看到第6、13行被过滤了
+1 2 3
+1 2 2
+2 2 2
+3 4 4
+4 4 4
+5 5 5
+6 6 6
+7 7 7
+8 8 8
 ```
