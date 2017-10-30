@@ -13,7 +13,7 @@ des=/home/
 user=root
 log=/usr/local/inotify/logs/rsync.log
 
-/usr/local/bin/inotifywait -mrq --timefmt '%d/%m/%y %H:%M' --format '%T %w%f' -e modify,delete,create,attrib ${src} | while read file 
+inotifywait -mrq --timefmt '%d/%m/%y %H:%M' --format '%T %w%f' -e modify,delete,create,attrib ${src} | while read file 
 do
     rsync -vzrtopg --delete -e ssh ${src} ${user}@${host1}:${des} && echo "${TIME} on ${DATE}, file $FILECHANGE backed ok" >> $log
     rsync -vzrtopg --delete -e ssh ${src} ${user}@${host2}:${des} && echo "${TIME} on ${DATE}, file $FILECHANGE backed ok" >> $log
