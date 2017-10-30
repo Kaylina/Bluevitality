@@ -74,13 +74,13 @@ EOF
 rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf
 
 #写入启动文件
-mv ../rsync.rcd.txt /etc/init.d/rsyncd
+mv ./rsyncd /etc/init.d/rsyncd
 chmod 0755 /etc/init.d/rsyncd
 
 #检查是否开机自启，若不存在则写入/etc/rc.local
 isSet=`grep "/usr/local/rsync/bin/rsync --daemon" /etc/rc.local | wc -l`
 if [ "$isSet" == "0" ]; then
-    echo "/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf">>/etc/rc.local
+    echo "/usr/local/rsync/bin/rsync --daemon --config=/usr/local/rsync/etc/rsyncd.conf" >> /etc/rc.local
 fi
 
 service rsyncd restart
