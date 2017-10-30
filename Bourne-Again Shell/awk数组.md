@@ -23,7 +23,7 @@
 3 a
 
 #有序输出数组内容（数组下标从1开始，与c不同）
-[root@localhost ~]# awk 'BEGIN{info="it is a test";len=split(info,A," ");for(i=1;i<=len;i++){print i,A[i]}}'            
+[root@localhost ~]# awk 'BEGIN{info="it is a test";len=split(info,A," ");for(i=1;i<=len;i++){print i,A[i]}}' 
 1 it
 2 is
 3 a
