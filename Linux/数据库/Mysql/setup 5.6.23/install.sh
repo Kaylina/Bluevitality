@@ -30,7 +30,7 @@ cmake . \
 -DCMAKE_INSTALL_PREFIX=$mysql_home \
 -DSYSCONFDIR=/etc \
 -DMYSQL_DATADIR=$data \
--DMYSQL_UNIX_ADDR=$mysql_sock \
+-DMYSQL_UNIX_ADDR=/var/lib/mysql/mysql.sock \
 -DWITH_INNOBASE_STORAGE_ENGINE=1 \
 -DENABLED_LOCAL_INFILE=1 \
 -DMYSQL_TCP_PORT=3306 \
@@ -58,7 +58,7 @@ chmod 755 /etc/init.d/mysqld
 #启动
 $mysql_home/bin/mysqld_safe --skip-grant-tables &
 
-mysql -uroot  <<eof
+mysql -h 127.0.0.1  <<eof
 UPDATE mysql.user SET password=PASSWORD("${mysql_root_pass:=123456}") WHERE user='root';
 eof
 
