@@ -57,6 +57,36 @@ sed -n 's!test!TEST!g'
 定界符出现在模式中时需转义：
 sed 's/\/bin/\/usr\/local\/bin/g'
 ```
+#### 分支跳转
+```bash
+# demo:
+# : tag   定义一个标签，名称为tag（一般用于定义一个特定的执行位置）
+# b tag   跳转到名为tag的锚点继续执行下一个命令
+
+[root@localhost ~]# !c
+cat test 
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+[root@localhost ~]# < test sed  '/8/{b tag};{s/.*/666/g;: tag}'
+666
+666
+666
+666
+666
+666
+666
+8
+666
+666
+```
 
 ### Example
 ```bash
