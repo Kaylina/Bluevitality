@@ -1,6 +1,7 @@
 #!/bin/bash
 
 mysql_home="/usr/local/mysql"
+mysql_root_pass=123456
 data="/data"
 
 set -e
@@ -58,14 +59,12 @@ chmod 755 /etc/init.d/mysqld
 $mysql_home/bin/mysqld_safe --skip-grant-tables &
 
 mysql -uroot  <<eof
-UPDATE mysql.user SET password=PASSWORD('123456') WHERE user='root';
+UPDATE mysql.user SET password=PASSWORD("${mysql_root_pass:=123456}") WHERE user='root';
 eof
 
 ps -ef | grep mysqld | awk '/--skip-grant-tables/{print "kill -9 " $2}' | bash -
 
 /etc/init.d/mysqld start
 echo "/etc/init.d/mysqld start" >> /etc/rc.local
-
-./bin/mysqladmin -u root password "123456"
 
 exit 0
