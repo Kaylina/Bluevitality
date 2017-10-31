@@ -11,3 +11,9 @@
 1       192.168.1.19
 1       192.168.1.15
 1       192.168.1.13
+
+[root@localhost ~]# awk 'BEGIN{print ENVIRON["PATH"];}'
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin
+
+[root@localhost ~]# awk 'BEGIN{OFMT="%.3f";print 2/3,123.11111111;}' /etc/passwd   
+0.667 123.111
