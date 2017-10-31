@@ -1,0 +1,22 @@
+最近想批量下载校内网资源，于是就想用到了curl先保存cookie，然后在用多线程下载工具axel或wget
+ 
+curl --dump-header head1.txt -c cookie -d "email={账号名}&password={密码}" http://www.renren.com/PLogin.do
+curl --dump-header head2.txt -L-b cookie http://www.renren.com/home
+ 
+首先去人人登陆页面上，看到表单发往 http://www.renren.com/PLogin.do 主要需要post的数据有email和password两个
+于是尝试：
+curl -d "email={账号名}&password={密码}" http://www.renren.com/PLogin.do
+返回显示：the url has moved...不管他，查看请求的header中有setcookie
+于是加上参数：-c cookie 
+将请求回来的cookie放到cookie这个文件中
+参数：--dump-header head1.txt 的作用仅仅是将请求的header保存到head1.txt这个文件中去
+
+接着实际登陆查看登陆过程中需要访问到url有两个：
+一个是http://www.renren.com/home，一个是http://www.renren.com/{账户的账号}
+估计这两个url都会用到cookie，所以加上参数：
+-b cookie表示请求的时候将cookie文件中的信息带上
+-L 表示如果在response header中如果有location的话就直接转向到location的地址 ( redirect )
+
+如果在第二句话中加上-c cookie的话，再次请求：
+curl -L -b cookie http://www.renren.com
+就会直接请求到数据，这是因为请求的返回中有location转向，而在curl命令中已经加上了一个-L因此请求会直接转向
