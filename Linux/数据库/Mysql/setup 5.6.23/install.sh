@@ -51,7 +51,6 @@ cd $mysql_home
 scripts/mysql_install_db --user=mysql --datadir=$data
 
 #备份旧的配置
-mkdir etc
 [ -f "/etc/my.cnf" ] &&  mv /etc/my.cnf /etc/my.cnf.bak
 cp support-files/my-default.cnf /etc/my.cnf
 cp support-files/mysql.server /etc/init.d/mysqld
