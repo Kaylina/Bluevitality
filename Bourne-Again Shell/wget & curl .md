@@ -101,3 +101,31 @@ BDPAGETYPE: 1
 	post：	curl -u username --data "param1=value1&param2=value" https://api.github.com	
 	get：	curl -u username https://api.github.com/user?access_token=XXXXXXXXXX
 ```
+
+#### Example
+```bash
+[root@localhost ~]# curl www.baidu.com -v > /dev/null  -s
+* About to connect() to www.baidu.com port 80 (#0)
+*   Trying 220.181.112.244...
+* Connected to www.baidu.com (220.181.112.244) port 80 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.29.0
+> Host: www.baidu.com
+> Accept: */*
+> 
+< HTTP/1.1 200 OK
+< Server: bfe/1.0.8.18
+< Date: Tue, 31 Oct 2017 06:18:16 GMT
+< Content-Type: text/html
+< Content-Length: 2381
+< Last-Modified: Mon, 23 Jan 2017 13:27:36 GMT
+< Connection: Keep-Alive
+< ETag: "588604c8-94d"
+< Cache-Control: private, no-cache, no-store, proxy-revalidate, no-transform
+< Pragma: no-cache
+< Set-Cookie: BDORZ=27315; max-age=86400; domain=.baidu.com; path=/
+< Accept-Ranges: bytes
+< 
+{ [data not shown]
+* Connection #0 to host www.baidu.com left intact
+```
