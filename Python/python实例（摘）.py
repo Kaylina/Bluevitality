@@ -1,7 +1,6 @@
-    python实例手册
+python实例手册
 
 #encoding:utf8
-# 设定编码-支持中文
 
 0 说明
 
