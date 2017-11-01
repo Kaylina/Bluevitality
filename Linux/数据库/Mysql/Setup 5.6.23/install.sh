@@ -23,7 +23,7 @@ yum -y install gcc gcc-c++ ncurses-devel cmake mysql perl-Module-Install.noarch
 #已经下载到了同级目录
 #wget http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-5.6.23.tar.gz
 
-tar -zxf mysql-5.6.23.tar.gz
+tar -Jxf mysql-5.6.23.tar.xz
 chown root:root mysql-5.6.23
 cd mysql-5.6.23
 cmake . \
