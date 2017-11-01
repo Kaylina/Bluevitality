@@ -6,7 +6,7 @@
 - [ ] Quota的配置流程记录（加注释）
 - [ ] mdadm的README
 - [ ] mutt+mstp的脚本
-- [ ] memcahed的README & 安装脚本
+- [ ] ~~memcahed的README & 安装脚本~~
 - [ ] mysql、nginx的安装脚本、mysql的主从复制，GTID，几种备份方式：Mysqldump / xtrabackup / lvm快照
 - [ ] galera cluster & mycat
 - [ ] mysql命令收集，归纳，整理 ---> .md
