@@ -56,12 +56,15 @@ cp -f support-files/mysql.server /etc/init.d/mysqld
 chmod 755 /etc/init.d/mysqld
 
 #启动
-$mysql_home/bin/mysqld_safe --skip-grant-tables &
+( $mysql_home/bin/mysqld_safe --skip-grant-tables & )
 
-:
+sleep 2 && {
+
 mysql -h 127.0.0.1  <<eof
 UPDATE mysql.user SET password=PASSWORD("${mysql_root_pass:=123456}") WHERE user='root';
 eof
+
+}
 
 ps -ef | grep mysqld | awk '/--skip-grant-tables/{print "kill -9 " $2}' | bash -
 
