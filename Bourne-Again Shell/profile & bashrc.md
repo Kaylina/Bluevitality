@@ -15,7 +15,7 @@
                   ~/.bashrc 是交互式 non-login 方式进入bash 运行的；
                   类似于/etc/bashrc，不需要重启生效，重新打开一个bash即可生效
                   /etc/bashrc     对所有用户新打开的bash都生效，另外/etc/profile中设定的变量(全局)可以作用于任何用户
-                  ~/.bashrc       只对当前用户新打开的bash生效，设定的变量(局部)只能继承/etc/profile中的变量，他们是"父子"关系
+                  ~/.bashrc       只对当前用户新打开的bash生效，设定的变量(局部)只继承/etc/profile，他们是"父子"关系
 
 ~/.bash_logout:   当每次退出系统(退出bash shell)时执行该文件
 ```
