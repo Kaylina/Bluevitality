@@ -1,16 +1,13 @@
 #!/bin/bash
-#
-# processname: memcached
 # config: /etc/sysconfig/memcached
-# pidfile: /var/run/memcached.pid
 
 
 MEMCACHED_HOME="/usr/local/memcached"
 memcached=$MEMCACHED_HOME"/bin/memcached"
 PROG=$(basename $memcached)
-pidfile=${PIDFILE-/var/run/memcached.pid}
-lockfile=${LOCKFILE-/var/lock/subsys/memcached}
-USER="daemon"
+lockfile="/var/lock/subsys/memcached"
+pidfile="/var/run/memcached.pid"
+USER="memcached"
 PORT=11211
 MAX_MEMORY=1024
 MAX_CONNEXTIONS=1024
@@ -22,59 +19,57 @@ RETVAL=0
 . /etc/rc.d/init.d/functions
 
 if [ -f /etc/sysconfig/memcached ]; then
-	. /etc/sysconfig/memcached
+        . /etc/sysconfig/memcached
 fi
 
 # Source networking configuration.
 . /etc/sysconfig/network
 
 start() {
-    	[ -x $memcached ] || exit 5
-    	echo -n $"Starting $PROG: "
-    	${memcached} -p ${PORT} -u ${USER} -m ${MAX_MEMORY} -c ${MAX_CONNEXTIONS} -R ${MAX_REQUESTS} -P ${pidfile} -d start
-    	RETVAL=$?
-    	echo
-    	[ $RETVAL -eq 0 ] && touch $lockfile
-    	return $RETVAL
+        [ -x $memcached ] || exit 5
+        echo -n $"Starting $PROG: "
+        ${memcached} -p ${PORT} -u ${USER} -m ${MAX_MEMORY} -c ${MAX_CONNEXTIONS} -R ${MAX_REQUESTS} -P ${pidfile} -d start
+        RETVAL=$?
+        [ $RETVAL -eq 0 ] && touch $lockfile
+        return $RETVAL
 }
 
 stop() {
-	echo -n $"Stopping $PROG: "
-	killproc $memcached -QUIT
-	RETVAL=$?
-    	echo
-    	[ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
+        echo -n $"Stopping $PROG: "
+        ps -ef | grep memcached | awk '/start/{print "kill -9 "$2 }'| bash -
+        RETVAL=$?
+        [ $RETVAL = 0 ] && rm -f ${lockfile} ${pidfile}
 }
 
 case "$1" in
-    	start)
-        	start
-		;;
-    	reload|restart)
-        	stop
-        	start
-		;;
-    	stop)
-        	stop
-		;;
-	condrestart|try-restart)
-		if status >&/dev/null; then
-			stop
-			start
-		fi
-		;;
-	status)
-		status -p ${pidfile} $memcached
-		RETVAL=$?
-		;;
-	help)
-		$memcached --help
-		RETVAL=$?
-		;;
-    	*)
-		echo $"Usage: $PROG {start|reload|restart|condrestart|try-restart|stop|status|help}"
-		RETVAL=2
-		;;
+        start)
+                start
+                ;;
+        reload|restart)
+                stop
+                start
+                ;;
+        stop)
+                stop
+                ;;
+        condrestart|try-restart)
+                if $memcached status &> /dev/null; then
+                        stop
+                        start
+                fi
+                ;;
+        status)
+                $memcached -p ${pidfile} status
+                RETVAL=$?
+                ;;
+        help)
+                $memcached --help
+                RETVAL=$?
+                ;;
+        *)
+                echo $"Usage: $PROG {start|reload|restart|condrestart|try-restart|stop|status|help}"
+                RETVAL=2
+                ;;
 esac
 
 exit $RETVAL
