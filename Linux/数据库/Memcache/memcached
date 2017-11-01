@@ -1,7 +1,6 @@
 #!/bin/bash
 # config: /etc/sysconfig/memcached
 
-
 MEMCACHED_HOME="/usr/local/memcached"
 memcached=$MEMCACHED_HOME"/bin/memcached"
 PROG=$(basename $memcached)
@@ -13,7 +12,6 @@ MAX_MEMORY=1024
 MAX_CONNEXTIONS=1024
 MAX_REQUESTS=100
 RETVAL=0
-
 
 # Source function library.
 . /etc/rc.d/init.d/functions
