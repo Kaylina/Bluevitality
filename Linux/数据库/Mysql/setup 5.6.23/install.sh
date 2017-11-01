@@ -58,6 +58,7 @@ chmod 755 /etc/init.d/mysqld
 #启动
 $mysql_home/bin/mysqld_safe --skip-grant-tables &
 
+:
 mysql -h 127.0.0.1  <<eof
 UPDATE mysql.user SET password=PASSWORD("${mysql_root_pass:=123456}") WHERE user='root';
 eof
