@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # 官方中文文档 http://cn.python-requests.org/zh_CN/latest/user/quickstart.html#id2
 # need sudo pip install requests
 import requests
