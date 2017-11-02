@@ -1,0 +1,57 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- 所有host的默认配置信息 -->
+<!-- 
+	Loader:用于Context中控制java类的加载
+	Manager:Manger对象用于实现HTTP会话管理的功能
+	Realm:
+	Resources:用于实现在Context中指定需要装载的但不在Tomcat本地磁盘上的应用资源，如Java类，HTML页面，JSP文件等
+	WatchedResource:用于Context中监视指定的webapp程序文件的改变,并且能够在监视到文件内容发生改变时重新装载此文件
+-->
+<Context>
+    
+    <!-- 应用默认配置文件路径 -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+    <!-- 
+		1) StandardManager
+			Tomcat的默认会话管理器，用于非集群环境中对单个处于运行状态的Tomcat实例会话进行管理。
+			默认保存于$CATALINA_HOME/work/Catalina/<hostname>/<webapp-name>/下的SESSIONS.ser文件中。
+			当Tomcat关闭时，这些会话相关的数据会被写入磁盘上的一个名叫SESSION.ser的文件，并在Tomcat下次启动时读取此文件。
+		2) PersistentManager
+			将会话数据保存至持久存储中，并且能在服务器意外中止后重新启动时重新加载这些会话信息。
+			当一个会话长时间处于空闲状态时会被写入到swap会话对象，这对于内存资源比较吃紧的应用环境来说比较有用。
+		    PersistentManager必须包含一个Store元素以指定将会话数据存储至何处。这通常有两种实现方式：FileStore和JDBCStore。
+		3)DeltaManager
+			用于Tomcat集群的会话管理器，它通过将改变了会话数据同步给集群中的其它节点实现会话复制。
+			这种实现会将所有会话的改变同步给集群中的每一个节点，也是在集群环境中用得最多的一种实现方式。
+		4) BackupManager
+			用于Tomcat集群的会话管理器，与DeltaManager不同的是，某节点会话的改变只会同步给集群中的另一个而非所有节点。
+		5)SimpleTcpReplicationManager
+			Tomcat4时用到的版本，过于老旧了。
+	-->
+    <!--
+	<Manager className="org.apache.catalina.session.StandardManager" 
+     maxInactiveInterval="7200"/>
+	-->
+	<!--保存至文件中
+	<Manager className="org.apache.catalina.session.PersistentManager" 
+	 saveOnRestart="true"> 
+		<Store className="org.apache.catalina.session.FileStore" 
+		  directory="/data/tomcat-sessions"/> 
+	</Manager>
+    -->
+	<!--保存至JDBCStore
+	<Manager className="org.apache.catalina.session.PersistentManager" 
+	 saveOnRestart="true"> 
+		<Store className="org.apache.catalina.session.JDBCStore" 
+		  driverName="com.mysql.jdbc.Driver" 
+		  connectionURL="jdbc:mysql://localhost:3306/mydb?user=jb;password=pw"/> 
+	</Manager>
+	-->
+
+    <!-- 同Server.xml中一样 -->
+    <!--
+    <Valve className="org.apache.catalina.valves.CometConnectionManagerValve" />
+    -->
+
+</Context>

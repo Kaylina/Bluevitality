@@ -1,0 +1,211 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!-- Note:  A "Server" is not itself a "Container", so you may not
+     define subcomponents such as "Valves" at this level.
+     Documentation at /docs/config/server.html
+	 同一个物理机配置多个Server实例，必须使用不同端口
+ -->
+
+<!-- Server实例，即一个JVM
+	className: 用于实现此Server容器的完全限定类的名称，默认为org.apache.catalina.core.StandardServer；
+ -->
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <!-- 安全监听. Documentation at /docs/config/listeners.html
+  <Listener className="org.apache.catalina.security.SecurityListener" />
+  -->
+  <!--APR library loader. Documentation at /docs/apr.html -->
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <!--Initialize Jasper prior to webapps are loaded. Documentation at /docs/jasper-howto.html -->
+  <Listener className="org.apache.catalina.core.JasperListener" />
+  <!-- 防止内存泄露 due to use of particular java/javax APIs-->
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <!-- 全局命名资源，来定义一些外部访问资源，
+	其作用是为所有引擎应用程序所引用的外部资源的定义
+	可以避免每个Web应用程序都需要在各自的web.xml创建，这在web应用程序以WAR的形式存在时尤为有用。
+	Environment
+	Resource
+	ResourceEnvRef
+  -->
+  <GlobalNamingResources>
+    <!-- -->
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+
+  <!-- Service主要用于关联一个引擎和与此引擎相关的连接器,每个连接器通过一个特定的端口和协议接收入站请求交将其转发至关联的引擎进行处理 
+	className： 用于实现service的类名，一般都是org.apache.catalina.core.StandardService。
+	Service要包含一个引擎、一个或多个连接器
+  -->
+  <Service name="Catalina">
+
+    <!--The connectors can use a shared executor, you can define one or more named thread pools-->
+    <!--
+    <Executor name="tomcatThreadPool" namePrefix="catalina-exec-"
+        maxThreads="150" minSpareThreads="4"/>
+    -->
+
+    <!-- HTTP连接器 属性：address：指定连接器监听的地址，默认为所有地址，即0.0.0.0-->
+    <Connector port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+    <!-- 使用共享线程池的Connector -->
+    <!--
+    <Connector executor="tomcatThreadPool"
+               port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+    -->
+    <!-- SSL连接器 -->
+    <!--
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11Protocol"
+               maxThreads="150" SSLEnabled="true" scheme="https" secure="true"
+               clientAuth="false" sslProtocol="TLS" />
+    -->
+    <!-- AJP连接器 
+		redirectPort：如果某连接器支持的协议是HTTP，当接收客户端发来的HTTPS请求时，则转发至此属性定义的端口
+		acceptCount：设置等待队列的最大长度
+	-->
+    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+
+    <!-- Engine是Servlet处理器的一个实例，即servlet引擎，默认为定义在server.xml中的Catalina -->
+	
+    <!-- 配置负载均衡时要设置jvmRoute, via AJP ie : -->
+	<!--
+    <Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1">
+    -->
+	
+	<!-- defaultHost属性:定义一个接收所有发往非明确定义虚拟主机的请求的host组件
+		如localhost对应name为localhost的Host
+		一个Host可以有一个或多个Host
+	-->
+    <Engine name="Catalina" defaultHost="localhost">
+      <!--
+		专用于配置Tomcat集群的元素，可用于Engine和Host容器中
+		在用于Engine容器中时，Engine中的所有Host均支持集群功能
+		在Cluster元素中，
+		   需要直接定义一个Manager元素，这个Manager元素有一个其值为org.apache.catalina.ha.session.DeltaManager或org.apache.catalina.ha.session.BackupManager的className属性。
+		   同时，Cluster中还需要分别定义一个Channel和ClusterListener元素。
+		   
+		    Channel 用于Cluster中给集群中同一组中的节点定义通信“信道”。
+				Channel中需要至少定义Membership、Receiver和Sender三个元素，此外还有一个可选元素Interceptor。
+				Membership 用于Channel中配置同一通信信道上节点集群组中的成员情况，即监控加入当前集群组中的节点并在各节点间传递心跳信息，而且可以在接收不到某成员的心跳信息时将其从集群节点中移除。
+				    Tomcat中Membership的实现是org.apache.catalina.tribes.membership.McastService。
+				Sender 用于Channel中配置“复制信息”的发送器，实现发送需要同步给其它节点的数据至集群中的其它节点。发送器不需要属性的定义，但可以在其内部定义一个Transport元素。
+					Transport 用于Sender内部，配置数据如何发送至集群中的其它节点。Tomcat有两种Transport的实现： 
+					1) PooledMultiSender 
+					   基于Java阻塞式IO，可以将一次将多个信息并发发送至其它节点，但一次只能传送给一个节点。 
+					2)PooledParallelSener 
+					   基于Java非阻塞式IO，即NIO，可以一次发送多个信息至一个或多个节点。
+				Receiver 用于Channel定义某节点如何从其它节点的Sender接收复制数据，Tomcat中实现的接收方式有两种BioReceiver和NioReceiver。
+	  -->
+      <!--
+      <Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster"/>
+	  
+	<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster" channelSendOptions="8">
+		<Manager className="org.apache.catalina.ha.session.DeltaManager" 
+		    expireSessionsOnShutdown="false" notifyListenersOnReplication="true"/> 
+		<Channel className="org.apache.catalina.tribes.group.GroupChannel"> 
+			<Membership className="org.apache.catalina.tribes.membership.McastService" 
+			   address="228.0.0.4" port="45564" frequency="500" dropTime="3000"/> 
+			<Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver" 
+			   address="192.168.18.201" port="4000" autoBind="100" selectorTimeout="5000" maxThreads="6"/> 
+			<Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter"> 
+				<Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender"/> 
+			</Sender> 
+			<Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector"/> 
+			<Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor"/> 
+		</Channel> 
+		<Valve className="org.apache.catalina.ha.tcp.ReplicationValve" filter="/"/> 
+		<Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve"/> 
+		<Deployer className="org.apache.catalina.ha.deploy.FarmWarDeployer" tempDir="/tmp/war-temp/" 
+		    deployDir="/tmp/war-deploy/" watchDir="/tmp/war-listen/" watchEnabled="false"/> 
+		<ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener"/> 
+		<ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener"/> 
+	</Cluster>
+      -->
+
+      <!-- 安全上下文 
+		JAASRealm
+		JDBCRealm 通过JDBC访问某关系型数据库表实现用户认证；
+		JNDIRealm 基于JNDI使用目录服务实现认证信息的获取；
+		MemoryRealm 查找tomcat-user.xml文件实现用户信息的获取；
+		UserDatabaseRealm：基于UserDatabase文件(通常是tomcat-user.xml)实现用户认证，
+		它实现是一个完全可更新和持久有效的MemoryRealm，因此能够跟标准的MemoryRealm兼容
+	  -->
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+		<!-- 使用JDBC方式获取用户认证信息 -->
+		<!--
+		<Realm className="org.apache.catalina.realm.JDBCRealm" debug="99"
+		 driverName="org.gjt.mm.mysql.Driver"
+		 connectionURL="jdbc:mysql://localhost/authority"
+		 connectionName="test" connectionPassword="test"
+		 userTable="users" userNameCol="user_name"
+		 userCredCol="user_pass"
+		 userRoleTable="user_roles" roleNameCol="role_name" />
+		-->
+      </Realm>
+			
+	  <!-- 位于Engine容器中用于接收请求并进行相应处理的主机或虚拟主机
+		unpackWARs 在启用此应用时是否对war格式的文件先进行展开
+	  -->
+      <Host name="localhost"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+		<!-- 配置应用context,一个Context表示tomcat实例中的一个Web应用程序 
+			docBase：相应的Web应用程序的存放位置
+			也可以使用相对路径，起始路径为此Context所属Host中appBase定义的路径
+			切记，docBase的路径名不能与相应的Host中appBase中定义的路径名有包含关系，比如，如果appBase为deploy，而docBase绝不能为deploy-bbs类的名字；
+			path：相对于Web服务器根路径而言的URI；如果为空""，则表示为此webapp的根路径
+			
+			如果context定义在一个单独的xml文件中，此属性不需要定义；
+		-->
+		<!--
+			<Context path="/examples" docBase="D:\" reloadable="true" />
+			<Context path="/examples" docBase="D:\" reloadable="true" />
+		-->
+        <!-- 类似于过滤器 
+		AccessLogValve：访问日志Valve
+		ExtendedAccessValve：扩展功能的访问日志Valve
+		JDBCAccessLogValve：通过JDBC将访问日志信息发送到数据库中；
+		RequestDumperValve：请求转储Valve；
+		RemoteAddrValve：基于远程地址的访问控制；
+		RemoteHostValve：基于远程主机名称的访问控制；
+		SemaphoreValve：用于控制Tomcat主机上任何容器上的并发访问数量；
+		JvmRouteBinderValve：在配置多个Tomcat为以Apache通过mod_proxy或mod_jk作为前端的集群架构中，当期望停止某节点时，可以通过此Valve将用记请求定向至备用节点；使用此Valve，必须使用JvmRouteSessionIDBinderListener；
+		ReplicationValve：专用于Tomcat集群架构中，可以在某个请求的session信息发生更改时触发session数据在各节点间进行复制；
+		SingleSignOn：将两个或多个需要对用户进行认证webapp在认证用户时连接在一起，即一次认证即可访问所有连接在一起的webapp；
+		ClusterSingleSingOn：对SingleSignOn的扩展，专用于Tomcat集群当中，需要结合ClusterSingleSignOnListener进行工作；
+		
+		RemoteHostValve和RemoteAddrValve可以分别用来实现基于主机名称和基于IP地址的访问控制,控制本身可以通过allow或deny来进行定义
+		<Context path="/probe" docBase="probe">
+			<Valve className="org.apache.catalina.valves.RemoteAddrValve" allow="127\.0\.0\.1"/>
+		</Context>
+		-->
+        <!--
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+        -->
+		<!-- 定义该主机的访问日志 -->
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log." suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+
+      </Host>
+	  
+
+	  <Host name="www.wangwanchao.wang"  appBase="/web"
+            unpackWARs="true" autoDeploy="true">
+		<!-- 如果一个主机有两个或两个以上的主机名，额外的名称均可以以别名的形式进行定义 -->
+	    <Alias>wanchao.wang</Alias>
+		<Context path="/" docBase="webapp"/>
+	  </Host>
+    </Engine>
+  </Service>
+</Server>

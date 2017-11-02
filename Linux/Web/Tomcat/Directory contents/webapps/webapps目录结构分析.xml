@@ -1,0 +1,9 @@
+Tomcat -- WebApps目录解析
+(1)页面内容等文件的存放位置：*.html, *.jsp等可以有许多目录层次，由用户的网站结构而定，实现的功能应该是网站的界面，也就是用户主要的可见部分。
+除了HTML文件、JSP文件外，还有js（JavaScript）文件和css（样式表）文件以及其他多媒体文件等。
+(2)Web-INF/web.xml 这是一个Web应用程序的描述文件。
+这个文件是一个XML文件，描述了Servlet和这个Web应用程序的其他组件信息，此外还包括一些初始化信息和安全约束等等。
+(3)Web-INF/classes/ 这个目录及其下的子目录应该包括这个Web应用程序的所有JavaBean及Servlet等编译好的Java类文件（*.class）文件，以及没有被压缩为JAR包的其他class文件和相关资源。
+注意，在这个目录下的Java类应该按照其所属的包层次组织目录（即如果该*.class文件具有包的定义，则该*.class文件应该放在.\WEB-INF\classes\包名下）。
+(4)通常Web-INF/classes/ 这个目录下的类文件也可以打包成JAR文件，并可以放到WEB-INF下的lib目录下。
+如将 classes目录下的各个*.class文件打包成WebMis.jar文件（jar cvf WebMis.jar *.*）

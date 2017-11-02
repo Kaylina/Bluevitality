@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- host-manager -->
+<!--
+
+    Context configuration file for the Tomcat Manager Web App
+-->
+<Context docBase="${catalina.home}/webapps/manager"
+         privileged="true" antiResourceLocking="false" antiJARLocking="false">
+
+</Context>
