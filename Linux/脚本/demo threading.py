@@ -28,6 +28,7 @@ settrace(func)            # 为所有线程设置一个跟踪函数
 setprofile(func)          # 为所有线程设置一个profile函数
 '''
 
+#demo1
 class Producer(threading.Thread):
     def __init__(self, t_name, queue):
         threading.Thread.__init__(self, name=t_name)
@@ -58,3 +59,20 @@ if __name__ == '__main__':
     consumer.start()
     producer.join()
     consumer.join()
+
+#demo2 (后台线程)
+import threading
+import time,random
+
+class MyThread(threading.Thread):
+    def run(self):
+        wait_time=random.randrange(1,10)
+        time.sleep(wait_time)
+        print "%s will wait %d seconds" % (self.name, wait_time)
+        print "%s finished!" % self.name
+
+if __name__=="__main__":
+    for i in range(5):
+        t = MyThread()
+        t.setDaemon(True)    # 设置为后台线程,主线程完成时不等待子线程完成就结束
+        t.start()
