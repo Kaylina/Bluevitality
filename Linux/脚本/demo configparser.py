@@ -1,88 +1,47 @@
-# encoding:utf-8
+#!/usr/bin/env python
 
-# !/usr/bin/env python
+#写入配置文件
+import ConfigParser
+config = ConfigParser.RawConfigParser()
+config.add_section('Section1')                          # 添加配置文件的块 [name]
+config.set('Section1', 'an_int', '15')                  # 针对块设置配置参数和值
+config.set('Section1', 'a_bool', 'true')
+config.set('Section1', 'a_float', '3.1415')
+config.set('Section1', 'baz', 'fun')
+config.set('Section1', 'bar', 'Python')
+config.set('Section1', 'foo', '%(bar)s is %(baz)s!')
+with open('example.cfg', 'wb') as configfile:           # 指定配置文件路径
+    config.write(configfile)                            # 写入配置文件
 
-# -*- Python读写conf格式配置文件 -*-
-
-__author__ = 'tanteng'
-
-
-import configparser
-import webbrowser
-
-# 返回config对象
-conf = configparser.ConfigParser()
-conf.read('./conf/demo.conf', 'utf-8')
-
-# 读取配置文件
-def readConf():
-    # 得到所有sections
-    sections = conf.sections()
-    print(sections)
-
-    # 得到sec_a,sec_b的设置项
-    options_sec_a = conf.options('sec_a')
-    print(options_sec_a)
-
-    options_sec_b = conf.options('sec_b')
-    print(options_sec_b)
-
-    # 得到sec_a,sec_b的设置键值对
-    items_sec_a = conf.items('sec_a')
-    print(items_sec_a)
-
-    items_sec_b = conf.items('sec_b')
-    print(items_sec_b)
-
-    # 得到具体某个section某个option的值
-    sec_a_key1 = conf.get('sec_a','a_key1')
-    print(sec_a_key1)
-
-readConf()
-
-'''
-readConf()运行结果：
-
-['sec_a', 'sec_b']
-['a_key1', 'a_key2']
-['b_key1', 'b_key2', 'b_key3', 'b_key4']
-[('a_key1', '20'), ('a_key2', '10')]
-[('b_key1', '121'), ('b_key2', 'b_value2'), ('b_key3', '$r'), ('b_key4', '127.0.0.1')]
-20
-'''
-
-# 写配置文件
-def writeConf():
-    # 更新某个section某个option的值
-    conf.set('sec_a','a_key1','100') # 最后一个参数必须是string类型
-    value = conf.get('sec_a','a_key1')
-    print(value) # 打印结果看是否设置成功
-
-    conf.add_section('new_section')
-    conf.set('new_section','new_option_name','new_option_value')
-
-    new_sections = conf.sections()
-
-    # 检测是否新增section和新增设置项成功
-    print(new_sections)
-    print(conf.get('new_section','new_option_name'))
+#读取配置文件
+import ConfigParser
+config = ConfigParser.RawConfigParser()
+config.read('example.cfg')                              # 读取配置文件
+a_float = config.getfloat('Section1', 'a_float')        # 获取配置文件参数对应的浮点值,如参数值类型不对则报ValueError
+an_int = config.getint('Section1', 'an_int')            # 获取配置文件参数对应的整数值,可直接进行计算
+print a_float + an_int
+if config.getboolean('Section1', 'a_bool'):             # 根据配置文件参数值是否为真
+    print config.get('Section1', 'foo')                 # 再获取依赖的配置参数 get获取后值为字符串
+print config.get('Section1', 'foo', 0)                  # 获取配置文件参数的同时加载变量[配置文件中的参数]
+print config.get('Section1', 'foo', 1)                  # 获取配置文件参数 原始值不做任何改动 不使用变量
+config.remove_option('Section1', 'bar')                 # 删除读取配置文件获取bar的值
+config.remove_option('Section1', 'baz')
+print config.get('Section1', 'foo', 0, {'bar': 'str1', 'baz': 'str1'})    # 读取配置参数的同时设置变量的值
 
 
-writeConf()
+#demo
+import ConfigParser
+import io
 
-'''
-writeConf()运行结果：
-
-100
-['sec_a', 'sec_b', 'website', 'new_section']
-new_option_value
-tantengdeMacBook-Pro:learn-python tanteng$
-'''
-
-# 更多Python3入门文章，读取网址配置跳转，现学现用
-
-def jump():
-    url = conf.get('website','url')
-    webbrowser.open(url)
-
-jump()
+sample_config = """
+[mysqld]
+user = mysql
+pid-file = /var/run/mysqld/mysqld.pid
+skip-external-locking
+old_passwords = 1
+skip-bdb
+skip-innodb
+"""
+config = ConfigParser.RawConfigParser(allow_no_value=True)
+config.readfp(io.BytesIO(sample_config))
+config.get("mysqld", "user")
