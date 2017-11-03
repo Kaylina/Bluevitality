@@ -1,31 +1,33 @@
 #!/bin/bash
-#仅适用于RPM或YUM安装的Vsftp服务。默认将随机产生的账号密码输出到脚本所在目录:Ftp_Userinfo.txt
-#默认情每个账户主目录都在${chroot_dir}下
+# 仅用于RPM或YUM安装的Vsftp服务
+# 默认将随机产生的账号密码输出到脚本所在目录: Ftp_Users.txt
+# 默认情每个账户主目录都在${chroot_dir}下
 
-#定义变量
-userlist=(shangftp wangftp)             #数组形式的账号名（密码默认随机产生，或修改循环中的Password变量）
-chroot_dir=/data                        #FTP根路径
+#账号（密码默认随机或修改循环中的"Password"变量）及FTP根路径
+userlist=(shangftp wangftp)             
+chroot_dir=/data
 
-[ -d ${chroot_dir} ] ||  { echo -e "\033[31mdirectory not exist!......\033[0m" ; exit 1 ; }
+[ -d ${chroot_dir} ] || mkdir -p ${chroot_dir}
 
-#check user
+#身份检查
 if [ $(id -u) != "0" ]
 then
-  echo -e "\033[1;40;31mError: You must be root to run this script, please use root to install this script.\033[0m"
-  exit 1
+        echo -e "\033[1;40;31mError: You must be root to run this script \033[0m"
+        exit 1
 fi
 
-#使用随机的数字密码创建帐号
+#帐号和对应的随机密码
 for username in ${userlist[@]}
 do
         if id ${username} 2>&- ; then
                 echo -e "\033[31m user ${username} already  exist...\033[0m" 
         else
-                Password=${RANDOM}   #统一密码则修改这里
-                useradd -d ${chroot_dir} -M ${username}
+                #统一密码需修改这里
+                Password=${RANDOM}   
+                useradd -d ${chroot_dir} -M ${username} -s /bin/nologin
                 echo $Password | passwd  ${username} --stdin 2>&-
-                echo -e "$username   $Password" >> ./Ftp_Userinfo.txt
-                echo -e "\033[32mFTP user create  success...\033[0m"
+                echo -e "$username   $Password" >> ./Ftp_Users.txt
+                echo -e "\033[32m create  ${username} .....\033[0m"
         fi
 done
 
