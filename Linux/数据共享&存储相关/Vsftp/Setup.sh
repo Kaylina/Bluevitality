@@ -1,11 +1,15 @@
 #!/bin/bash
 # 仅用于RPM或YUM安装的Vsftp服务
 # 默认将随机产生的账号密码输出到脚本所在目录: Ftp_Users.txt
-# 默认情每个账户主目录都在${chroot_dir}下
 
 #账号（密码默认随机或修改循环中的"Password"变量）及FTP根路径
 userlist=(shangftp wangftp)             
 chroot_dir=/data
+
+set -e
+set -x
+
+yum -y install vsftpd
 
 [ -d ${chroot_dir} ] || mkdir -p ${chroot_dir}
 
@@ -31,21 +35,29 @@ do
         fi
 done
 
-#查找RPM安装时的配置文件（默认不需要）
+#查找配置文件路径
 config_file=$(awk 'BEGIN{while("rpm -qc vsftpd"|getline)/vsftpd.conf/;print}')
 
 #写入配置文件 (使用时需把注释去掉！否则报语法错误)
-cat > ${config_file} <<eof
+cat > ${config_file:-'/etc/vsftpd/vsftpd.conf'} <<eof
 listen_port=21
-connect_from_port_20=YES        #是否用20作为数据传输端口
-ftp_data_port=20                #在PORT方式下数据传输端口
-pasv_enable=YES                 #是否使用PASV模式；若NO则使用PORT模式。默认YES
-pasv_max_port=0                 #在PASV模式下数据连接可使用的端口范围的最大端口，0：任意端口
-pasv_min_port=0                 #在PASV模式下数据连接可使用的端口范围的最小端口，0：任意端口
-listen=YES                      #服务是否以standalone模式运行。建议采用这种方式，此时listen须设为YES
+#是否用20作为数据传输端口
+connect_from_port_20=YES
+#在PORT方式下数据传输端口
+#ftp_data_port=20              
+pasv_enable=YES
+#是否使用PASV模式；若NO则使用PORT模式。默认YES
+pasv_max_port=0
+#在PASV模式下数据连接可使用的端口范围的最大端口，0：任意端口
+pasv_min_port=0
+#在PASV模式下数据连接可使用的端口范围的最小端口，0：任意端口
+listen=YES
+#服务是否以standalone模式运行。建议采用这种方式，此时listen须设为YES
 listen_ipv6=NO     
-max_clients=0                   #允许的最大连接数，默认为：0，即不受限制。仅standalone模式有效
-max_per_ip=0                    #每个IP允许与FTP同时建立连接的数目。默认：0，即不受限制。仅standalone模式有效
+max_clients=0
+#允许的最大连接数，默认为：0，即不受限制。仅standalone模式有效
+max_per_ip=0
+#每个IP允许与FTP同时建立连接的数目。默认：0，即不受限制。仅standalone模式有效
 #listen_address=IP地址          #设置FTP在指定的地址侦听用户请求。若不设置则对所有IP地址侦听。仅standalone模式有效
 setproctitle_enable=YES         #每个与连接是否以不同进程展现。设为NO时使用："ps -ef|grep ftp"仅1个vsftpd进程                 
 ascii_upload_enable=NO          
@@ -107,23 +119,21 @@ log_ftp_protocol=NO                     #所有FTP请求和响应是否被记录
 
 #用户配置文件
 #user_config_dir=/etc/vsftpd/userconf  
-#用户配置文件所在目录。当设置该项后用户登陆时系统会到指定目录下读取与当前用户名相同的文件，并据文件中的配置命令对当前用户进行更进一步的配置
-#用户配置文件可实现对不同用户进行访问速度的控制，在各用户配置文件中定义local_max_rate=XX即可
+#当设置该项后用户登陆时系统会到指定目录读取与当前用户名相同的文件并据文件中的配置对当前用户进行更进一步的配置
+#用户配置文件可实现对不同用户进行速度的控制，在各用户配置文件中定义local_max_rate=XX...
 eof
-
-echo -e "\033[32mConfig：${config_file}\033[0m"
 
 #执行
 [ -e /usr/bin/systemctl ] && {
-  systemctl restart vsftpd
-  systemctl enable vsftpd
-  echo "Vsftp start ..."
+        systemctl restart vsftpd
+        systemctl enable vsftpd
+        echo "Vsftp start ..."
 }
 
 [ -e /usr/bin/systemctl ] || {
-  chkconfig vsftpd --level 235 on
-  service vsftpd start
-  echo "Vsftp start ..."
+        chkconfig vsftpd --level 235 on
+        service vsftpd start
+        echo "Vsftp start ..."
 }
 
 
